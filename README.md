@@ -30,4 +30,6 @@ Current versions supported: 1.8 - 1.12.
    npc.destroy();
 ```
 
-All rights reserved.
+## Copyright
+
+Copyright (c) Jitse Boonstra 2018 All rights reserved.
