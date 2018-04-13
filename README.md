@@ -4,7 +4,6 @@ NPCLib – Basic non-player character library.<br>
 =
 
 This is an API made specifically for spigot servers (Minecraft).
-
 Current versions supported: 1.8 - 1.12.
 
 ## Usage
