@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.skin;
 
 import com.google.gson.JsonObject;
@@ -10,6 +14,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class MineSkinFetcher {
 
     private static final String MINESKIN_API = "https://api.mineskin.org/get/id/";
@@ -17,7 +24,7 @@ public class MineSkinFetcher {
     public static void fetchSkinFromIdAsync(int id, Callback callback) {
         new Thread(() -> {
             try {
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder builder = new StringBuilder();
                 HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + id).openConnection();
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setDoOutput(true);
@@ -26,13 +33,13 @@ public class MineSkinFetcher {
 
                 Scanner scanner = new Scanner(httpURLConnection.getInputStream());
                 while (scanner.hasNextLine()) {
-                    stringBuffer.append(scanner.nextLine());
+                    builder.append(scanner.nextLine());
                 }
 
                 scanner.close();
                 httpURLConnection.disconnect();
 
-                JsonObject jsonObject = (JsonObject) new JsonParser().parse(stringBuffer.toString());
+                JsonObject jsonObject = (JsonObject) new JsonParser().parse(builder.toString());
                 JsonObject textures = jsonObject.get("data").getAsJsonObject().get("texture").getAsJsonObject();
                 String value = textures.get("value").getAsString();
                 String signature = textures.get("signature").getAsString();

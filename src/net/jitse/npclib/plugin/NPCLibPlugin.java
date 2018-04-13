@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.plugin;
 
 import net.jitse.npclib.NPCLib;
@@ -13,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPCLibPlugin extends JavaPlugin implements Listener {
 
     private NPCLib npcLib;

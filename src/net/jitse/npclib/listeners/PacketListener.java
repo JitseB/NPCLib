@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.listeners;
 
 import com.comphenix.tinyprotocol.Reflection;
@@ -15,6 +19,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketListener {
 
     // Classes:

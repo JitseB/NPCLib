@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.version;
 
 import net.jitse.npclib.api.NPC;
@@ -14,6 +18,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * @author Jitse Boonstra
+ */
 public enum Version {
 
     V1_8_R1("v1_8_R1", NPC_V1_8_R1.class),

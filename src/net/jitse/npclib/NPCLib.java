@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib;
 
 import net.jitse.npclib.api.NPC;
@@ -13,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPCLib {
 
     private final JavaPlugin plugin;

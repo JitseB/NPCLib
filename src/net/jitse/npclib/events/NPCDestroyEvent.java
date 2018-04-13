@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.events;
 
 import net.jitse.npclib.api.NPC;
@@ -7,6 +11,9 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPCDestroyEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.holograms;
 
 import com.comphenix.tinyprotocol.Reflection;
@@ -9,6 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class Hologram {
 
     private final double delta = 0.3;

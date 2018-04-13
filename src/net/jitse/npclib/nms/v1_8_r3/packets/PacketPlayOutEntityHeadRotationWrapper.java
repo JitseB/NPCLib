@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_8_r3.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
 import org.bukkit.Location;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketPlayOutEntityHeadRotationWrapper {
 
     public PacketPlayOutEntityHeadRotation create(Location location, int entityId) {

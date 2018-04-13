@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_8_r1;
 
 import net.jitse.npclib.api.NPC;
@@ -16,6 +20,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPC_V1_8_R1 extends NPC {
 
     private Hologram hologram;

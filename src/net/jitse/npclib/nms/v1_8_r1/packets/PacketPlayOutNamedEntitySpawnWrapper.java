@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_8_r1.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
@@ -7,6 +11,9 @@ import org.bukkit.Location;
 
 import java.util.UUID;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketPlayOutNamedEntitySpawnWrapper {
 
     public PacketPlayOutNamedEntitySpawn create(UUID uuid, Location location, int entityId) {

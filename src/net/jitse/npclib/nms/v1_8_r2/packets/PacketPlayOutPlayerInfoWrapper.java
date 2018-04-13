@@ -1,11 +1,20 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_8_r2.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_8_R2.*;
+import net.minecraft.server.v1_8_R2.IChatBaseComponent;
+import net.minecraft.server.v1_8_R2.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_8_R2.WorldSettings;
 
 import java.util.List;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketPlayOutPlayerInfoWrapper {
 
     public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfile gameProfile, String name) {

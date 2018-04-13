@@ -1,5 +1,12 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.skin;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class Skin {
 
     private final String value, signature;

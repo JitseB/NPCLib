@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib;
 
 import net.jitse.npclib.api.NPC;
@@ -5,6 +9,9 @@ import net.jitse.npclib.api.NPC;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPCManager {
 
     private static Set<NPC> npcs = new HashSet<>();

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.api;
 
 import com.mojang.authlib.GameProfile;
@@ -13,13 +17,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
+/**
+ * @author Jitse Boonstra
+ */
 public abstract class NPC {
 
     protected final UUID uuid = UUID.randomUUID();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     protected final int entityId = (int) Math.ceil(Math.random() * 100000) + 100000;
-    protected final Set<UUID> shown = new HashSet<>();
-    protected final Set<UUID> autoHidden = new HashSet<>();
+
+    private final Set<UUID> shown = new HashSet<>();
+    private final Set<UUID> autoHidden = new HashSet<>();
 
     protected final double autoHideDistance;
     protected final Skin skin;

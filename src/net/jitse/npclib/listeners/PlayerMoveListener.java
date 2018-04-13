@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.listeners;
 
 import net.jitse.npclib.NPCManager;
@@ -8,6 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PlayerMoveListener implements Listener {
 
     @EventHandler

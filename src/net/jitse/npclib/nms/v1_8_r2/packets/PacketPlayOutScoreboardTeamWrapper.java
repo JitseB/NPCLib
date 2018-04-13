@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_8_r2.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
@@ -5,6 +9,9 @@ import net.minecraft.server.v1_8_R2.PacketPlayOutScoreboardTeam;
 
 import java.util.Collection;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketPlayOutScoreboardTeamWrapper {
 
     public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {

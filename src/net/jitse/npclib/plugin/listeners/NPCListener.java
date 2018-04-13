@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.plugin.listeners;
 
 import net.jitse.npclib.events.NPCDestroyEvent;
@@ -7,6 +11,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class NPCListener implements Listener {
 
     @EventHandler

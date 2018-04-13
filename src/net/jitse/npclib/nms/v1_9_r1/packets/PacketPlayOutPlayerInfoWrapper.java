@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ */
+
 package net.jitse.npclib.nms.v1_9_r1.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
@@ -8,6 +12,9 @@ import net.minecraft.server.v1_9_R1.WorldSettings;
 
 import java.util.List;
 
+/**
+ * @author Jitse Boonstra
+ */
 public class PacketPlayOutPlayerInfoWrapper {
 
     public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
