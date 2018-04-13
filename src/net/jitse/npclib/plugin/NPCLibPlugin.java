@@ -27,10 +27,19 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.npcLib = new NPCLib(this);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "NPCLib enabled.");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin enabled.");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " +
+                ChatColor.GRAY + "This is a test plugin usually used for development reasons. " +
+                "You can spawn NPCs by pressing [shift] in game.");
+
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin disabled.");
     }
 
     @EventHandler
