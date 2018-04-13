@@ -7,4 +7,27 @@ This is an API made specifically for spigot servers (Minecraft).
 
 Current versions supported: 1.8 - 1.12.
 
+## Usage
+
+```Java
+    // First we define our (global) library variable.
+    // This is usually done in the onEnable method.
+    NPCLib lib = new NPCLib(plugin);
+```
+
+```Java
+   // If you want to spawn an NPC, you can generate it like so:
+   NPC npc = lib.createNPC(skin, autoHideDistance, lines);
+
+   // Then you need to generate the packets for the NPC like so:
+   npc.create(location);
+
+   // Then, finally, you can show/hide it to/from players like so:
+   npc.show(player);
+   npc.hide(player);
+
+   // If you don't use the NPC anymore, destroy it accordingly:
+   npc.destroy();
+```
+
 All rights reserved.
