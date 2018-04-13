@@ -42,18 +42,30 @@ public class NPCLib {
     /**
      * Create a new non-player character (NPC).
      *
-     * @param skin  The skin you want the NPC to have.
-     * @param lines The text you want to sendShowPackets above the NPC (null = no text).
+     * @param skin             The skin you want the NPC to have.
+     * @param autoHideDistance Distance from where you want to NPC to hide from the player (50 recommended).
+     * @param lines            The text you want to sendShowPackets above the NPC (null = no text).
      * @return The NPC object you may use to sendShowPackets it to players.
      */
-    public NPC createNPC(Skin skin, List<String> lines) {
+    public NPC createNPC(Skin skin, double autoHideDistance, List<String> lines) {
         try {
-            return version.createNPC(plugin, skin, lines);
+            return version.createNPC(plugin, skin, autoHideDistance, lines);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException exception) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
             exception.printStackTrace();
         }
 
         return null;
+    }
+
+    /**
+     * Create a new non-player character (NPC).
+     *
+     * @param skin  The skin you want the NPC to have.
+     * @param lines The text you want to sendShowPackets above the NPC (null = no text).
+     * @return The NPC object you may use to sendShowPackets it to players.
+     */
+    public NPC createNPC(Skin skin, List<String> lines) {
+        return createNPC(skin, 50, lines);
     }
 }

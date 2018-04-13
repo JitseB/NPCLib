@@ -25,8 +25,8 @@ public class NPC_V1_8_R3 extends NPC {
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
 
-    public NPC_V1_8_R3(JavaPlugin plugin, Skin skin, List<String> lines) {
-        super(plugin, skin, lines);
+    public NPC_V1_8_R3(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
+        super(plugin, skin, autoHideDistance, lines);
     }
 
     @Override

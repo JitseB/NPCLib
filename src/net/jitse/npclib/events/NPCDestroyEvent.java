@@ -1,6 +1,7 @@
 package net.jitse.npclib.events;
 
 import net.jitse.npclib.api.NPC;
+import net.jitse.npclib.events.trigger.TriggerType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -14,10 +15,12 @@ public class NPCDestroyEvent extends Event implements Cancellable {
 
     private final NPC npc;
     private final Player player;
+    private final TriggerType trigger;
 
-    public NPCDestroyEvent(NPC npc, Player player) {
+    public NPCDestroyEvent(NPC npc, Player player, TriggerType trigger) {
         this.npc = npc;
         this.player = player;
+        this.trigger = trigger;
     }
 
     @Override
@@ -31,6 +34,10 @@ public class NPCDestroyEvent extends Event implements Cancellable {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public TriggerType getTrigger() {
+        return trigger;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
         }
 
         MineSkinFetcher.fetchSkinFromIdAsync(168841, skin -> {
-            NPC npc = npcLib.createNPC(skin, Arrays.asList(
+            NPC npc = npcLib.createNPC(skin, 5, Arrays.asList(
                     ChatColor.BOLD + "NPC Library", "",
                     "Create your own", "non-player characters",
                     "with the simplistic", "API of NPCLib!"

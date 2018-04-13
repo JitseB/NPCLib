@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.events.NPCDestroyEvent;
 import net.jitse.npclib.events.NPCSpawnEvent;
+import net.jitse.npclib.events.trigger.TriggerType;
 import net.jitse.npclib.skin.Skin;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -39,10 +40,6 @@ public abstract class NPC {
         this.lines = (lines == null ? new ArrayList<>() : lines);
 
         NPCManager.add(this);
-    }
-
-    public NPC(JavaPlugin plugin, Skin skin, List<String> lines) {
-        this(plugin, skin, 50, lines);
     }
 
     protected GameProfile generateGameProfile(UUID uuid, String name) {
@@ -88,7 +85,7 @@ public abstract class NPC {
     }
 
     public void show(Player player, boolean auto) {
-        NPCSpawnEvent event = new NPCSpawnEvent(this, player);
+        NPCSpawnEvent event = new NPCSpawnEvent(this, player, auto ? TriggerType.AUTOMATIC : TriggerType.MANUAL);
         plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -121,7 +118,7 @@ public abstract class NPC {
     }
 
     public void hide(Player player, boolean auto) {
-        NPCDestroyEvent event = new NPCDestroyEvent(this, player);
+        NPCDestroyEvent event = new NPCDestroyEvent(this, player, auto ? TriggerType.AUTOMATIC : TriggerType.MANUAL);
         plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
