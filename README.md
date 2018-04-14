@@ -36,6 +36,8 @@ Alternatively, you can help the project by starring the repository or telling ot
    npc.destroy();
 ```
 
+Usable events: `NPCSpawnEvent`, `NPCDestroyEvent` and `NPCInteractEvent`.
+
 ## Copyright
 
 Copyright (c) Jitse Boonstra 2018 All rights reserved.
