@@ -6,6 +6,12 @@ NPCLib – Basic non-player character library.<br>
 This is an API made specifically for spigot servers (Minecraft).
 Current versions supported: 1.8 - 1.12.
 
+## Donate
+
+[![paypal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)
+
+Alternatively, you can help the project by starring the repository or telling others about NPCLib :smile:
+
 ## Usage
 
 ```Java
