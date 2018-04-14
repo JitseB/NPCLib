@@ -1,14 +1,14 @@
 NPCLib – Basic non-player character library.<br>
 [![Release](https://jitpack.io/v/JitseB/npclib.svg)](https://github.com/JitseB/npclib/releases)
-[![JDK](https://img.shields.io/badge/Using-Java%208-red.svg)](http://jdk.java.net/8/)
+[![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
+[![Versions](https://img.shields.io/badge/MC-1.8%20--%201.12-blue.svg)](https://github.com/JitseB/npclib/releases)
 =
 
-This is an API made specifically for spigot servers (Minecraft).
-Current versions supported: 1.8 - 1.12.
+This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.12**.
 
 ## Donate
 
-[![paypal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)
+[![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)
 
 Alternatively, you can help the project by starring the repository or telling others about NPCLib :smile:
 
