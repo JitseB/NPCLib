@@ -10,6 +10,7 @@ import net.jitse.npclib.plugin.listeners.NPCListener;
 import net.jitse.npclib.skin.MineSkinFetcher;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -55,7 +56,10 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
                     "with the simplistic", "API of NPCLib!"
             ));
             npc.create(event.getPlayer().getLocation());
-            npc.show(event.getPlayer());
+
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                npc.show(player);
+            }
         });
     }
 }
