@@ -10,9 +10,10 @@ import net.jitse.npclib.listeners.PlayerLeaveListener;
 import net.jitse.npclib.listeners.PlayerMoveListener;
 import net.jitse.npclib.skin.Skin;
 import net.jitse.npclib.version.Version;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.PluginManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -22,17 +23,19 @@ import java.util.List;
  */
 public class NPCLib {
 
+    private final Server server;
     private final JavaPlugin plugin;
     private final Version version;
 
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
-
-        String versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        this.server = plugin.getServer();
+        
+        String versionName = this.server.getClass().getPackage().getName().split("\\.")[3];
         version = Version.getByName(versionName).orElse(null);
 
         if (version == null) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to initiate. Your server's version ("
+            this.server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to initiate. Your server's version ("
                     + versionName + ") is not supported.");
         }
 
@@ -40,8 +43,10 @@ public class NPCLib {
     }
 
     private void registerInternal() {
-        plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new PlayerLeaveListener(), plugin);
+        PluginManager pluginManager = this.server.getPluginManager();
+        
+        pluginManager.registerEvents(new PlayerMoveListener(), plugin);
+        pluginManager.registerEvents(new PlayerLeaveListener(), plugin);
 
         new PacketListener().start(plugin);
     }
@@ -58,7 +63,7 @@ public class NPCLib {
         try {
             return version.createNPC(plugin, skin, autoHideDistance, lines);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException exception) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
+            this.server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
             exception.printStackTrace();
         }
 

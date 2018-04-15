@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author Jitse Boonstra
  */
-public class NPCManager {
+public final class NPCManager {
 
     private static Set<NPC> npcs = new HashSet<>();
 
@@ -27,4 +27,9 @@ public class NPCManager {
     public static void remove(NPC npc) {
         npcs.remove(npc);
     }
+    
+    private NPCManager() {
+        throw new SecurityException("You cannot initialize this class.");
+    }
+    
 }
