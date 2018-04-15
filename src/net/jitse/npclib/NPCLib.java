@@ -10,10 +10,10 @@ import net.jitse.npclib.listeners.PlayerLeaveListener;
 import net.jitse.npclib.listeners.PlayerMoveListener;
 import net.jitse.npclib.skin.Skin;
 import net.jitse.npclib.version.Version;
-import org.bukkit.Server;
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -30,12 +30,12 @@ public class NPCLib {
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
         this.server = plugin.getServer();
-        
-        String versionName = this.server.getClass().getPackage().getName().split("\\.")[3];
+
+        String versionName = server.getClass().getPackage().getName().split("\\.")[3];
         version = Version.getByName(versionName).orElse(null);
 
         if (version == null) {
-            this.server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to initiate. Your server's version ("
+            server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to initiate. Your server's version ("
                     + versionName + ") is not supported.");
         }
 
@@ -43,8 +43,8 @@ public class NPCLib {
     }
 
     private void registerInternal() {
-        PluginManager pluginManager = this.server.getPluginManager();
-        
+        PluginManager pluginManager = server.getPluginManager();
+
         pluginManager.registerEvents(new PlayerMoveListener(), plugin);
         pluginManager.registerEvents(new PlayerLeaveListener(), plugin);
 
@@ -63,7 +63,7 @@ public class NPCLib {
         try {
             return version.createNPC(plugin, skin, autoHideDistance, lines);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException exception) {
-            this.server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
+            server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
             exception.printStackTrace();
         }
 
