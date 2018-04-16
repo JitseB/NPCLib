@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * @author Jitse Boonstra
@@ -26,23 +27,31 @@ public class PlayerMoveListener implements Listener {
             return;
         }
 
-        Player player = event.getPlayer();
+        handleMove(event.getPlayer());
+    }
 
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        handleMove(event.getPlayer());
+    }
+
+    private void handleMove(Player player) {
         for (NPC npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
-            double distance = player.getLocation().distance(npc.getLocation());
+            double hideDistance = npc.getAutoHideDistance();
+            boolean inRange = player.getLocation().distanceSquared(npc.getLocation()) <= (hideDistance * hideDistance);
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
-                if (distance <= npc.getAutoHideDistance()) {
+                if (inRange) {
                     npc.show(player, true);
                     npc.getAutoHidden().remove(player.getUniqueId());
                 }
             } else {
                 // Check if the player and NPC are out of range to sendHidePackets it.
-                if (distance > npc.getAutoHideDistance()) {
+                if (!inRange) {
                     npc.hide(player, true);
                     npc.getAutoHidden().add(player.getUniqueId());
                 }

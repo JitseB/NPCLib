@@ -11,6 +11,7 @@ import net.jitse.npclib.events.NPCDestroyEvent;
 import net.jitse.npclib.events.NPCSpawnEvent;
 import net.jitse.npclib.events.trigger.TriggerType;
 import net.jitse.npclib.skin.Skin;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,27 +39,27 @@ public abstract class NPC {
     protected Location location;
 
     public NPC(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
-        if (skin == null) {
-            throw new IllegalArgumentException("Skin cannot be null.");
-        }
-
         this.plugin = plugin;
         this.skin = skin;
         this.autoHideDistance = autoHideDistance;
-        this.lines = (lines == null ? new ArrayList<>() : lines);
+        this.lines = (lines == null ? Collections.emptyList() : lines);
 
         NPCManager.add(this);
     }
 
     protected GameProfile generateGameProfile(UUID uuid, String name) {
         GameProfile gameProfile = new GameProfile(uuid, name);
-        gameProfile.getProperties().removeAll("textures");
-        gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+
+        if (skin != null) {
+            gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        }
+
         return gameProfile;
     }
 
     public void destroy() {
         NPCManager.remove(this);
+        shown.stream().filter(u -> !autoHidden.contains(u)).forEach(u -> hide(Bukkit.getPlayer(u), true));
     }
 
     public Set<UUID> getShown() {

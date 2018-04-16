@@ -8,7 +8,6 @@ import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.plugin.listeners.NPCListener;
 import net.jitse.npclib.skin.MineSkinFetcher;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,8 +27,8 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.npcLib = new NPCLib(this);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin enabled.");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " +
+        getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin enabled.");
+        getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " +
                 ChatColor.GRAY + "This is a test plugin usually used for development reasons. " +
                 "You can spawn NPCs by pressing [shift] in game.");
 
@@ -40,7 +39,7 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin disabled.");
+        getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin disabled.");
     }
 
     @EventHandler
@@ -57,7 +56,7 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
             ));
             npc.create(event.getPlayer().getLocation());
 
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : getServer().getOnlinePlayers()) {
                 npc.show(player);
             }
         });
