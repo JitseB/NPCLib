@@ -59,7 +59,15 @@ public abstract class NPC {
 
     public void destroy() {
         NPCManager.remove(this);
-        shown.stream().filter(u -> !autoHidden.contains(u)).forEach(u -> hide(Bukkit.getPlayer(u), true));
+
+        // Destroy NPC for every player that is still seeing it.
+        for (UUID uuid : shown) {
+            if (autoHidden.contains(uuid)) {
+                continue;
+            }
+
+            hide(Bukkit.getPlayer(uuid), true);
+        }
     }
 
     public Set<UUID> getShown() {
