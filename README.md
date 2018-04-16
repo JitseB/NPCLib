@@ -47,6 +47,10 @@ You (the developer) can also contact me if you wish to be added to the list belo
 Plugin(s) using NPCLib:
  - [PremiumHub](https://www.spigotmc.org/resources/premiumhub-a-new-recode-is-soon-here.32110/) (by Vouchs).
 
+## Acknowledgement
+
+We thank all those who have [contributed](https://github.com/JitseB/npclib/graphs/contributors) to the creation of what NPCLib is today.
+
 ## Copyright
 
 Copyright (c) Jitse Boonstra 2018 All rights reserved.
