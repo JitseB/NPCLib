@@ -75,7 +75,7 @@ public class NPC_V1_12_R1 extends NPC {
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-//        playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
+        playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);

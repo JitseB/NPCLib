@@ -1,5 +1,5 @@
 name: NPCLib
-version: 1.0.2
+version: 1.0.4
 author: JitseB
 main: net.jitse.npclib.plugin.NPCLibPlugin
 description: An NPC library.
