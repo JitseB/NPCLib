@@ -5,14 +5,14 @@
 package net.jitse.npclib.version;
 
 import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.nms.v1_10_r1.NPC_V1_10_R1;
-import net.jitse.npclib.nms.v1_11_r1.NPC_V1_11_R1;
-import net.jitse.npclib.nms.v1_12_r1.NPC_V1_12_R1;
-import net.jitse.npclib.nms.v1_8_r1.NPC_V1_8_R1;
-import net.jitse.npclib.nms.v1_8_r2.NPC_V1_8_R2;
-import net.jitse.npclib.nms.v1_8_r3.NPC_V1_8_R3;
-import net.jitse.npclib.nms.v1_9_r1.NPC_V1_9_R1;
-import net.jitse.npclib.nms.v1_9_r2.NPC_V1_9_R2;
+import net.jitse.npclib.nms.v1_10_R1.NPC_V1_10_R1;
+import net.jitse.npclib.nms.v1_11_R1.NPC_V1_11_R1;
+import net.jitse.npclib.nms.v1_12_R1.NPC_V1_12_R1;
+import net.jitse.npclib.nms.v1_8_R1.NPC_V1_8_R1;
+import net.jitse.npclib.nms.v1_8_R2.NPC_V1_8_R2;
+import net.jitse.npclib.nms.v1_8_R3.NPC_V1_8_R3;
+import net.jitse.npclib.nms.v1_9_R1.NPC_V1_9_R1;
+import net.jitse.npclib.nms.v1_9_R2.NPC_V1_9_R2;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;

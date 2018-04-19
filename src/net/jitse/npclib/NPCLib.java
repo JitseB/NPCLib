@@ -40,6 +40,8 @@ public class NPCLib {
                     + versionName + ") is not supported.");
         }
 
+        server.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "Enabled for version " + version.toString() + ".");
+
         registerInternal();
     }
 
@@ -81,5 +83,26 @@ public class NPCLib {
      */
     public NPC createNPC(Skin skin, List<String> lines) {
         return createNPC(skin, 50, lines);
+    }
+
+
+    /**
+     * Create a new non-player character (NPC).
+     *
+     * @param skin The skin you want the NPC to have.
+     * @return The NPC object you may use to sendShowPackets it to players.
+     */
+    public NPC createNPC(Skin skin) {
+        return createNPC(skin, 50, null);
+    }
+
+
+    /**
+     * Create a new non-player character (NPC).
+     *
+     * @return The NPC object you may use to sendShowPackets it to players.
+     */
+    public NPC createNPC() {
+        return createNPC(null, 50, null);
     }
 }
