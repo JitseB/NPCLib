@@ -8,8 +8,10 @@ import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import java.util.UUID;
@@ -37,6 +39,37 @@ public class ChunkListener implements Listener {
                     }
 
                     npc.hide(Bukkit.getPlayer(uuid), true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        Chunk chunk = event.getChunk();
+
+        for (NPC npc : NPCManager.getAllNPCs()) {
+            Chunk npcChunk = npc.getLocation().getChunk();
+
+            if (chunk.getX() == npcChunk.getX() && chunk.getZ() == npcChunk.getZ()) {
+                // Loaded chunk with NPC in it. Showing it to the players again.
+
+                for (UUID uuid : npc.getShown()) {
+                    // Make sure not to respawn a not-hidden NPC.
+                    if (!npc.getAutoHidden().contains(uuid)) {
+                        continue;
+                    }
+
+                    Player player = Bukkit.getPlayer(uuid);
+
+                    double hideDistance = npc.getAutoHideDistance();
+                    double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
+                    boolean inRange = distanceSquared <= (hideDistance * hideDistance) || distanceSquared <= (Bukkit.getViewDistance() << 4);
+
+                    // Show the NPC (if in range).
+                    if (inRange) {
+                        npc.show(Bukkit.getPlayer(uuid), true);
+                    }
                 }
             }
         }
