@@ -8,7 +8,7 @@ This is an API made specifically for spigot servers (Minecraft). Current support
 
 ### Notice
 If any developer out there knows how to convert this project to Maven, please consider contacting me or creating a pull request. I have yet to come up with a good solution for the (older) NMS code repositories. I would love to add a CI system to this repository for easier collaboration.
- 
+
 ## Donate
 
 [![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)

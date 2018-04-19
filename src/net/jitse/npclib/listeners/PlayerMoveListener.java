@@ -6,6 +6,7 @@ package net.jitse.npclib.listeners;
 
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,8 +42,11 @@ public class PlayerMoveListener implements Listener {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
+            // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
+            // This will cause issues otherwise (e.g. custom skin disappearing).
             double hideDistance = npc.getAutoHideDistance();
-            boolean inRange = player.getLocation().distanceSquared(npc.getLocation()) <= (hideDistance * hideDistance);
+            double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
+            boolean inRange = distanceSquared <= (hideDistance * hideDistance) || distanceSquared <= (Bukkit.getViewDistance() << 4);
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
                 if (inRange) {
