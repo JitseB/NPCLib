@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ * Copyright (c) 2018 Jitse Boonstra
  */
 
 package net.jitse.npclib.plugin;

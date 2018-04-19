@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ * Copyright (c) 2018 Jitse Boonstra
  */
 
 package net.jitse.npclib;
@@ -27,9 +27,9 @@ public final class NPCManager {
     public static void remove(NPC npc) {
         npcs.remove(npc);
     }
-    
+
     private NPCManager() {
         throw new SecurityException("You cannot initialize this class.");
     }
-    
+
 }

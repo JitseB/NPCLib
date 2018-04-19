@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Jitse Boonstra 2018 All rights reserved.
+ * Copyright (c) 2018 Jitse Boonstra
  */
 
 package net.jitse.npclib.listeners;
@@ -39,6 +39,7 @@ public class PacketListener {
 
             @Override
             public Object onPacketInAsync(Player player, Channel channel, Object packet) {
+
                 if (packetPlayInUseEntityClazz.isInstance(packet)) {
                     NPC npc = NPCManager.getAllNPCs().stream().filter(
                             check -> check.isActuallyShown(player) && check.getEntityId() == (int) entityIdField.get(packet))

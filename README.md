@@ -43,7 +43,8 @@ Usable events: `NPCSpawnEvent`, `NPCDestroyEvent` and `NPCInteractEvent`.
 
 ## Usage
 
-Developers are only allowed to use NPCLib if they acknowledge the author of NPCLib (JitseB) with a link to this repository in the description of their resource. NPCLib comes without warranty. I (JitseB) cannot be held responsible for any damage. You may open an [issue](https://github.com/JitseB/npclib/issues) if you are experiencing issues with NPCLib.
+NPCLib is licensed under the [MIT license](https://github.com/JitseB/npclib/blob/master/LICENSE.md).
+Developers are free to use NPCLib for both private and commercial use. Though, it would be nice to acknowledge me.
 
 You (the developer) can also contact me if you wish to be added to the list below.
 
