@@ -25,6 +25,8 @@ public class PacketPlayOutScoreboardTeamWrapper {
                 .set(packetPlayOutScoreboardTeam, name);
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "e", String.class)
                 .set(packetPlayOutScoreboardTeam, "never");
+        Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "f", String.class)
+                .set(packetPlayOutScoreboardTeam, "never");
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)
                 .set(packetPlayOutScoreboardTeam, 0);
         Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
