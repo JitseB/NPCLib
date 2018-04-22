@@ -7,8 +7,7 @@ package net.jitse.npclib;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.listeners.ChunkListener;
 import net.jitse.npclib.listeners.PacketListener;
-import net.jitse.npclib.listeners.PlayerLeaveListener;
-import net.jitse.npclib.listeners.PlayerMoveListener;
+import net.jitse.npclib.listeners.PlayerListener;
 import net.jitse.npclib.skin.Skin;
 import net.jitse.npclib.version.Version;
 import org.bukkit.ChatColor;
@@ -48,8 +47,7 @@ public class NPCLib {
     private void registerInternal() {
         PluginManager pluginManager = server.getPluginManager();
 
-        pluginManager.registerEvents(new PlayerMoveListener(), plugin);
-        pluginManager.registerEvents(new PlayerLeaveListener(), plugin);
+        pluginManager.registerEvents(new PlayerListener(), plugin);
         pluginManager.registerEvents(new ChunkListener(), plugin);
 
         new PacketListener().start(plugin);
