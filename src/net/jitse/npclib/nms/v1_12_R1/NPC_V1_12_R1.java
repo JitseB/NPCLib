@@ -82,9 +82,9 @@ public class NPC_V1_12_R1 extends NPC {
 
         hologram.spawn(player);
 
-
+        // Todo: Test this new delay speed (custom skin render issue).
         Bukkit.getScheduler().runTaskLater(plugin, () ->
-                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 5);
+                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 10);
     }
 
     @Override

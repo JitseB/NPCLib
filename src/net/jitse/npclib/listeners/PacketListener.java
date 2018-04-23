@@ -39,6 +39,8 @@ public class PacketListener {
 
             @Override
             public Object onPacketInAsync(Player player, Channel channel, Object packet) {
+                // Todo: Remove this debug message.
+                Bukkit.broadcastMessage("Class:" + packet.getClass().getName());
 
                 if (packetPlayInUseEntityClazz.isInstance(packet)) {
                     NPC npc = NPCManager.getAllNPCs().stream().filter(
