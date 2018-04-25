@@ -51,7 +51,7 @@ public class ChunkListener implements Listener {
         for (NPC npc : NPCManager.getAllNPCs()) {
             Chunk npcChunk = npc.getLocation().getChunk();
 
-            if (chunk == npcChunk) {
+            if (chunk.equals(npcChunk)) {
                 // Loaded chunk with NPC in it. Showing it to the players again.
 
                 for (UUID uuid : npc.getShown()) {
