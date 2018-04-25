@@ -8,9 +8,11 @@ import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -35,6 +37,22 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        World from = event.getFrom();
+
+        // The PlayerTeleportEvent is call, and will handle visiiblity in the new world
+        for (NPC npc : NPCManager.getAllNPCs()) {
+            if (npc.getLocation().getWorld() == from) {
+                if (!npc.getAutoHidden().contains(player.getUniqueId())) {
+                    npc.getAutoHidden().add(player.getUniqueId());
+                    npc.hide(player, true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
@@ -52,9 +70,14 @@ public class PlayerListener implements Listener {
     }
 
     private void handleMove(Player player) {
+        World world = player.getWorld();
         for (NPC npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
+            }
+
+            if (npc.getLocation().getWorld() != world) {
+                continue; // NPC is not in the same world
             }
 
             // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
