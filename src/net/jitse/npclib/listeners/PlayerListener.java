@@ -78,7 +78,7 @@ public class PlayerListener implements Listener {
             }
 
             if (!npc.getLocation().getWorld().equals(world)) {
-                continue; // NPC is not in the same world
+                continue; // NPC is not in the same world.
             }
 
             // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
