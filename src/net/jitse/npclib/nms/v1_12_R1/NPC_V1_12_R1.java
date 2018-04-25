@@ -6,10 +6,7 @@ package net.jitse.npclib.nms.v1_12_R1;
 
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.nms.holograms.Hologram;
-import net.jitse.npclib.nms.v1_12_R1.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_12_R1.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_12_R1.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_12_R1.packets.PacketPlayOutScoreboardTeamWrapper;
+import net.jitse.npclib.nms.v1_12_R1.packets.*;
 import net.jitse.npclib.skin.Skin;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Bukkit;
@@ -99,5 +96,14 @@ public class NPC_V1_12_R1 extends NPC {
         // Sending this a bit later so the player doesn't see the name (for that split second).
         Bukkit.getScheduler().runTaskLater(plugin, () ->
                 playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
+    }
+
+    @Override
+    public void sendTeleportationPackets(Player player) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        PacketPlayOutEntityTeleport packetPlayOutEntityTeleport = new PacketPlayOutEntityTeleportWrapper().create(entityId, location);
+
+        playerConnection.sendPacket(packetPlayOutEntityTeleport);
     }
 }

@@ -162,4 +162,13 @@ public abstract class NPC {
 
     // Internal method.
     protected abstract void sendHidePackets(Player player);
+
+    public void teleport(Player player, Location location) {
+        this.location = location;
+
+        sendTeleportationPackets(player);
+    }
+
+    // Internal method.
+    public abstract void sendTeleportationPackets(Player player);
 }
