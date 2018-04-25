@@ -30,8 +30,8 @@ public class PlayerListener implements Listener {
                 npc.getAutoHidden().remove(player.getUniqueId());
             }
 
-            if (npc.isActuallyShown(player)) {
-                npc.hide(player);
+            if (npc.getShown().contains(player.getUniqueId())) {
+                npc.getShown().remove(player.getUniqueId());
             }
         }
     }

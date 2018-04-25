@@ -150,7 +150,7 @@ public abstract class NPC {
 
             shown.remove(player.getUniqueId());
 
-            if (player.getLocation().distance(location) <= autoHideDistance) {
+            if (player.getWorld() == location.getWorld() && player.getLocation().distance(location) <= autoHideDistance) {
                 sendHidePackets(player);
             } else {
                 if (autoHidden.contains(player.getUniqueId())) {
