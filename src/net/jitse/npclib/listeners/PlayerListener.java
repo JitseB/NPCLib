@@ -14,29 +14,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * @author Jitse Boonstra
  */
 public class PlayerListener implements Listener {
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        for (NPC npc : NPCManager.getAllNPCs()) {
-            if (npc.getAutoHidden().contains(player.getUniqueId())) {
-                npc.getAutoHidden().remove(player.getUniqueId());
-            }
-
-            // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-            if (npc.getShown().contains(player.getUniqueId())) {
-                npc.getShown().remove(player.getUniqueId());
-            }
-        }
-    }
-
+  
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();

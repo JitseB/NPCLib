@@ -39,7 +39,6 @@ public class PacketListener {
 
             @Override
             public Object onPacketInAsync(Player player, Channel channel, Object packet) {
-
                 if (packetPlayInUseEntityClazz.isInstance(packet)) {
                     NPC npc = NPCManager.getAllNPCs().stream().filter(
                             check -> check.isActuallyShown(player) && check.getEntityId() == (int) entityIdField.get(packet))
