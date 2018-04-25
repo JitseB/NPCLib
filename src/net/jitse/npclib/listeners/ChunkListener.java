@@ -63,7 +63,7 @@ public class ChunkListener implements Listener {
                     Player player = Bukkit.getPlayer(uuid);
 
                     if (npcChunk.getWorld() != player.getWorld()) {
-                        continue; // Player and NPC are not in the same world
+                        continue; // Player and NPC are not in the same world.
                     }
 
                     double hideDistance = npc.getAutoHideDistance();

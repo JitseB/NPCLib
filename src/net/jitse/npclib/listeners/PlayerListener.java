@@ -30,6 +30,7 @@ public class PlayerListener implements Listener {
                 npc.getAutoHidden().remove(player.getUniqueId());
             }
 
+            // Don't need to use NPC#hide since the entity is not registered in the NMS server.
             if (npc.getShown().contains(player.getUniqueId())) {
                 npc.getShown().remove(player.getUniqueId());
             }
@@ -41,7 +42,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         World from = event.getFrom();
 
-        // The PlayerTeleportEvent is call, and will handle visiiblity in the new world
+        // The PlayerTeleportEvent is call, and will handle visibility in the new world.
         for (NPC npc : NPCManager.getAllNPCs()) {
             if (npc.getLocation().getWorld() == from) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
