@@ -100,4 +100,9 @@ public class NPC_V1_9_R2 extends NPC {
         Bukkit.getScheduler().runTaskLater(plugin, () ->
                 playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
     }
+
+    @Override
+    public void sendTeleportationPackets(Player player) {
+        // Todo create this method.
+    }
 }

@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class NPCLibPlugin extends JavaPlugin implements Listener {
 
     private NPCLib npcLib;
+    private NPC npc;
 
     @Override
     public void onEnable() {
@@ -31,7 +32,6 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
         getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " +
                 ChatColor.GRAY + "This is a test plugin usually used for development reasons. " +
                 "You can spawn NPCs by pressing [shift] in game.");
-
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new NPCListener(), this);
@@ -48,17 +48,21 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        MineSkinFetcher.fetchSkinFromIdAsync(168841, skin -> {
-            NPC npc = npcLib.createNPC(skin, Arrays.asList(
-                    ChatColor.BOLD + "NPC Library", "",
-                    "Create your own", "non-player characters",
-                    "with the simplistic", "API of NPCLib!"
-            ));
-            npc.create(event.getPlayer().getLocation());
+        if (npc != null) {
+            npc.teleport(event.getPlayer(), event.getPlayer().getLocation());
+        } else {
+            MineSkinFetcher.fetchSkinFromIdAsync(168841, skin -> {
+                npc = npcLib.createNPC(skin, Arrays.asList(
+                        ChatColor.BOLD + "NPC Library", "",
+                        "Create your own", "non-player characters",
+                        "with the simplistic", "API of NPCLib!"
+                ));
+                npc.create(event.getPlayer().getLocation());
 
-            for (Player player : getServer().getOnlinePlayers()) {
-                npc.show(player);
-            }
-        });
+                for (Player player : getServer().getOnlinePlayers()) {
+                    npc.show(player);
+                }
+            });
+        }
     }
 }
