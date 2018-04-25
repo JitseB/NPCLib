@@ -6,6 +6,7 @@ package net.jitse.npclib.nms.holograms;
 
 import com.comphenix.tinyprotocol.Reflection;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -25,49 +26,49 @@ public class Hologram {
     private Set<Object> destroyPackets = new HashSet<>();
 
     // Classes:
-    private final Class<?> entityArmorStandClazz = Reflection.getMinecraftClass("EntityArmorStand");
-    private final Class<?> entityLivingClazz = Reflection.getMinecraftClass("EntityLiving");
-    private final Class<?> entityClazz = Reflection.getMinecraftClass("Entity");
-    private final Class<?> craftWorldClazz = Reflection.getCraftBukkitClass("CraftWorld");
-    private final Class<?> craftPlayerClazz = Reflection.getCraftBukkitClass("entity.CraftPlayer");
-    private final Class<?> packetPlayOutSpawnEntityLivingClazz = Reflection.getMinecraftClass(
+    private static final Class<?> ENTITY_ARMOR_STAND_CLAZZ = Reflection.getMinecraftClass("EntityArmorStand");
+    private static final Class<?> ENTITY_LIVING_CLAZZ = Reflection.getMinecraftClass("EntityLiving");
+    private static final Class<?> ENTITY_CLAZZ = Reflection.getMinecraftClass("Entity");
+    private static final Class<?> CRAFT_BUKKIT_CLASS = Reflection.getCraftBukkitClass("CraftWorld");
+    private static final Class<?> CRAFT_PLAYER_CLAZZ = Reflection.getCraftBukkitClass("entity.CraftPlayer");
+    private static final Class<?> PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CLAZZ = Reflection.getMinecraftClass(
             "PacketPlayOutSpawnEntityLiving");
-    private final Class<?> packetPlayOutEntityDestroyClazz = Reflection.getMinecraftClass(
+    private static final Class<?> PACKET_PLAY_OUT_ENTITY_DESTROY_CLAZZ = Reflection.getMinecraftClass(
             "PacketPlayOutEntityDestroy");
-    private final Class<?> entityPlayerClazz = Reflection.getMinecraftClass("EntityPlayer");
-    private final Class<?> playerConnectionClazz = Reflection.getMinecraftClass("PlayerConnection");
-    private final Class<?> packetClazz = Reflection.getMinecraftClass("Packet");
+    private static final Class<?> ENTITY_PLAYER_CLAZZ = Reflection.getMinecraftClass("EntityPlayer");
+    private static final Class<?> PLAYER_CONNECTION_CLAZZ = Reflection.getMinecraftClass("PlayerConnection");
+    private static final Class<?> PACKET_CLAZZ = Reflection.getMinecraftClass("Packet");
 
     // Constructors:
-    private final Reflection.ConstructorInvoker packetPlayOutSpawnEntityLivingConstructor = Reflection
-            .getConstructor(packetPlayOutSpawnEntityLivingClazz, entityLivingClazz);
-    private final Reflection.ConstructorInvoker packetPlayOutEntityDestroyConstructor = Reflection
-            .getConstructor(packetPlayOutEntityDestroyClazz, int[].class);
+    private static final Reflection.ConstructorInvoker PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CONSTRUCTOR = Reflection
+            .getConstructor(PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CLAZZ, ENTITY_LIVING_CLAZZ);
+    private static final Reflection.ConstructorInvoker PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR = Reflection
+            .getConstructor(PACKET_PLAY_OUT_ENTITY_DESTROY_CLAZZ, int[].class);
 
     // Fields:
-    private final Reflection.FieldAccessor playerConnectionField = Reflection.getField(entityPlayerClazz,
-            "playerConnection", playerConnectionClazz);
+    private static final Reflection.FieldAccessor playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
+            "playerConnection", PLAYER_CONNECTION_CLAZZ);
 
     // Methods:
-    private final Reflection.MethodInvoker setLocationMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_LOCATION_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setLocation", double.class, double.class, double.class, float.class, float.class);
-    private final Reflection.MethodInvoker setCustomNameMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_CUSTOM_NAME_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setCustomName", String.class);
-    private final Reflection.MethodInvoker setCustomNameVisibleMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_CUSTOM_NAME_VISIBLE_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setCustomNameVisible", boolean.class);
-    private final Reflection.MethodInvoker setSmallMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_SMALL_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setSmall", boolean.class);
-    private final Reflection.MethodInvoker setInvisibleMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_INVISIBLE_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setInvisible", boolean.class);
-    private final Reflection.MethodInvoker setBasePlateMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_BASE_PLATE_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setBasePlate", boolean.class);
-    private final Reflection.MethodInvoker setArmsMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SET_ARMS_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setArms", boolean.class);
-    private final Reflection.MethodInvoker playerGetHandleMethod = Reflection.getMethod(craftPlayerClazz,
+    private static final Reflection.MethodInvoker PLAYER_GET_HANDLE_METHOD = Reflection.getMethod(CRAFT_PLAYER_CLAZZ,
             "getHandle");
-    private final Reflection.MethodInvoker sendPacketMethod = Reflection.getMethod(playerConnectionClazz,
-            "sendPacket", packetClazz);
-    private final Reflection.MethodInvoker getIdMethod = Reflection.getMethod(entityArmorStandClazz,
+    private static final Reflection.MethodInvoker SEND_PACKET_METHOD = Reflection.getMethod(PLAYER_CONNECTION_CLAZZ,
+            "sendPacket", PACKET_CLAZZ);
+    private static final Reflection.MethodInvoker GET_ID_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "getId");
 
     private final Location start;
@@ -78,32 +79,37 @@ public class Hologram {
         this.start = location;
         this.lines = lines;
 
-        this.worldServer = Reflection.getMethod(craftWorldClazz, "getHandle")
-                .invoke(craftWorldClazz.cast(location.getWorld()));
+        this.worldServer = Reflection.getMethod(CRAFT_BUKKIT_CLASS, "getHandle")
+                .invoke(CRAFT_BUKKIT_CLASS.cast(location.getWorld()));
 
     }
 
     public void generatePackets(boolean above1_9_r2) {
-        Reflection.MethodInvoker gravityMethod = (above1_9_r2 ? Reflection.getMethod(entityClazz,
-                "setNoGravity", boolean.class) : Reflection.getMethod(entityArmorStandClazz,
+        Reflection.MethodInvoker gravityMethod = (above1_9_r2 ? Reflection.getMethod(ENTITY_CLAZZ,
+                "setNoGravity", boolean.class) : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
                 "setGravity", boolean.class));
 
         Location location = start.clone().add(0, delta * lines.size(), 0);
+        Class<?> worldClass = worldServer.getClass().getSuperclass();
+
+        if (start.getWorld().getEnvironment() != World.Environment.NORMAL) {
+            worldClass = worldClass.getSuperclass();
+        }
 
         Reflection.ConstructorInvoker entityArmorStandConstructor = Reflection
-                .getConstructor(entityArmorStandClazz, worldServer.getClass().getSuperclass());
+                .getConstructor(ENTITY_ARMOR_STAND_CLAZZ, worldClass);
 
         for (String line : lines) {
             Object entityArmorStand = entityArmorStandConstructor.invoke(worldServer);
 
-            setLocationMethod.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
-            setCustomNameMethod.invoke(entityArmorStand, line);
-            setCustomNameVisibleMethod.invoke(entityArmorStand, true);
-            gravityMethod.invoke(entityArmorStand, (above1_9_r2 ? true : false));
-            setSmallMethod.invoke(entityArmorStand, true);
-            setInvisibleMethod.invoke(entityArmorStand, true);
-            setBasePlateMethod.invoke(entityArmorStand, false);
-            setArmsMethod.invoke(entityArmorStand, false);
+            SET_LOCATION_METHOD.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
+            SET_CUSTOM_NAME_METHOD.invoke(entityArmorStand, line);
+            SET_CUSTOM_NAME_VISIBLE_METHOD.invoke(entityArmorStand, true);
+            gravityMethod.invoke(entityArmorStand, above1_9_r2);
+            SET_SMALL_METHOD.invoke(entityArmorStand, true);
+            SET_INVISIBLE_METHOD.invoke(entityArmorStand, true);
+            SET_BASE_PLATE_METHOD.invoke(entityArmorStand, false);
+            SET_ARMS_METHOD.invoke(entityArmorStand, false);
 
             location.subtract(0, delta, 0);
 
@@ -113,30 +119,30 @@ public class Hologram {
 
             armorStands.add(entityArmorStand);
 
-            Object spawnPacket = packetPlayOutSpawnEntityLivingConstructor.invoke(entityArmorStand);
+            Object spawnPacket = PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CONSTRUCTOR.invoke(entityArmorStand);
             spawnPackets.add(spawnPacket);
 
-            Object destroyPacket = packetPlayOutEntityDestroyConstructor
-                    .invoke(new int[]{(int) getIdMethod.invoke(entityArmorStand)});
+            Object destroyPacket = PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR
+                    .invoke(new int[]{(int) GET_ID_METHOD.invoke(entityArmorStand)});
             destroyPackets.add(destroyPacket);
         }
     }
 
     public void spawn(Player player) {
-        Object playerConnection = playerConnectionField.get(playerGetHandleMethod
-                .invoke(craftPlayerClazz.cast(player)));
+        Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
+                .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
 
         for (Object packet : spawnPackets) {
-            sendPacketMethod.invoke(playerConnection, packet);
+            SEND_PACKET_METHOD.invoke(playerConnection, packet);
         }
     }
 
     public void destroy(Player player) {
-        Object playerConnection = playerConnectionField.get(playerGetHandleMethod
-                .invoke(craftPlayerClazz.cast(player)));
+        Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
+                .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
 
         for (Object packet : destroyPackets) {
-            sendPacketMethod.invoke(playerConnection, packet);
+            SEND_PACKET_METHOD.invoke(playerConnection, packet);
         }
     }
 }
