@@ -28,7 +28,7 @@ public class ChunkListener implements Listener {
         for (NPC npc : NPCManager.getAllNPCs()) {
             Chunk npcChunk = npc.getLocation().getChunk();
 
-            if (chunk.getX() == npcChunk.getX() && chunk.getZ() == npcChunk.getZ()) {
+            if (chunk.equals(npcChunk)) {
                 // Unloaded chunk with NPC in it. Hiding it from all players currently shown to.
 
                 for (UUID uuid : npc.getShown()) {
@@ -51,7 +51,7 @@ public class ChunkListener implements Listener {
         for (NPC npc : NPCManager.getAllNPCs()) {
             Chunk npcChunk = npc.getLocation().getChunk();
 
-            if (chunk.getX() == npcChunk.getX() && chunk.getZ() == npcChunk.getZ()) {
+            if (chunk.equals(npcChunk)) {
                 // Loaded chunk with NPC in it. Showing it to the players again.
 
                 for (UUID uuid : npc.getShown()) {
@@ -61,6 +61,10 @@ public class ChunkListener implements Listener {
                     }
 
                     Player player = Bukkit.getPlayer(uuid);
+
+                    if (!npcChunk.getWorld().equals(player.getWorld())) {
+                        continue; // Player and NPC are not in the same world.
+                    }
 
                     double hideDistance = npc.getAutoHideDistance();
                     double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
