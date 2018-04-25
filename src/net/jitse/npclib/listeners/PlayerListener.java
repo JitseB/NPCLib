@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
 
         // The PlayerTeleportEvent is call, and will handle visibility in the new world.
         for (NPC npc : NPCManager.getAllNPCs()) {
-            if (npc.getLocation().getWorld() == from) {
+            if (npc.getLocation().getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
                     npc.hide(player, true);
@@ -77,7 +77,7 @@ public class PlayerListener implements Listener {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
-            if (npc.getLocation().getWorld() != world) {
+            if (!npc.getLocation().getWorld().equals(world)) {
                 continue; // NPC is not in the same world
             }
 
