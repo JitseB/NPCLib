@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.listeners;
+package net.jitse.npclib.listeners.world;
 
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;

@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.listeners;
+package net.jitse.npclib.listeners.packet;
 
 import com.comphenix.tinyprotocol.Reflection;
 import com.comphenix.tinyprotocol.TinyProtocol;
