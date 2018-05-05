@@ -18,7 +18,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 
 ## Usage
 
-It is recommended to shade NPCLib into your plugin.
+It is recommended to shade `NPCLib-API-v*` into your plugin.
 
 ```Java
     // First we define our (global) library variable.

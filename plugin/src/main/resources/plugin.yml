@@ -1,5 +1,5 @@
 name: NPCLib
-version: 1.0.4
+version: ${project.parent.version}
 author: JitseB
 main: net.jitse.npclib.plugin.NPCLibPlugin
-description: An NPC library.
+description: Basic non-player character library.

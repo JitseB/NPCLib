@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.jitse</groupId>
         <artifactId>npclib</artifactId>
-        <version>1.0.4</version>
+        <version>1.1</version>
     </parent>
 
     <artifactId>npclib-api</artifactId>
@@ -68,4 +68,9 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+        <finalName>NPCLib-API-v${project.parent.version}</finalName>
+    </build>
 </project>
