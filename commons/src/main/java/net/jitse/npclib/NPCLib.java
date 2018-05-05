@@ -26,6 +26,10 @@ public class NPCLib {
     private final Class<?> npcClass;
 
     public NPCLib(JavaPlugin plugin) {
+        this(plugin, true);
+    }
+
+    public NPCLib(JavaPlugin plugin, boolean message) {
         this.plugin = plugin;
         this.server = plugin.getServer();
 
@@ -35,8 +39,8 @@ public class NPCLib {
 
         try {
             npcClass = Class.forName("net.jitse.npclib.nms." + versionName + ".NPC_" + versionName);
-        } catch (ClassNotFoundException e) {
-            // Version not supported, error below
+        } catch (ClassNotFoundException exception) {
+            // Version not supported, error below.
         }
 
         this.npcClass = npcClass;
@@ -47,7 +51,9 @@ public class NPCLib {
             return;
         }
 
-        server.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "Enabled for version " + versionName + ".");
+        if (message) {
+            server.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "Enabled for version " + versionName + ".");
+        }
 
         registerInternal();
     }

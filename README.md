@@ -10,16 +10,15 @@ This is an API made specifically for spigot servers (Minecraft). Current support
 **Thread**: https://www.spigotmc.org/threads/npclib-–-basic-non-player-character-library.314460/  
 **Preview**: https://youtu.be/LqwdqIxPIvE
 
-### Notice
-If any developer out there knows how to convert this project to Maven, please consider contacting me or creating a pull request. I have yet to come up with a good solution for the (older) NMS code repositories. I would love to add a CI system to this repository for easier collaboration.
-
 ## Donate
 
 [![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)
 
 Alternatively, you can help the project by starring the repository or telling others about NPCLib :smile:
 
-## Code Example
+## Usage
+
+It is recommended to shade NPCLib into your plugin.
 
 ```Java
     // First we define our (global) library variable.
@@ -45,7 +44,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 
 Usable events: `NPCSpawnEvent`, `NPCDestroyEvent` and `NPCInteractEvent`.
 
-## Usage
+## License and plugins using NPCLib
 
 NPCLib is licensed under the [MIT license](https://github.com/JitseB/npclib/blob/master/LICENSE.md).
 Developers are free to use NPCLib for both private and commercial use. Though, it would be nice to acknowledge me.
