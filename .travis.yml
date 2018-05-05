@@ -2,13 +2,14 @@ language: java
 install:
     - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 script:
-    - java -jar BuildTools.jar --rev 1.8
-    - java -jar BuildTools.jar --rev 1.8.3
-    - java -jar BuildTools.jar --rev 1.8.8
-    - java -jar BuildTools.jar --rev 1.9
-    - java -jar BuildTools.jar --rev 1.9.4
-    - java -jar BuildTools.jar --rev 1.10.2
-    - java -jar BuildTools.jar --rev 1.11.2
-    - java -jar BuildTools.jar --rev 1.12.2
-    - mvn clean install
+    # Todo: Figure out how to decrease the time this process takes.
+    - java -jar BuildTools.jar --rev 1.8 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.8.3 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.8.8 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.9 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.9.4 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.10.2 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.11.2 2>&1 >/dev/null
+    - java -jar BuildTools.jar --rev 1.12.2 2>&1 >/dev/null
     - cd api && mvn clean install
+    - cd .. && mvn clean install
