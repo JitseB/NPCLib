@@ -1,0 +1,14 @@
+language: java
+install:
+    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+script:
+    - java -jar BuildTools.jar --rev 1.8
+    - java -jar BuildTools.jar --rev 1.8.3
+    - java -jar BuildTools.jar --rev 1.8.8
+    - java -jar BuildTools.jar --rev 1.9
+    - java -jar BuildTools.jar --rev 1.9.4
+    - java -jar BuildTools.jar --rev 1.10.2
+    - java -jar BuildTools.jar --rev 1.11.2
+    - java -jar BuildTools.jar --rev 1.12.2
+    - mvn clean install
+    - cd api && mvn clean install
