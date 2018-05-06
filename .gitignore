@@ -1,10 +1,10 @@
 # Eclipse
 .classpath
 .project
-.settings/
+.settings
 
 # IntelliJ
-.idea/
+.idea
 *.iml
 *.iws
 out
@@ -13,6 +13,7 @@ out
 .DS_Store
 
 # Maven
-log/
-target/
+log
+target
 dependency-reduced-pom.xml
+jars
