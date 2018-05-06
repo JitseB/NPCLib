@@ -1,7 +1,7 @@
 language: java
 cache:
   directories:
-    - $HOME/.m2
+    - $HOME/.m2/repository/org/spigotmc/spigot
 install:
     - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
     - ls $HOME/.m2/repository/org/spigotmc/spigot/1.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8 >> /dev/null 2>&1
