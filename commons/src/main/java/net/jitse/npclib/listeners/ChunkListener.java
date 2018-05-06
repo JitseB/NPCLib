@@ -38,7 +38,7 @@ public class ChunkListener implements Listener {
                         continue;
                     }
 
-                    npc.hide(Bukkit.getPlayer(uuid), true);
+                    npc.hide(Bukkit.getPlayer(uuid), true, true);
                 }
             }
         }

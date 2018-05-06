@@ -47,7 +47,7 @@ public class PlayerListener implements Listener {
             if (npc.getLocation().getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
+                    npc.hide(player, true, false);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class PlayerListener implements Listener {
             } else {
                 // Check if the player and NPC are out of range to sendHidePackets it.
                 if (!inRange) {
-                    npc.hide(player, true);
+                    npc.hide(player, true, true);
                     npc.getAutoHidden().add(player.getUniqueId());
                 }
             }

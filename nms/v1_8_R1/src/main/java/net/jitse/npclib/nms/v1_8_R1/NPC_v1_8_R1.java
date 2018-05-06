@@ -87,7 +87,7 @@ public class NPC_v1_8_R1 extends NPC {
     }
 
     @Override
-    public void sendHidePackets(Player player) {
+    public void sendHidePackets(Player player, boolean scheduler) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
@@ -95,8 +95,12 @@ public class NPC_v1_8_R1 extends NPC {
 
         hologram.destroy(player);
 
-        // Sending this a bit later so the player doesn't see the name (for that split second).
-        Bukkit.getScheduler().runTaskLater(plugin, () ->
-                playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
+        if (scheduler) {
+            // Sending this a bit later so the player doesn't see the name (for that split second).
+            Bukkit.getScheduler().runTaskLater(plugin, () ->
+                    playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
+        } else {
+            playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister);
+        }
     }
 }

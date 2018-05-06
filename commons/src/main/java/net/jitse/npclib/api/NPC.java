@@ -57,7 +57,12 @@ public abstract class NPC {
         return gameProfile;
     }
 
+
     public void destroy() {
+        destroy(true);
+    }
+
+    public void destroy(boolean scheduler) {
         NPCManager.remove(this);
 
         // Destroy NPC for every player that is still seeing it.
@@ -66,7 +71,7 @@ public abstract class NPC {
                 continue;
             }
 
-            hide(Bukkit.getPlayer(uuid), true);
+            hide(Bukkit.getPlayer(uuid), true, scheduler);
         }
     }
 
@@ -131,10 +136,10 @@ public abstract class NPC {
     protected abstract void sendShowPackets(Player player);
 
     public void hide(Player player) {
-        hide(player, false);
+        hide(player, false, true);
     }
 
-    public void hide(Player player, boolean auto) {
+    public void hide(Player player, boolean auto, boolean scheduler) {
         NPCDestroyEvent event = new NPCDestroyEvent(this, player, auto ? TriggerType.AUTOMATIC : TriggerType.MANUAL);
         plugin.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
@@ -142,7 +147,7 @@ public abstract class NPC {
         }
 
         if (auto) {
-            sendHidePackets(player);
+            sendHidePackets(player, scheduler);
         } else {
             if (!shown.contains(player.getUniqueId())) {
                 throw new RuntimeException("Cannot call hide method without calling NPC#show.");
@@ -151,7 +156,7 @@ public abstract class NPC {
             shown.remove(player.getUniqueId());
 
             if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location) <= autoHideDistance) {
-                sendHidePackets(player);
+                sendHidePackets(player, scheduler);
             } else {
                 if (autoHidden.contains(player.getUniqueId())) {
                     autoHidden.remove(player.getUniqueId());
@@ -161,5 +166,5 @@ public abstract class NPC {
     }
 
     // Internal method.
-    protected abstract void sendHidePackets(Player player);
+    protected abstract void sendHidePackets(Player player, boolean scheduler);
 }
