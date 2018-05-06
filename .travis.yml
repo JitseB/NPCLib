@@ -1,8 +1,9 @@
 language: java
+cache:
+  directories:
+    - $HOME/.m2
 install:
     - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-script:
-    # Todo: Figure out how to decrease the time this process takes.
     - java -jar BuildTools.jar --rev 1.8 2>&1 >/dev/null
     - java -jar BuildTools.jar --rev 1.8.3 2>&1 >/dev/null
     - java -jar BuildTools.jar --rev 1.8.8 2>&1 >/dev/null
@@ -11,5 +12,6 @@ script:
     - java -jar BuildTools.jar --rev 1.10.2 2>&1 >/dev/null
     - java -jar BuildTools.jar --rev 1.11.2 2>&1 >/dev/null
     - java -jar BuildTools.jar --rev 1.12.2 2>&1 >/dev/null
+script:
+    - mvn clean install
     - cd api && mvn clean install
-    - cd .. && mvn clean install
