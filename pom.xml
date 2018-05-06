@@ -73,6 +73,7 @@
     <modules>
         <module>commons</module>
         <module>nms</module>
+        <module>api</module>
         <module>plugin</module>
     </modules>
 </project>
