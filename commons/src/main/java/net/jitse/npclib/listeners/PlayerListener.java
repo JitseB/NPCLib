@@ -58,9 +58,9 @@ public class PlayerListener implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
-            return;
-        }
+//        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
+//            return;
+//        }
 
         handleMove(event.getPlayer());
     }
@@ -89,14 +89,14 @@ public class PlayerListener implements Listener {
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
                 if (inRange) {
-                    npc.show(player, true);
                     npc.getAutoHidden().remove(player.getUniqueId());
+                    npc.show(player, true);
                 }
             } else {
                 // Check if the player and NPC are out of range to sendHidePackets it.
                 if (!inRange) {
-                    npc.hide(player, true, true);
                     npc.getAutoHidden().add(player.getUniqueId());
+                    npc.hide(player, true, true);
                 }
             }
         }

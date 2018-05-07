@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -113,6 +114,17 @@ public abstract class NPC {
             return;
         }
 
+        if (!canSeeNPC(player)) {
+            if (!auto) {
+                shown.add(player.getUniqueId());
+            }
+
+            if (!autoHidden.contains(player.getUniqueId())) {
+                autoHidden.add(player.getUniqueId());
+            }
+            return;
+        }
+
         if (auto) {
             sendShowPackets(player);
         } else {
@@ -130,6 +142,15 @@ public abstract class NPC {
                 }
             }
         }
+    }
+
+    public boolean canSeeNPC(Player player) {
+        Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
+        double dot = dir.dot(player.getLocation().getDirection());
+        Bukkit.broadcastMessage("dot: " + dot);
+        // 0.5 equals a FOV of 60 deg (but should be 0.55)
+        // We want to spawn the NPC *just* before the player can see it.
+        return dot >= 0.5;
     }
 
     // Internal method.

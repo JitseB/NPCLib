@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class NPCLibPlugin extends JavaPlugin implements Listener {
 
     private NPCLib npcLib;
+    private NPC npc;
 
     @Override
     public void onEnable() {
@@ -48,17 +49,25 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        MineSkinFetcher.fetchSkinFromIdAsync(168841, skin -> {
-            NPC npc = npcLib.createNPC(skin, Arrays.asList(
-                    ChatColor.BOLD + "NPC Library", "",
-                    "Create your own", "non-player characters",
-                    "with the simplistic", "API of NPCLib!"
-            ));
-            npc.create(event.getPlayer().getLocation());
-
-            for (Player player : getServer().getOnlinePlayers()) {
-                npc.show(player);
+        if (npc != null) {
+            if (npc.isActuallyShown(event.getPlayer())) {
+                npc.hide(event.getPlayer());
+            } else {
+                npc.show(event.getPlayer());
             }
-        });
+        } else {
+            MineSkinFetcher.fetchSkinFromIdAsync(168841, skin -> {
+                npc = npcLib.createNPC(skin, Arrays.asList(
+                        ChatColor.BOLD + "NPC Library", "",
+                        "Create your own", "non-player characters",
+                        "with the simplistic", "API of NPCLib!"
+                ));
+                npc.create(event.getPlayer().getLocation());
+
+                for (Player player : getServer().getOnlinePlayers()) {
+                    npc.show(player);
+                }
+            });
+        }
     }
 }
