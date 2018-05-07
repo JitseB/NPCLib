@@ -147,7 +147,7 @@ public abstract class NPC {
     public boolean canSeeNPC(Player player) {
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
         double dot = dir.dot(player.getLocation().getDirection());
-        Bukkit.broadcastMessage("dot: " + dot);
+
         // 0.5 equals a FOV of 60 deg (but should be 0.55)
         // We want to spawn the NPC *just* before the player can see it.
         return dot >= 0.5;
