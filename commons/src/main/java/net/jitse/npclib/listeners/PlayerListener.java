@@ -7,7 +7,6 @@ package net.jitse.npclib.listeners;
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,13 +54,6 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        Location from = event.getFrom();
-        Location to = event.getTo();
-
-//        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
-//            return;
-//        }
-
         handleMove(event.getPlayer());
     }
 

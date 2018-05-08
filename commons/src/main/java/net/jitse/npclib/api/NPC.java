@@ -28,6 +28,8 @@ public abstract class NPC {
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     protected final int entityId = (int) Math.ceil(Math.random() * 100000) + 100000;
 
+    protected double cosFOV = Math.cos(Math.toRadians(60));
+
     private final Set<UUID> shown = new HashSet<>();
     private final Set<UUID> autoHidden = new HashSet<>();
 
@@ -74,6 +76,14 @@ public abstract class NPC {
 
             hide(Bukkit.getPlayer(uuid), true, scheduler);
         }
+    }
+
+    public void disableFOV() {
+        this.cosFOV = 0; // Or equals Math.cos(1/2 * Math.PI).
+    }
+
+    public void setFOV(double fov) {
+        this.cosFOV = Math.cos(Math.toRadians(60));
     }
 
     public Set<UUID> getShown() {
@@ -128,8 +138,12 @@ public abstract class NPC {
         if (auto) {
             sendShowPackets(player);
         } else {
-            if (shown.contains(player.getUniqueId())) {
+            if (isActuallyShown(player)) {
                 throw new RuntimeException("Cannot call show method twice.");
+            }
+
+            if (shown.contains(player.getUniqueId())) {
+                return;
             }
 
             shown.add(player.getUniqueId());
@@ -144,13 +158,10 @@ public abstract class NPC {
         }
     }
 
-    public boolean canSeeNPC(Player player) {
+    private boolean canSeeNPC(Player player) {
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
         double dot = dir.dot(player.getLocation().getDirection());
-
-        // 0.5 equals a FOV of 60 deg (but should be 0.55)
-        // We want to spawn the NPC *just* before the player can see it.
-        return dot >= 0.5;
+        return dot >= cosFOV;
     }
 
     // Internal method.

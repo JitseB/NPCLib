@@ -40,6 +40,10 @@ public class NPCLibPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if (npc != null) {
+            npc.destroy(false);
+        }
+
         getServer().getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "plugin disabled.");
     }
 
