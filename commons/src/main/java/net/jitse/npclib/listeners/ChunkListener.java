@@ -72,7 +72,7 @@ public class ChunkListener implements Listener {
 
                     // Show the NPC (if in range).
                     if (inRange) {
-                        npc.show(Bukkit.getPlayer(uuid), true);
+                        npc.show(player, true);
                     }
                 }
             }
