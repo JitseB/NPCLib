@@ -61,11 +61,11 @@ public class PacketListener {
 
                     UUID uuid = player.getUniqueId();
                     delay.add(uuid);
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> delay.remove(uuid), 1);
+                    Bukkit.getScheduler().runTask(plugin, () -> delay.remove(uuid));
                     return null;
-                } else {
-                    return super.onPacketInAsync(player, channel, packet);
                 }
+
+                return super.onPacketInAsync(player, channel, packet);
             }
         };
     }
