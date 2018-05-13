@@ -13,7 +13,6 @@ import net.jitse.npclib.nms.v1_8_R1.packets.PacketPlayOutScoreboardTeamWrapper;
 import net.jitse.npclib.skin.Skin;
 import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,9 +36,7 @@ public class NPC_v1_8_R1 extends NPC {
     }
 
     @Override
-    public void create(Location location) {
-        this.location = location;
-
+    public void createPackets() {
         this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
         hologram.generatePackets(false);
 

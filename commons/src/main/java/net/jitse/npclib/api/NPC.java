@@ -22,11 +22,12 @@ import java.util.*;
 /**
  * @author Jitse Boonstra
  */
-public abstract class NPC {
+public abstract class NPC implements PacketHandler {
 
     protected final UUID uuid = UUID.randomUUID();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
-    protected final int entityId = (int) Math.ceil(Math.random() * 100000) + 100000;
+    // Below was previously = (int) Math.ceil(Math.random() * 100000) + 100000 (new is experimental).
+    protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
 
@@ -45,7 +46,7 @@ public abstract class NPC {
         this.plugin = plugin;
         this.skin = skin;
         this.autoHideDistance = autoHideDistance;
-        this.lines = (lines == null ? Collections.emptyList() : lines);
+        this.lines = lines == null ? Collections.emptyList() : lines;
 
         NPCManager.add(this);
     }
@@ -110,8 +111,11 @@ public abstract class NPC {
         return shown.contains(player.getUniqueId()) && !autoHidden.contains(player.getUniqueId());
     }
 
-    // Generate packets.
-    public abstract void create(Location location);
+    public void create(Location location) {
+        this.location = location;
+
+        createPackets();
+    }
 
     public void show(Player player) {
         show(player, false);
@@ -160,12 +164,8 @@ public abstract class NPC {
 
     private boolean canSeeNPC(Player player) {
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
-        double dot = dir.dot(player.getLocation().getDirection());
-        return dot >= cosFOV;
+        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
     }
-
-    // Internal method.
-    protected abstract void sendShowPackets(Player player);
 
     public void hide(Player player) {
         hide(player, false, true);
@@ -196,7 +196,4 @@ public abstract class NPC {
             }
         }
     }
-
-    // Internal method.
-    protected abstract void sendHidePackets(Player player, boolean scheduler);
 }
