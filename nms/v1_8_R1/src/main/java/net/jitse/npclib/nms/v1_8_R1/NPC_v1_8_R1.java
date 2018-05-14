@@ -80,7 +80,7 @@ public class NPC_v1_8_R1 extends NPC {
         hologram.spawn(player);
 
         Bukkit.getScheduler().runTaskLater(plugin, () ->
-                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 5);
+                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
     }
 
     @Override
