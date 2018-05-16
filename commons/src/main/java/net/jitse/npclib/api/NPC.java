@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * @author Jitse Boonstra
  */
-public abstract class NPC implements PacketHandler {
+public abstract class NPC implements PacketHandler, ActionHandler {
 
     protected final UUID uuid = UUID.randomUUID();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
