@@ -1,8 +1,8 @@
 NPCLib – Basic non-player character library.<br>
-[![Release](https://jitpack.io/v/JitseB/npclib.svg)](https://github.com/JitseB/npclib/releases)
-[![Build Status](https://travis-ci.org/JitseB/npclib.svg?branch=master)](https://travis-ci.org/JitseB/npclib)
+[![Release](https://jitpack.io/v/JitseB/NPCLib.svg)](https://github.com/JitseB/NPCLib/releases)
+[![Build Status](https://travis-ci.org/JitseB/NPCLib.svg?branch=master)](https://travis-ci.org/JitseB/NPCLib)
 [![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
-[![Versions](https://img.shields.io/badge/MC-1.8%20--%201.12-blue.svg)](https://github.com/JitseB/npclib/releases)
+[![Versions](https://img.shields.io/badge/MC-1.8%20--%201.12-blue.svg)](https://github.com/JitseB/NPCLib/releases)
 =
 
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.12**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
@@ -21,7 +21,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 
 It is recommended to shade `NPCLib-API-v*.jar` into your plugin.
 
-You can download the latest release [here](https://github.com/JitseB/npclib/releases/latest).
+You can download the latest release [here](https://github.com/JitseB/NPCLib/releases/latest).
 
 ```Java
     // First we define our (global) library variable.
@@ -49,7 +49,7 @@ Usable events: `NPCSpawnEvent`, `NPCDestroyEvent` and `NPCInteractEvent`.
 
 ## License and plugins using NPCLib
 
-NPCLib is licensed under the [MIT license](https://github.com/JitseB/npclib/blob/master/LICENSE.md).
+NPCLib is licensed under the [MIT license](https://github.com/JitseB/NPCLib/blob/master/LICENSE.md).
 Developers are free to use NPCLib for both private and commercial use. Though, it would be nice to acknowledge me.
 
 You (the developer) can also contact me if you wish to be added to the list below.
@@ -59,7 +59,7 @@ Plugin(s) using NPCLib:
 
 ## Acknowledgement
 
-We thank all those who have [contributed](https://github.com/JitseB/npclib/graphs/contributors) to the creation of what NPCLib is today.
+We thank all those who have [contributed](https://github.com/JitseB/NPCLib/graphs/contributors) to the creation of what NPCLib is today.
 
 ## Copyright
 
