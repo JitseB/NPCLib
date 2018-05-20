@@ -20,6 +20,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 ## Usage
 
 It is recommended to shade `NPCLib-API-v*.jar` into your plugin.
+Alternatively, you may put `NPCLib-Plugin-v*.jar` under your `plugins` folder. By using this option, you do not need to shade the API JAR anymore. Though, do not forget to add `NPCLib` as a dependency in your `plugin.yml`!
 
 You can download the latest release [here](https://github.com/JitseB/NPCLib/releases/latest).
 
@@ -41,7 +42,7 @@ You can download the latest release [here](https://github.com/JitseB/NPCLib/rele
    npc.show(player);
    npc.hide(player);
 
-   // If you don't use the NPC anymore, destroy the NPC accordingly.
+   // If you do not use the NPC anymore, destroy the NPC accordingly.
    npc.destroy();
 ```
 
