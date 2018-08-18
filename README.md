@@ -2,7 +2,7 @@ NPCLib – Basic non-player character library.<br>
 [![Release](https://jitpack.io/v/JitseB/NPCLib.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Build Status](https://travis-ci.org/JitseB/NPCLib.svg?branch=master)](https://travis-ci.org/JitseB/NPCLib)
 [![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
-[![Versions](https://img.shields.io/badge/MC-1.8%20--%201.12-blue.svg)](https://github.com/JitseB/NPCLib/releases)
+[![Versions](https://img.shields.io/badge/MC-1.8%20--%201.13-blue.svg)](https://github.com/JitseB/NPCLib/releases)
 =
 
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.13**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
