@@ -38,7 +38,7 @@ public class NPC_v1_8_R2 extends NPC {
     @Override
     public void createPackets() {
         this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
-        hologram.generatePackets(false);
+        hologram.generatePackets(false, false);
 
         this.gameProfile = generateGameProfile(uuid, name);
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();

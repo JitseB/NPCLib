@@ -5,8 +5,13 @@
 package net.jitse.npclib.nms.holograms;
 
 import com.comphenix.tinyprotocol.Reflection;
+import net.minecraft.server.v1_13_R1.EntityArmorStand;
 import org.bukkit.Location;
+import org.bukkit.Nameable;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftArmorStand;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -26,6 +31,8 @@ public class Hologram {
     private Set<Object> destroyPackets = new HashSet<>();
 
     // Classes:
+    private static final Class<?> CHAT_COMPONENT_TEXT_CLAZZ = Reflection.getMinecraftClass("ChatComponentText");
+    private static final Class<?> CHAT_BASE_COMPONENT_CLAZZ = Reflection.getMinecraftClass("IChatBaseComponent");
     private static final Class<?> ENTITY_ARMOR_STAND_CLAZZ = Reflection.getMinecraftClass("EntityArmorStand");
     private static final Class<?> ENTITY_LIVING_CLAZZ = Reflection.getMinecraftClass("EntityLiving");
     private static final Class<?> ENTITY_CLAZZ = Reflection.getMinecraftClass("Entity");
@@ -40,6 +47,8 @@ public class Hologram {
     private static final Class<?> PACKET_CLAZZ = Reflection.getMinecraftClass("Packet");
 
     // Constructors:
+    private static final Reflection.ConstructorInvoker CHAT_COMPONENT_TEXT_CONSTRUCTOR = Reflection
+            .getConstructor(CHAT_COMPONENT_TEXT_CLAZZ, String.class);
     private static final Reflection.ConstructorInvoker PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CONSTRUCTOR = Reflection
             .getConstructor(PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CLAZZ, ENTITY_LIVING_CLAZZ);
     private static final Reflection.ConstructorInvoker PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR = Reflection
@@ -52,10 +61,6 @@ public class Hologram {
     // Methods:
     private static final Reflection.MethodInvoker SET_LOCATION_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setLocation", double.class, double.class, double.class, float.class, float.class);
-    private static final Reflection.MethodInvoker SET_CUSTOM_NAME_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
-            "setCustomName", String.class);
-    private static final Reflection.MethodInvoker SET_CUSTOM_NAME_VISIBLE_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
-            "setCustomNameVisible", boolean.class);
     private static final Reflection.MethodInvoker SET_SMALL_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
             "setSmall", boolean.class);
     private static final Reflection.MethodInvoker SET_INVISIBLE_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
@@ -84,10 +89,18 @@ public class Hologram {
 
     }
 
-    public void generatePackets(boolean above1_9_r2) {
+    public void generatePackets(boolean above1_9_r2, boolean above_1_12_r1) {
         Reflection.MethodInvoker gravityMethod = (above1_9_r2 ? Reflection.getMethod(ENTITY_CLAZZ,
                 "setNoGravity", boolean.class) : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
                 "setGravity", boolean.class));
+
+        Reflection.MethodInvoker customNameMethod = (above_1_12_r1 ? Reflection.getMethod(ENTITY_CLAZZ,
+                "setCustomName", CHAT_BASE_COMPONENT_CLAZZ) : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
+                "setCustomName", String.class));
+
+        Reflection.MethodInvoker customNameVisibilityMethod = (above_1_12_r1 ? Reflection.getMethod(ENTITY_CLAZZ,
+                "setCustomNameVisible", boolean.class) : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ,
+                "setCustomNameVisible", boolean.class));
 
         Location location = start.clone().add(0, delta * lines.size(), 0);
         Class<?> worldClass = worldServer.getClass().getSuperclass();
@@ -103,8 +116,8 @@ public class Hologram {
             Object entityArmorStand = entityArmorStandConstructor.invoke(worldServer);
 
             SET_LOCATION_METHOD.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
-            SET_CUSTOM_NAME_METHOD.invoke(entityArmorStand, line);
-            SET_CUSTOM_NAME_VISIBLE_METHOD.invoke(entityArmorStand, true);
+            customNameMethod.invoke(entityArmorStand, above_1_12_r1 ? CHAT_COMPONENT_TEXT_CONSTRUCTOR.invoke(line) : line);
+            customNameVisibilityMethod.invoke(entityArmorStand, true);
             gravityMethod.invoke(entityArmorStand, above1_9_r2);
             SET_SMALL_METHOD.invoke(entityArmorStand, true);
             SET_INVISIBLE_METHOD.invoke(entityArmorStand, true);
