@@ -43,6 +43,8 @@ public class PacketPlayOutScoreboardTeamWrapper {
 
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "g", int.class)
                 .set(packetPlayOutScoreboardTeam, 1);
+        Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)
+                .set(packetPlayOutScoreboardTeam, 1);
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "a", String.class)
                 .set(packetPlayOutScoreboardTeam, name);
 
