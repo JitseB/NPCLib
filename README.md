@@ -14,7 +14,7 @@ This is an API made specifically for spigot servers (Minecraft). Current support
 
 ## Donate
 
-[![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/JitseB)
+[![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/jitseboonstra)
 
 Alternatively, you can help the project by starring the repository or telling others about NPCLib :smile:
 
