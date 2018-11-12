@@ -11,7 +11,7 @@
     <parent>
         <groupId>net.jitse</groupId>
         <artifactId>npclib-nms</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.2</version>
     </parent>
 
     <artifactId>npclib-nms-v1_13_R1</artifactId>
