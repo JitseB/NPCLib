@@ -5,10 +5,10 @@
 package net.jitse.npclib.nms.v1_13_R2.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
-import net.minecraft.server.v1_13_R1.DataWatcher;
-import net.minecraft.server.v1_13_R1.DataWatcherObject;
-import net.minecraft.server.v1_13_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_13_R1.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_13_R2.DataWatcher;
+import net.minecraft.server.v1_13_R2.DataWatcherObject;
+import net.minecraft.server.v1_13_R2.DataWatcherRegistry;
+import net.minecraft.server.v1_13_R2.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Location;
 
 import java.util.UUID;

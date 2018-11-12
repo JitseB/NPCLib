@@ -6,9 +6,9 @@ package net.jitse.npclib.nms.v1_13_R2.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_13_R1.EnumGamemode;
-import net.minecraft.server.v1_13_R1.IChatBaseComponent;
-import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_13_R2.EnumGamemode;
+import net.minecraft.server.v1_13_R2.IChatBaseComponent;
+import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerInfo;
 import org.bukkit.ChatColor;
 
 import java.util.List;
