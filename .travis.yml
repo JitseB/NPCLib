@@ -1,16 +1,17 @@
 language: java
 cache:
   directories:
-    - $HOME/.m2/
+  - $HOME/.m2/
 install:
-    - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.8.3-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8.3 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.8.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8.8 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.9-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.9 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.9.4-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.9.4 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.10.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.10.2 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.11.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.11.2 >> /dev/null 2>&1
-    - ls $HOME/.m2/repository/org/spigotmc/spigot/1.12.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.12.2 >> /dev/null 2>&1
+- wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.8.3-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8.3 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.8.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8.8 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.9-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.9 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.9.4-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.9.4 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.10.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.10.2 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.11.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.11.2 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.12.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.12.2 >> /dev/null 2>&1
+- ls $HOME/.m2/repository/org/spigotmc/spigot/1.12.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.13.1 >> /dev/null 2>&1
 script:
-    - mvn clean install
+- mvn clean install
