@@ -1,3 +1,4 @@
+![Banner](https://i.imgur.com/WL6QeUA.png)
 NPCLib – Basic non-player character library.<br>
 [![Release](https://jitpack.io/v/JitseB/NPCLib.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Build Status](https://travis-ci.org/JitseB/NPCLib.svg?branch=master)](https://travis-ci.org/JitseB/NPCLib)
