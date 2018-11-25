@@ -5,13 +5,8 @@
 package net.jitse.npclib.nms.holograms;
 
 import com.comphenix.tinyprotocol.Reflection;
-import net.minecraft.server.v1_13_R1.EntityArmorStand;
 import org.bukkit.Location;
-import org.bukkit.Nameable;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftArmorStand;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
