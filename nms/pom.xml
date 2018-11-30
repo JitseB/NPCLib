@@ -13,6 +13,7 @@
     <artifactId>npclib-nms</artifactId>
 
     <modules>
+        <module>v1_7_R4</module>
         <module>v1_8_R1</module>
         <module>v1_8_R2</module>
         <module>v1_8_R3</module>
