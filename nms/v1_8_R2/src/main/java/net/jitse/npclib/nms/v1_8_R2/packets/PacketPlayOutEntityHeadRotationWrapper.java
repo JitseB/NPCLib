@@ -4,9 +4,9 @@
 
 package net.jitse.npclib.nms.v1_8_R2.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_8_R2.PacketPlayOutEntityHeadRotation;
 import org.bukkit.Location;
+import tinyprotocol.Reflection;
 
 /**
  * @author Jitse Boonstra

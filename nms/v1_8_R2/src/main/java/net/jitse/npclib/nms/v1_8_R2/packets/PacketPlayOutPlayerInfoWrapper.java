@@ -4,11 +4,11 @@
 
 package net.jitse.npclib.nms.v1_8_R2.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_8_R2.IChatBaseComponent;
 import net.minecraft.server.v1_8_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R2.WorldSettings;
+import tinyprotocol.Reflection;
 
 import java.util.List;
 

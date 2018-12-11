@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Jitse Boonstra
+ */
+
 package com.comphenix.tinyprotocol;
 
 import org.bukkit.Bukkit;

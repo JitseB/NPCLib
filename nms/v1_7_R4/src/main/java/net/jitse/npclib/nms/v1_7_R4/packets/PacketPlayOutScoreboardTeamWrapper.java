@@ -4,9 +4,9 @@
 
 package net.jitse.npclib.nms.v1_7_R4.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_7_R4.PacketPlayOutScoreboardTeam;
 import org.bukkit.ChatColor;
+import tinyprotocol.Reflection;
 
 import java.util.Collection;
 
