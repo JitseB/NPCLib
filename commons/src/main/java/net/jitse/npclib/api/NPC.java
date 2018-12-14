@@ -25,11 +25,11 @@ import java.util.*;
 public abstract class NPC implements PacketHandler, ActionHandler {
 
     protected final UUID uuid = UUID.randomUUID();
-    protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     // Below was previously = (int) Math.ceil(Math.random() * 100000) + 100000 (new is experimental).
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
+    protected String name = uuid.toString().replace("-", "").substring(0, 10);
 
     private final Set<UUID> shown = new HashSet<>();
     private final Set<UUID> autoHidden = new HashSet<>();

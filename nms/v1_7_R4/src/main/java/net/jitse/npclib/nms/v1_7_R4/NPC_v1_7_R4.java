@@ -5,7 +5,6 @@
 package net.jitse.npclib.nms.v1_7_R4;
 
 import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.nms.holograms.Hologram;
 import net.jitse.npclib.nms.v1_7_R4.packets.PacketPlayOutEntityHeadRotationWrapper;
 import net.jitse.npclib.nms.v1_7_R4.packets.PacketPlayOutNamedEntitySpawnWrapper;
 import net.jitse.npclib.nms.v1_7_R4.packets.PacketPlayOutPlayerInfoWrapper;
@@ -27,7 +26,6 @@ import java.util.UUID;
  */
 public class NPC_v1_7_R4 extends NPC {
 
-    private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister, packetPlayOutScoreboardTeamUnregister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -38,31 +36,29 @@ public class NPC_v1_7_R4 extends NPC {
 
     public NPC_v1_7_R4(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
         super(plugin, skin, autoHideDistance, lines);
+        this.name = lines.get(0);
     }
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
-        hologram.generatePackets(false, false);
-
-        this.legacyGameProfile = generateLegacyGameProfile(uuid, name);
+        this.legacyGameProfile = generateLegacyGameProfile(uuid, name.length() < 16 ? name : name.substring(0, 15));
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
         // Packets for spawning the NPC:
         this.packetPlayOutScoreboardTeamRegister = new PacketPlayOutScoreboardTeamWrapper()
-                .createRegisterTeam(name); // First packet to send.
+                .createRegisterTeam(legacyGameProfile.getId().toString().replace("-", "").substring(0, 10), name); // First packet to send.
 
         this.packetPlayOutPlayerInfoAdd = packetPlayOutPlayerInfoWrapper
-                .create(0, legacyGameProfile, name); // Second packet to send.
+                .create(0, legacyGameProfile, name.length() < 16 ? name : name.length() < 16 ? name : name.substring(0, 15)); // Second packet to send.
 
         this.packetPlayOutNamedEntitySpawn = new PacketPlayOutNamedEntitySpawnWrapper()
-                .create(uuid, location, entityId); // Third packet to send.
+                .create(legacyGameProfile, location, entityId); // Third packet to send.
 
         this.packetPlayOutEntityHeadRotation = new PacketPlayOutEntityHeadRotationWrapper()
                 .create(location, entityId); // Fourth packet to send.
 
         this.packetPlayOutPlayerInfoRemove = packetPlayOutPlayerInfoWrapper
-                .create(4, legacyGameProfile, name); // Fifth packet to send (delayed).
+                .create(4, legacyGameProfile, name.length() < 16 ? name : name.substring(0, 15)); // Fifth packet to send (delayed).
 
         // Packet for destroying the NPC:
         this.packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityId); // First packet to send.
@@ -70,7 +66,7 @@ public class NPC_v1_7_R4 extends NPC {
         // Second packet to send is "packetPlayOutPlayerInfoRemove".
 
         this.packetPlayOutScoreboardTeamUnregister = new PacketPlayOutScoreboardTeamWrapper()
-                .createUnregisterTeam(name); // Third packet to send.
+                .createUnregisterTeam(legacyGameProfile.getId().toString().replace("-", "").substring(0, 10)); // Third packet to send.
     }
 
     @Override
@@ -82,8 +78,6 @@ public class NPC_v1_7_R4 extends NPC {
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
 
-        hologram.spawn(player);
-
         Bukkit.getScheduler().runTaskLater(plugin, () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
     }
@@ -94,8 +88,6 @@ public class NPC_v1_7_R4 extends NPC {
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-
-        hologram.destroy(player);
 
         if (scheduler) {
             // Sending this a bit later so the player doesn't see the name (for that split second).
