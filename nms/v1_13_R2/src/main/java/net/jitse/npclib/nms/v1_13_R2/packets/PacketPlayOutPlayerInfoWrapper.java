@@ -4,12 +4,12 @@
 
 package net.jitse.npclib.nms.v1_13_R2.packets;
 
+import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_13_R2.EnumGamemode;
 import net.minecraft.server.v1_13_R2.IChatBaseComponent;
 import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerInfo;
 import org.bukkit.ChatColor;
-import tinyprotocol.Reflection;
 
 import java.util.List;
 

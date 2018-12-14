@@ -4,9 +4,9 @@
 
 package net.jitse.npclib.nms.v1_8_R1.packets;
 
+import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_8_R1.*;
-import tinyprotocol.Reflection;
 
 import java.util.List;
 

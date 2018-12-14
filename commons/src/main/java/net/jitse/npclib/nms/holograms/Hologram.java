@@ -4,10 +4,10 @@
 
 package net.jitse.npclib.nms.holograms;
 
+import com.comphenix.tinyprotocol.Reflection;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import tinyprotocol.Reflection;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -4,12 +4,12 @@
 
 package net.jitse.npclib.nms.v1_9_R2.packets;
 
+import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_9_R2.DataWatcher;
 import net.minecraft.server.v1_9_R2.DataWatcherObject;
 import net.minecraft.server.v1_9_R2.DataWatcherRegistry;
 import net.minecraft.server.v1_9_R2.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Location;
-import tinyprotocol.Reflection;
 
 import java.util.UUID;
 

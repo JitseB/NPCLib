@@ -1,12 +1,11 @@
-/*
- * Copyright (c) 2018 Jitse Boonstra
- */
+package com.comphenix.tinyprotocol;
 
-package net.comphenix.tinyprotocol;
-
+import com.comphenix.tinyprotocol.Reflection.FieldAccessor;
+import com.comphenix.tinyprotocol.Reflection.MethodInvoker;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.mojang.authlib.GameProfile;
+import io.netty.channel.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,21 +32,21 @@ public abstract class TinyProtocol {
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
-    private static final Reflection.MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
-    private static final Reflection.FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
-    private static final Reflection.FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
-    private static final Reflection.FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
+    private static final MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
+    private static final FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
+    private static final FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
+    private static final FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
 
     // Looking up ServerConnection
     private static final Class<Object> minecraftServerClass = Reflection.getUntypedClass("{nms}.MinecraftServer");
     private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
-    private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
-    private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+    private static final FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
+    private static final FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
+    private static final MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
     // Packets we have to intercept
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-    private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
+    private static final FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
     // Speedup channel lookup
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
@@ -72,7 +71,7 @@ public abstract class TinyProtocol {
     protected Plugin plugin;
 
     /**
-     * Construct a new instance of com.comphenix.tinyprotocol.TinyProtocol, and start intercepting packets for all connected clients and future clients.
+     * Construct a new instance of TinyProtocol, and start intercepting packets for all connected clients and future clients.
      * <p>
      * You can construct multiple instances per plugin.
      *
@@ -92,14 +91,14 @@ public abstract class TinyProtocol {
             registerPlayers(plugin);
         } catch (IllegalArgumentException ex) {
             // Damn you, late bind
-            plugin.getLogger().info("[com.comphenix.tinyprotocol.TinyProtocol] Delaying server channel injection due to late bind.");
+            plugin.getLogger().info("[TinyProtocol] Delaying server channel injection due to late bind.");
 
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     registerChannelHandler();
                     registerPlayers(plugin);
-                    plugin.getLogger().info("[com.comphenix.tinyprotocol.TinyProtocol] Late bind injection successful.");
+                    plugin.getLogger().info("[TinyProtocol] Late bind injection successful.");
                 }
             }.runTask(plugin);
         }
@@ -416,7 +415,7 @@ public abstract class TinyProtocol {
     }
 
     /**
-     * Determine if the given player has been injected by com.comphenix.tinyprotocol.TinyProtocol.
+     * Determine if the given player has been injected by TinyProtocol.
      *
      * @param player - the player.
      * @return TRUE if it is, FALSE otherwise.
@@ -426,7 +425,7 @@ public abstract class TinyProtocol {
     }
 
     /**
-     * Determine if the given channel has been injected by com.comphenix.tinyprotocol.TinyProtocol.
+     * Determine if the given channel has been injected by TinyProtocol.
      *
      * @param channel - the channel.
      * @return TRUE if it is, FALSE otherwise.

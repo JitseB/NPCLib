@@ -4,8 +4,6 @@
 
 package net.jitse.npclib.nms.v1_13_R2;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.nms.holograms.Hologram;
 import net.jitse.npclib.nms.v1_13_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
@@ -20,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Jitse Boonstra
@@ -33,7 +30,6 @@ public class NPC_v1_13_R2 extends NPC {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
-    private GameProfile gameProfile;
 
     public NPC_v1_13_R2(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
         super(plugin, skin, autoHideDistance, lines);
@@ -104,15 +100,5 @@ public class NPC_v1_13_R2 extends NPC {
         } else {
             playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister);
         }
-    }
-
-    protected GameProfile generateGameProfile(UUID uuid, String name) {
-        GameProfile gameProfile = new GameProfile(uuid, name);
-
-        if (skin != null) {
-            gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
-        }
-
-        return gameProfile;
     }
 }
