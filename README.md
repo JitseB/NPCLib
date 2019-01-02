@@ -4,15 +4,13 @@ NPCLib – Basic non-player character library.<br>
 [![Build Status](https://travis-ci.com/JitseB/NPCLib.svg?branch=master)](https://travis-ci.com/JitseB/NPCLib)
 [![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
 [![Versions](https://img.shields.io/badge/MC-1.8%20--%201.13.2-blue.svg)](https://github.com/JitseB/NPCLib/releases)
+[![Thread](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
+[![Thread](https://img.shields.io/badge/SpigotMC-Thread-orange.svg)](https://www.spigotmc.org/threads/npclib-–-basic-non-player-character-library.314460/)
 =
 
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.13.2**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
 
-**SpigotMC Resource** https://www.spigotmc.org/resources/npclib.55884/ <br>
-**SpigotMC Thread** https://www.spigotmc.org/threads/npclib-–-basic-non-player-character-library.314460/
-
-**Preview** (click to play video)
-
+### Preview (click to play video)
 [![YouTube Video](http://img.youtube.com/vi/LqwdqIxPIvE/0.jpg)](http://www.youtube.com/watch?v=LqwdqIxPIvE "NPCLib – Basic non-player character library (Minecraft).")
 
 ## Donate
@@ -20,6 +18,19 @@ This is an API made specifically for spigot servers (Minecraft). Current support
 [![PayPal](https://cdn.rawgit.com/twolfson/paypal-github-button/1.0.0/dist/button.svg)](https://paypal.me/jitseboonstra)
 
 Alternatively, you can help the project by starring the repository or telling others about NPCLib. :smile:
+
+## Roadmap
+
+- :heavy_check_mark: Spawn and destroy NPC (version 1.8 - latest).
+- :heavy_check_mark: Autohide NPC when out of range.
+- :construction: Option to rotate head to player (when nearby).
+- :construction: Add support for 1.7.10 (1.7 R4).
+- :x: Give NPC armor and items in hand.
+
+### Roadmad Legend
+:heavy_check_mark: Feature is fully implemented and functional. <br>
+:construction: Feature is still in development (or experimental). <br>
+:x: Development of feature has yet to be started. <br>
 
 ## Developers
 
