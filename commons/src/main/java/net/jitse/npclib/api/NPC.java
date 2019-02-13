@@ -4,9 +4,8 @@
 
 package net.jitse.npclib.api;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCManager;
+import net.jitse.npclib.api.wrapper.GameProfileWrapper;
 import net.jitse.npclib.events.NPCDestroyEvent;
 import net.jitse.npclib.events.NPCSpawnEvent;
 import net.jitse.npclib.events.trigger.TriggerType;
@@ -39,7 +38,7 @@ public abstract class NPC implements PacketHandler, ActionHandler {
     protected final List<String> lines;
 
     protected JavaPlugin plugin;
-    protected GameProfile gameProfile;
+    protected GameProfileWrapper gameProfile;
     protected Location location;
 
     public NPC(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
@@ -51,11 +50,11 @@ public abstract class NPC implements PacketHandler, ActionHandler {
         NPCManager.add(this);
     }
 
-    protected GameProfile generateGameProfile(UUID uuid, String name) {
-        GameProfile gameProfile = new GameProfile(uuid, name);
+    protected GameProfileWrapper generateGameProfile(UUID uuid, String name) {
+        GameProfileWrapper gameProfile = new GameProfileWrapper(uuid, name);
 
         if (skin != null) {
-            gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+            gameProfile.addSkin(skin);
         }
 
         return gameProfile;

@@ -4,9 +4,8 @@
 
 package net.jitse.npclib.listeners;
 
+import com.comphenix.tinyprotocol.LegacyTinyProtocol;
 import com.comphenix.tinyprotocol.Reflection;
-import com.comphenix.tinyprotocol.TinyProtocol;
-import io.netty.channel.Channel;
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.events.NPCInteractEvent;
@@ -22,7 +21,7 @@ import java.util.UUID;
 /**
  * @author Jitse Boonstra
  */
-public class PacketListener {
+public class LegacyPacketListener {
 
     // Classes:
     private final Class<?> packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
@@ -35,10 +34,10 @@ public class PacketListener {
     private final Set<UUID> delay = new HashSet<>();
 
     public void start(JavaPlugin plugin) {
-        new TinyProtocol(plugin) {
+        new LegacyTinyProtocol(plugin) {
 
             @Override
-            public Object onPacketInAsync(Player player, Channel channel, Object packet) {
+            public Object onPacketInAsync(Player player, Object packet) {
 
                 if (packetPlayInUseEntityClazz.isInstance(packet)) {
                     NPC npc = NPCManager.getAllNPCs().stream().filter(
@@ -47,7 +46,7 @@ public class PacketListener {
 
                     if (npc == null) {
                         // Default player, not doing magic with the packet.
-                        return super.onPacketInAsync(player, channel, packet);
+                        return super.onPacketInAsync(player, packet);
                     }
 
                     if (delay.contains(player.getUniqueId())) {
@@ -65,7 +64,7 @@ public class PacketListener {
                     return null;
                 }
 
-                return super.onPacketInAsync(player, channel, packet);
+                return super.onPacketInAsync(player, packet);
             }
         };
     }
