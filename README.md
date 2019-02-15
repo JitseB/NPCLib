@@ -30,6 +30,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 - :construction: Add support for animated text (update-able holograms).
 - :x: Give NPC armor and items in hand.
 - :x: Multi-line text support for 1.7.10 (1.7 R4).
+- :x: Add example plugin class(es).
 
 ### Roadmad Legend
 :heavy_check_mark: Feature is fully implemented and functional. <br>
