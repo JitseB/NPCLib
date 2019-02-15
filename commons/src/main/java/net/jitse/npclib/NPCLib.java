@@ -9,6 +9,7 @@ import net.jitse.npclib.listeners.ChunkListener;
 import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
 import net.jitse.npclib.skin.Skin;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
@@ -64,7 +65,8 @@ public class NPCLib {
         pluginManager.registerEvents(new PlayerListener(), plugin);
         pluginManager.registerEvents(new ChunkListener(), plugin);
 
-        new PacketListener().start(plugin);
+        // Boot the according packet listener.
+        new PacketListener().start(plugin, Bukkit.getBukkitVersion().contains("1.7"));
     }
 
     /**

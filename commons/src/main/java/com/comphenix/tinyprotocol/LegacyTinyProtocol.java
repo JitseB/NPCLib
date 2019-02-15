@@ -1,17 +1,16 @@
 package com.comphenix.tinyprotocol;
 
-import com.comphenix.tinyprotocol.Reflection.FieldAccessor;
-import com.comphenix.tinyprotocol.Reflection.MethodInvoker;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
-import io.netty.channel.*;
+import net.minecraft.util.com.mojang.authlib.GameProfile;
+import net.minecraft.util.io.netty.channel.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,29 +22,33 @@ import java.util.logging.Level;
 /**
  * Minimized version of TinyProtocol by Kristian suited for NPCLib.
  */
-public abstract class TinyProtocol {
+public abstract class LegacyTinyProtocol {
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
-    private static final MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
-    private static final FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
-    private static final FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
-    private static final FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
+    private static final Reflection.MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
+    private static final Reflection.FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
+    private static final Reflection.FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
+    private static final Reflection.FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
 
     // Looking up ServerConnection
     private static final Class<Object> minecraftServerClass = Reflection.getUntypedClass("{nms}.MinecraftServer");
     private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
-    private static final FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
-    private static final FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-    private static final MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+    private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
+    private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
+    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
     // Packets we have to intercept
+    private static final Class<?> PACKET_SET_PROTOCOL = Reflection.getMinecraftClass("PacketHandshakingInSetProtocol");
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-    private static final FieldAccessor getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START,
-            Reflection.getClass("com.mojang.authlib.GameProfile"), 0);
+    private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
+    private static final Reflection.FieldAccessor<Integer> protocolId = Reflection.getField(PACKET_SET_PROTOCOL, int.class, 0);
+    private static final Reflection.FieldAccessor<Enum> protocolType = Reflection.getField(PACKET_SET_PROTOCOL, Enum.class, 0);
+
 
     // Speedup channel lookup
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
+    private Map<Channel, Integer> protocolLookup = new MapMaker().weakKeys().makeMap();
     private Listener listener;
 
     // Channels that have already been removed
@@ -66,7 +69,7 @@ public abstract class TinyProtocol {
     private volatile boolean closed;
     protected Plugin plugin;
 
-    protected TinyProtocol(final Plugin plugin) {
+    protected LegacyTinyProtocol(final Plugin plugin) {
         this.plugin = plugin;
 
         // Compute handler name
@@ -134,7 +137,6 @@ public abstract class TinyProtocol {
             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                 Channel channel = (Channel) msg;
 
-                // Prepare to initialize ths channel
                 channel.pipeline().addFirst(beginInitProtocol);
                 ctx.fireChannelRead(msg);
             }
@@ -147,7 +149,7 @@ public abstract class TinyProtocol {
 
             @SuppressWarnings("unused")
             @EventHandler(priority = EventPriority.LOWEST)
-            public final void onPlayerLogin(PlayerLoginEvent e) {
+            public final void onPlayerLogin(PlayerJoinEvent e) {
                 if (closed)
                     return;
 
@@ -187,14 +189,16 @@ public abstract class TinyProtocol {
             List<Object> list = Reflection.getField(serverConnection.getClass(), List.class, i).get(serverConnection);
 
             for (Object item : list) {
-                if (!(item instanceof ChannelFuture))
-                    break;
+                //if (!ChannelFuture.class.isInstance(item))
+                //	break;
 
                 // Channel future that contains the server connection
                 Channel serverChannel = ((ChannelFuture) item).channel();
 
                 serverChannels.add(serverChannel);
+
                 serverChannel.pipeline().addFirst(serverChannelHandler);
+                System.out.println("[NPCLib] Server channel handler injected (" + serverChannel + ")");
                 looking = false;
             }
         }
@@ -264,20 +268,23 @@ public abstract class TinyProtocol {
         return channel;
     }
 
+    private void uninjectChannel(final Channel channel) {
+        // No need to guard against this if we're closing
+        if (!closed) {
+            uninjectedChannels.add(channel);
+        }
+
+        // See ChannelInjector in ProtocolLib, line 590
+        channel.eventLoop().execute(() -> channel.pipeline().remove(handlerName));
+    }
+
     private void close() {
         if (!closed) {
             closed = true;
 
             // Remove our handlers
             for (Player player : plugin.getServer().getOnlinePlayers()) {
-                // No need to guard against this if we're closing
-                Channel channel = getChannel(player);
-                if (!closed) {
-                    uninjectedChannels.add(channel);
-                }
-
-                // See ChannelInjector in ProtocolLib, line 590
-                channel.eventLoop().execute(() -> channel.pipeline().remove(handlerName));
+                uninjectChannel(getChannel(player));
             }
 
             // Clean up Bukkit
@@ -294,7 +301,15 @@ public abstract class TinyProtocol {
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             // Intercept channel
             final Channel channel = ctx.channel();
-            handleLoginStart(channel, msg);
+            if (PACKET_LOGIN_IN_START.isInstance(msg)) {
+                GameProfile profile = getGameProfile.get(msg);
+                channelLookup.put(profile.getName(), channel);
+            } else if (PACKET_SET_PROTOCOL.isInstance(msg)) {
+                String protocol = protocolType.get(msg).name();
+                if (protocol.equalsIgnoreCase("LOGIN")) {
+                    protocolLookup.put(channel, protocolId.get(msg));
+                }
+            }
 
             try {
                 msg = onPacketInAsync(player, msg);
@@ -304,13 +319,6 @@ public abstract class TinyProtocol {
 
             if (msg != null) {
                 super.channelRead(ctx, msg);
-            }
-        }
-
-        private void handleLoginStart(Channel channel, Object packet) {
-            if (PACKET_LOGIN_IN_START.isInstance(packet)) {
-                Object profile = getGameProfile.get(packet);
-                channelLookup.put((String) Reflection.getMethod(profile.getClass(), "getName").invoke(profile), channel);
             }
         }
     }

@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.jitse</groupId>
         <artifactId>npclib</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
     </parent>
 
     <artifactId>npclib-commons</artifactId>
@@ -16,8 +16,16 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Netty (implemented in version above 1.7.10) -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.33.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 </project>
