@@ -4,6 +4,8 @@ cache:
   - $HOME/.m2/
 install:
 - wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+- wget http://central.maven.org/maven2/io/netty/netty-all/4.1.33.Final/netty-all-4.1.33.Final.jar
+  mvn install:install-file -Dfile=netty-all-4.1.33.Final.jar -DgroupId=io.netty -DartifactId=netty-all -Dversion=4.1.33.Final -Dpackaging=jar
 - wget https://github.com/Sarabveer/CraftBukkit-Spigot-Binary/blob/master/spigot-1.7.10-R0.1/spigot-1.7.10-R0.1-1649.jar
 - mvn install:install-file -Dfile=spigot-1.7.10-R0.1-1649.jar -DgroupId=org.spigotmc -DartifactId=spigot -Dversion=1.7.10-R0.1-SNAPSHOT -Dpackaging=jar
 - ls $HOME/.m2/repository/org/spigotmc/spigot/1.8-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.8 >> /dev/null 2>&1

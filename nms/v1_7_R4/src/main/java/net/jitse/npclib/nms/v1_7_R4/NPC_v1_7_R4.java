@@ -36,6 +36,7 @@ public class NPC_v1_7_R4 extends NPC {
 
     public NPC_v1_7_R4(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
         super(plugin, skin, autoHideDistance, lines);
+        // TODO: Add multi-line text support.
         this.name = lines.get(0);
     }
 
