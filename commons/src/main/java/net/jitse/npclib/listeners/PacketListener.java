@@ -4,9 +4,9 @@
 
 package net.jitse.npclib.listeners;
 
+import com.comphenix.tinyprotocol.LegacyTinyProtocol;
 import com.comphenix.tinyprotocol.Reflection;
 import com.comphenix.tinyprotocol.TinyProtocol;
-import io.netty.channel.Channel;
 import net.jitse.npclib.NPCManager;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.events.NPCInteractEvent;
@@ -34,39 +34,77 @@ public class PacketListener {
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();
 
-    public void start(JavaPlugin plugin) {
-        new TinyProtocol(plugin) {
+    public void start(JavaPlugin plugin, boolean is1_7) {
+        if (is1_7) {
+            // 1.7 R4 packet interaction.
+            new LegacyTinyProtocol(plugin) {
 
-            @Override
-            public Object onPacketInAsync(Player player, Channel channel, Object packet) {
+                @Override
+                public Object onPacketInAsync(Player player, Object packet) {
 
-                if (packetPlayInUseEntityClazz.isInstance(packet)) {
-                    NPC npc = NPCManager.getAllNPCs().stream().filter(
-                            check -> check.isActuallyShown(player) && check.getEntityId() == (int) entityIdField.get(packet))
-                            .findFirst().orElse(null);
+                    if (packetPlayInUseEntityClazz.isInstance(packet)) {
+                        NPC npc = NPCManager.getAllNPCs().stream().filter(
+                                check -> check.isActuallyShown(player) && check.getEntityId() == (int) entityIdField.get(packet))
+                                .findFirst().orElse(null);
 
-                    if (npc == null) {
-                        // Default player, not doing magic with the packet.
-                        return super.onPacketInAsync(player, channel, packet);
-                    }
+                        if (npc == null) {
+                            // Default player, not doing magic with the packet.
+                            return super.onPacketInAsync(player, packet);
+                        }
 
-                    if (delay.contains(player.getUniqueId())) {
+                        if (delay.contains(player.getUniqueId())) {
+                            return null;
+                        }
+
+                        ClickType clickType = actionField.get(packet).toString()
+                                .equals("ATTACK") ? ClickType.LEFT_CLICK : ClickType.RIGHT_CLICK;
+
+                        Bukkit.getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
+
+                        UUID uuid = player.getUniqueId();
+                        delay.add(uuid);
+                        Bukkit.getScheduler().runTask(plugin, () -> delay.remove(uuid));
                         return null;
                     }
 
-                    ClickType clickType = actionField.get(packet).toString()
-                            .equals("ATTACK") ? ClickType.LEFT_CLICK : ClickType.RIGHT_CLICK;
-
-                    Bukkit.getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
-
-                    UUID uuid = player.getUniqueId();
-                    delay.add(uuid);
-                    Bukkit.getScheduler().runTask(plugin, () -> delay.remove(uuid));
-                    return null;
+                    return super.onPacketInAsync(player, packet);
                 }
+            };
+        } else {
+            // 1.8 (and above) packet interaction.
+            new TinyProtocol(plugin) {
 
-                return super.onPacketInAsync(player, channel, packet);
-            }
-        };
+                @Override
+                public Object onPacketInAsync(Player player, Object packet) {
+
+                    if (packetPlayInUseEntityClazz.isInstance(packet)) {
+                        NPC npc = NPCManager.getAllNPCs().stream().filter(
+                                check -> check.isActuallyShown(player) && check.getEntityId() == (int) entityIdField.get(packet))
+                                .findFirst().orElse(null);
+
+                        if (npc == null) {
+                            // Default player, not doing magic with the packet.
+                            return super.onPacketInAsync(player, packet);
+                        }
+
+                        if (delay.contains(player.getUniqueId())) {
+                            return null;
+                        }
+
+                        ClickType clickType = actionField.get(packet).toString()
+                                .equals("ATTACK") ? ClickType.LEFT_CLICK : ClickType.RIGHT_CLICK;
+
+                        Bukkit.getPluginManager().callEvent(new NPCInteractEvent(player, clickType, npc));
+
+                        UUID uuid = player.getUniqueId();
+                        delay.add(uuid);
+                        Bukkit.getScheduler().runTask(plugin, () -> delay.remove(uuid));
+                        return null;
+                    }
+
+                    return super.onPacketInAsync(player, packet);
+                }
+            };
+        }
     }
 }

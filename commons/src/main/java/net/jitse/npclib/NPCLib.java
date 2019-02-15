@@ -6,7 +6,6 @@ package net.jitse.npclib;
 
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.listeners.ChunkListener;
-import net.jitse.npclib.listeners.LegacyPacketListener;
 import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
 import net.jitse.npclib.skin.Skin;
@@ -67,11 +66,7 @@ public class NPCLib {
         pluginManager.registerEvents(new ChunkListener(), plugin);
 
         // Boot the according packet listener.
-        if (Bukkit.getBukkitVersion().contains("1.7")) {
-            new LegacyPacketListener().start(plugin);
-        } else {
-            new PacketListener().start(plugin);
-        }
+        new PacketListener().start(plugin, Bukkit.getBukkitVersion().contains("1.7"));
     }
 
     /**
