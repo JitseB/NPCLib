@@ -136,6 +136,22 @@ public class Hologram {
         }
     }
 
+//    public void updateText(List<String> newLines) {
+//        if (lines.size() != newLines.size()) {
+//            throw new IllegalArgumentException("New NPC text cannot differ in size from old text.");
+//            return;
+//        }
+//
+//        int i = 0;
+//        for (String oldLine : lines) {
+//            if (oldLine.isEmpty() && !newLines.get(i).isEmpty()) {
+//                // Need to spawn
+//            }
+//            i++;
+//        }
+//        customNameMethod.invoke(entityArmorStand, above_1_12_r1 ? CHAT_COMPONENT_TEXT_CONSTRUCTOR.invoke(line) : line);
+//    }
+
     public void spawn(Player player) {
         Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
                 .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
