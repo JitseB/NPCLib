@@ -47,32 +47,7 @@ Alternatively, you can put `npclib-plugin-v*.jar` under your `plugins` folder. B
 
 [Click here](https://github.com/JitseB/NPCLib/releases/latest) to download the latest release.
 
-```Java
-    // First we define our (global) library variable.
-    // This is usually done in the onEnable method.
-    NPCLib lib = new NPCLib(plugin);
-```
-
-```Java
-
-   // Creating a new NPC instance.
-   // MC 1.7.10 (1.7 R4) only supports single-line text.
-   NPC npc = lib.createNPC(skin, lines);
-
-   // Then let the library generate the necessary packets.
-   npc.create(location);
-
-   // You are all set! You can now show/hide it to/from players.
-   npc.show(player);
-   npc.hide(player);
-
-   // If you do not wish to use the NPC anymore, destroy it accordingly.
-   npc.destroy();
-```
-
-### Events
-
-Events you may want to use are `NPCSpawnEvent`, `NPCDestroyEvent` and `NPCInteractEvent`.
+[Click here](https://github.com/JitseB/NPCLib/blob/master/DOCUMENTATION.md) for an elaborate explanation on how to use NPCLib in your next project.
 
 ### Building your own version
 
@@ -94,6 +69,8 @@ Plugin(s) using NPCLib:
 ## Acknowledgement
 
 We thank all those who have [contributed](https://github.com/JitseB/NPCLib/graphs/contributors) to the creation of what NPCLib is today.
+
+Please view the credits [here](https://github.com/JitseB/NPCLib/blob/master/CREDITS.md).
 
 ## Copyright
 
