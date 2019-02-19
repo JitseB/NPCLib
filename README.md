@@ -4,8 +4,7 @@ NPCLib – Basic non-player character library.<br>
 [![Build Status](https://travis-ci.com/JitseB/NPCLib.svg?branch=master)](https://travis-ci.com/JitseB/NPCLib)
 [![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
 [![Versions](https://img.shields.io/badge/MC-1.7.10%20--%201.13.2-blue.svg)](https://github.com/JitseB/NPCLib/releases)
-[![Thread](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
-[![Thread](https://img.shields.io/badge/SpigotMC-Thread-orange.svg)](https://www.spigotmc.org/threads/npclib-–-basic-non-player-character-library.314460/)
+[![Resource](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
 =
 
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.7.10\* - 1.13.2**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
@@ -26,11 +25,11 @@ Alternatively, you can help the project by starring the repository or telling ot
 - :heavy_check_mark: Spawn and destroy NPC (version 1.8 - latest).
 - :heavy_check_mark: Autohide NPC when out of range.
 - :heavy_check_mark: Add support for 1.7.10 (1.7 R4).
+- :heavy_check_mark: Documentation material.
 - :construction: Option to rotate head to player (when nearby).
 - :construction: Add support for animated text (update-able holograms).
 - :x: Give NPC armor and items in hand.
 - :x: Multi-line text support for 1.7.10 (1.7 R4).
-- :x: Add example plugin class(es).
 
 ### Roadmad Legend
 :heavy_check_mark: Feature is fully implemented and functional. <br>
