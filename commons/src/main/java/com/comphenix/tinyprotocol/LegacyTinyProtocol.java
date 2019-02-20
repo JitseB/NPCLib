@@ -79,12 +79,12 @@ public abstract class LegacyTinyProtocol {
         registerBukkitEvents();
 
         try {
-            System.out.println("[NPCLib] Attempting to inject into netty.");
+            plugin.getLogger().info("[NPCLib] Attempting to inject into netty.");
             registerChannelHandler();
             registerPlayers(plugin);
         } catch (IllegalArgumentException ex) {
             // Damn you, late bind
-            plugin.getLogger().info("[NPCLib] Attempting to delay injection.");
+            plugin.getLogger().log(Level.WARNING, "[NPCLib] Attempting to delay injection.");
 
             new BukkitRunnable() {
                 @Override
@@ -198,7 +198,7 @@ public abstract class LegacyTinyProtocol {
                 serverChannels.add(serverChannel);
 
                 serverChannel.pipeline().addFirst(serverChannelHandler);
-                System.out.println("[NPCLib] Server channel handler injected (" + serverChannel + ")");
+                plugin.getLogger().info("[NPCLib] Server channel handler injected (" + serverChannel + ")");
                 looking = false;
             }
         }

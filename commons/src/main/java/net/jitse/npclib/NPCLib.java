@@ -16,6 +16,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Jitse Boonstra
@@ -34,6 +35,9 @@ public class NPCLib {
         this.plugin = plugin;
         this.server = plugin.getServer();
 
+        // TODO: Change this to a more dynamic variable (maven file filtering?).
+        plugin.getLogger().info("[NPCLib] Initiating NPCLib v1.4.");
+
         String versionName = server.getClass().getPackage().getName().split("\\.")[3];
 
         Class<?> npcClass = null;
@@ -47,13 +51,13 @@ public class NPCLib {
         this.npcClass = npcClass;
 
         if (npcClass == null) {
-            server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to initiate. Your server's version ("
+            plugin.getLogger().log(Level.SEVERE, "NPCLib failed to initiate. Your server's version ("
                     + versionName + ") is not supported.");
             return;
         }
 
         if (message) {
-            server.getConsoleSender().sendMessage(ChatColor.BLUE + "[NPCLib] " + ChatColor.WHITE + "Enabled for version " + versionName + ".");
+            plugin.getLogger().info("[NPCLib] Enabled for version " + versionName + ".");
         }
 
         registerInternal();

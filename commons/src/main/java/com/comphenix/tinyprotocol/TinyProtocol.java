@@ -76,12 +76,12 @@ public abstract class TinyProtocol {
         registerBukkitEvents();
 
         try {
-            System.out.println("[NPCLib] Attempting to inject into netty.");
+            plugin.getLogger().info("[NPCLib] Attempting to inject into netty.");
             registerChannelHandler();
             registerPlayers(plugin);
         } catch (IllegalArgumentException ex) {
             // Damn you, late bind
-            plugin.getLogger().info("[NPCLib] Attempting to delay injection.");
+            plugin.getLogger().log(Level.WARNING, "[NPCLib] Attempting to delay injection.");
 
             new BukkitRunnable() {
                 @Override
