@@ -18,6 +18,7 @@ public class GameProfileWrapper {
 
     // TODO: Add this class to the v1_7_R4 module of NPCLib.
 
+    // This doesn't seem to work well with modified versions of Spigot (see issue #13).
     private final boolean is1_7 = Bukkit.getBukkitVersion().contains("1.7");
     private final Class<?> gameProfileClazz = Reflection.getClass((is1_7 ? "net.minecraft.util." : "") + "com.mojang.authlib.GameProfile");
 
