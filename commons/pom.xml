@@ -12,18 +12,20 @@
 
     <artifactId>npclib-commons</artifactId>
 
-    <!--<build>-->
-    <!--<resources>-->
-    <!--<resource>-->
-    <!--<targetPath>.</targetPath>-->
-    <!--<directory>${basedir}/src/main/java/net/jitse/npclib</directory>-->
-    <!--<filtering>true</filtering>-->
-    <!--<includes>-->
-    <!--<include>NPCLib.java</include>-->
-    <!--</includes>-->
-    <!--</resource>-->
-    <!--</resources>-->
-    <!--</build>-->
+    <!--
+    <build>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/java/net/jitse/npclib</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>NPCLib.java</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    -->
 
     <dependencies>
         <dependency>
@@ -36,7 +38,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.33.Final</version>
+            <version>4.0.23.Final</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
