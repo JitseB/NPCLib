@@ -43,7 +43,7 @@ public class PacketListener {
 
         try {
             Class.forName("io.netty.channel.Channel");
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException exception) {
             legacyProtocol = true;
         }
 
