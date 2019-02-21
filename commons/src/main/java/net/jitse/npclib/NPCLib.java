@@ -10,8 +10,6 @@ import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
 import net.jitse.npclib.logging.NPCLibLogger;
 import net.jitse.npclib.skin.Skin;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,7 +22,6 @@ import java.util.logging.Logger;
  */
 public class NPCLib {
 
-    private final Server server;
     private final JavaPlugin plugin;
     private final Class<?> npcClass;
 
@@ -32,13 +29,12 @@ public class NPCLib {
 
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.server = plugin.getServer();
         this.logger = new NPCLibLogger(plugin);
 
         // TODO: Change this variable to a dynamic variable (maven file filtering?).
         // logger.info("Initiating NPCLib v1.4");
 
-        String versionName = server.getClass().getPackage().getName().split("\\.")[3];
+        String versionName = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
 
         Class<?> npcClass = null;
 
@@ -62,13 +58,13 @@ public class NPCLib {
     }
 
     private void registerInternal() {
-        PluginManager pluginManager = server.getPluginManager();
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
 
         pluginManager.registerEvents(new PlayerListener(), plugin);
         pluginManager.registerEvents(new ChunkListener(), plugin);
 
         // Boot the according packet listener.
-        new PacketListener().start(plugin, Bukkit.getBukkitVersion().contains("1.7"));
+        new PacketListener().start(plugin);
     }
 
     /**

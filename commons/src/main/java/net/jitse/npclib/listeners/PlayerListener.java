@@ -25,14 +25,10 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         for (NPC npc : NPCManager.getAllNPCs()) {
-            if (npc.getAutoHidden().contains(player.getUniqueId())) {
-                npc.getAutoHidden().remove(player.getUniqueId());
-            }
+            npc.getAutoHidden().remove(player.getUniqueId());
 
             // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-            if (npc.getShown().contains(player.getUniqueId())) {
-                npc.getShown().remove(player.getUniqueId());
-            }
+            npc.getShown().remove(player.getUniqueId());
         }
     }
 
