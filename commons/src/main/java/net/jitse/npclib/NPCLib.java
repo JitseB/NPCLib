@@ -8,15 +8,16 @@ import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.listeners.ChunkListener;
 import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
+import net.jitse.npclib.logging.NPCLibLogger;
 import net.jitse.npclib.skin.Skin;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Jitse Boonstra
@@ -27,16 +28,15 @@ public class NPCLib {
     private final JavaPlugin plugin;
     private final Class<?> npcClass;
 
-    public NPCLib(JavaPlugin plugin) {
-        this(plugin, true);
-    }
+    private Logger logger;
 
-    public NPCLib(JavaPlugin plugin, boolean message) {
+    public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
         this.server = plugin.getServer();
+        this.logger = new NPCLibLogger(plugin);
 
-        // TODO: Change this to a more dynamic variable (maven file filtering?).
-        plugin.getLogger().info("[NPCLib] Initiating NPCLib v1.4.");
+        // TODO: Change this variable to a dynamic variable (maven file filtering?).
+        // logger.info("Initiating NPCLib v1.4");
 
         String versionName = server.getClass().getPackage().getName().split("\\.")[3];
 
@@ -51,14 +51,12 @@ public class NPCLib {
         this.npcClass = npcClass;
 
         if (npcClass == null) {
-            plugin.getLogger().log(Level.SEVERE, "NPCLib failed to initiate. Your server's version ("
-                    + versionName + ") is not supported.");
+            logger.log(Level.SEVERE, "Failed to initiate. Your server's version ("
+                    + versionName + ") is not supported");
             return;
         }
 
-        if (message) {
-            plugin.getLogger().info("[NPCLib] Enabled for version " + versionName + ".");
-        }
+        logger.info("Enabled for MC " + versionName);
 
         registerInternal();
     }
@@ -85,8 +83,7 @@ public class NPCLib {
         try {
             return (NPC) npcClass.getConstructors()[0].newInstance(plugin, skin, autoHideDistance, lines);
         } catch (Exception exception) {
-            server.getConsoleSender().sendMessage(ChatColor.RED + "NPCLib failed to create NPC. Please report this stacktrace:");
-            exception.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to create NPC. Please report the following stacktrace", exception);
         }
 
         return null;

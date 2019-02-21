@@ -5,6 +5,7 @@ import com.comphenix.tinyprotocol.Reflection.MethodInvoker;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import io.netty.channel.*;
+import net.jitse.npclib.logging.NPCLibLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,11 +20,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Minimized version of TinyProtocol by Kristian suited for NPCLib.
  */
 public abstract class TinyProtocol {
+
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
@@ -48,6 +51,8 @@ public abstract class TinyProtocol {
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
     private Listener listener;
 
+    private Logger logger;
+
     // Channels that have already been removed
     private Set<Channel> uninjectedChannels = Collections.newSetFromMap(new MapMaker().weakKeys().makeMap());
 
@@ -68,6 +73,7 @@ public abstract class TinyProtocol {
 
     protected TinyProtocol(final Plugin plugin) {
         this.plugin = plugin;
+        this.logger = new NPCLibLogger(plugin);
 
         // Compute handler name
         this.handlerName = "tiny-" + plugin.getName() + "-" + ID.incrementAndGet();
@@ -76,19 +82,19 @@ public abstract class TinyProtocol {
         registerBukkitEvents();
 
         try {
-            plugin.getLogger().info("[NPCLib] Attempting to inject into netty.");
+            logger.info("Attempting to inject into netty");
             registerChannelHandler();
             registerPlayers(plugin);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException exceptionx) {
             // Damn you, late bind
-            plugin.getLogger().log(Level.WARNING, "[NPCLib] Attempting to delay injection.");
+            logger.log(Level.WARNING, "Attempting to delay injection");
 
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     registerChannelHandler();
                     registerPlayers(plugin);
-                    plugin.getLogger().info("[NPCLib] Injection complete.");
+                    logger.info("Injection complete");
                 }
             }.runTask(plugin);
         }
@@ -109,8 +115,8 @@ public abstract class TinyProtocol {
                             channel.eventLoop().submit(() -> injectChannelInternal(channel));
                         }
                     }
-                } catch (Exception e) {
-                    plugin.getLogger().log(Level.SEVERE, "[NPCLib] Cannot inject incomming channel " + channel, e);
+                } catch (Exception exception) {
+                    logger.log(Level.SEVERE, "Cannot inject incomming channel " + channel, exception);
                 }
             }
 
@@ -211,7 +217,7 @@ public abstract class TinyProtocol {
             serverChannel.eventLoop().execute(() -> {
                 try {
                     pipeline.remove(serverChannelHandler);
-                } catch (NoSuchElementException e) {
+                } catch (NoSuchElementException exception) {
                     // That's fine
                 }
             });
@@ -244,7 +250,7 @@ public abstract class TinyProtocol {
             }
 
             return interceptor;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException exception) {
             // Try again
             return (PacketInterceptor) channel.pipeline().get(handlerName);
         }
@@ -298,8 +304,8 @@ public abstract class TinyProtocol {
 
             try {
                 msg = onPacketInAsync(player, msg);
-            } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "[NPCLib] Error in onPacketInAsync().", e);
+            } catch (Exception exception) {
+                logger.log(Level.SEVERE, "Error in onPacketInAsync()", exception);
             }
 
             if (msg != null) {

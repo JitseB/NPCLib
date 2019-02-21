@@ -12,6 +12,19 @@
 
     <artifactId>npclib-commons</artifactId>
 
+    <!--<build>-->
+    <!--<resources>-->
+    <!--<resource>-->
+    <!--<targetPath>.</targetPath>-->
+    <!--<directory>${basedir}/src/main/java/net/jitse/npclib</directory>-->
+    <!--<filtering>true</filtering>-->
+    <!--<includes>-->
+    <!--<include>NPCLib.java</include>-->
+    <!--</includes>-->
+    <!--</resource>-->
+    <!--</resources>-->
+    <!--</build>-->
+
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -19,13 +32,12 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Netty (implemented in version above 1.7.10) -->
+        <!-- Netty (implemented in versions above 1.7.10) -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.33.Final</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 </project>

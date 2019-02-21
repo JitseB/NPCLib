@@ -1,4 +1,4 @@
-name: NPCLib
+name: NPCLib-Plugin
 version: ${project.parent.version}
 author: JitseB
 main: net.jitse.npclib.plugin.NPCLibPlugin

@@ -13,11 +13,11 @@ public class NPCLibPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("NPC library loaded.");
+        getLogger().info("NPCLib classes loaded");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("NPC library unloaded.");
+        getLogger().info("NPCLib classes unloaded");
     }
 }
