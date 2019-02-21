@@ -18,7 +18,7 @@ public class GameProfileWrapper {
 
     // TODO: Add this class to the v1_7_R4 module of NPCLib.
 
-    // This doesn't seem to work well with modified versions of Spigot (see issue #13).
+    // TODO: This doesn't seem to work well with modified versions of Spigot (see issue #12).
     private final boolean is1_7 = Bukkit.getBukkitVersion().contains("1.7");
     private final Class<?> gameProfileClazz = Reflection.getClass((is1_7 ? "net.minecraft.util." : "") + "com.mojang.authlib.GameProfile");
 
@@ -41,6 +41,7 @@ public class GameProfileWrapper {
                 propertyMapClazz);
         Object propertyMap = propertyMapGetter.get(gameProfile);
 
+        // TODO: Won't work on 1.7.10 (as Guava also changed package location).
         // Add our new property to the property map.
         Reflection.getMethod(ForwardingMultimap.class, "put", Object.class, Object.class)
                 .invoke(propertyMap, "textures", property);
