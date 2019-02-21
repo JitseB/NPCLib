@@ -132,9 +132,7 @@ public abstract class NPC implements PacketHandler, ActionHandler {
                 shown.add(player.getUniqueId());
             }
 
-            if (!autoHidden.contains(player.getUniqueId())) {
-                autoHidden.add(player.getUniqueId());
-            }
+            autoHidden.add(player.getUniqueId());
             return;
         }
 
@@ -154,9 +152,7 @@ public abstract class NPC implements PacketHandler, ActionHandler {
             if (player.getLocation().distance(location) <= autoHideDistance) {
                 sendShowPackets(player);
             } else {
-                if (!autoHidden.contains(player.getUniqueId())) {
-                    autoHidden.add(player.getUniqueId());
-                }
+                autoHidden.add(player.getUniqueId());
             }
         }
     }
@@ -189,9 +185,7 @@ public abstract class NPC implements PacketHandler, ActionHandler {
             if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location) <= autoHideDistance) {
                 sendHidePackets(player, scheduler);
             } else {
-                if (autoHidden.contains(player.getUniqueId())) {
-                    autoHidden.remove(player.getUniqueId());
-                }
+                autoHidden.remove(player.getUniqueId());
             }
         }
     }
