@@ -14,7 +14,7 @@
 
     <build>
         <directory>../target</directory>
-        <finalName>npclib-plugin-v${project.parent.version}</finalName>
+        <finalName>npclib-plugin-${project.parent.version}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>

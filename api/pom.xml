@@ -89,6 +89,6 @@
 
     <build>
         <defaultGoal>clean install</defaultGoal>
-        <finalName>npclib-api-v${project.version}</finalName>
+        <finalName>npclib-api-${project.version}</finalName>
     </build>
 </project>
