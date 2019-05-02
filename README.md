@@ -7,9 +7,9 @@ NPCLib – Basic non-player character library.<br>
 [![Resource](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
 =
 
-This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.7.10\* - 1.13.2**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
+This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.13.2**\*. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
 
-\*NPCLib has basic support for 1.7.10, as it not currently support multi-line text for this version (yet).
+\*You can find a version of NPCLib with basic support for 1.7.10 on the [legacy branch](https://github.com/JitseB/NPCLib/tree/legacy). This branch is not (as) actively maintained as the master branch. This version does not support multi-line text (yet).
 
 ### Preview (click to play video)
 [![YouTube Video](http://img.youtube.com/vi/LqwdqIxPIvE/0.jpg)](http://www.youtube.com/watch?v=LqwdqIxPIvE "NPCLib – Basic non-player character library (Minecraft).")
