@@ -85,7 +85,7 @@ public abstract class TinyProtocol {
             logger.info("Attempting to inject into netty");
             registerChannelHandler();
             registerPlayers(plugin);
-        } catch (IllegalArgumentException exceptionx) {
+        } catch (IllegalArgumentException exception) {
             // Damn you, late bind
             logger.log(Level.WARNING, "Attempting to delay injection");
 

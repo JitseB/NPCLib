@@ -149,7 +149,7 @@ public abstract class NPC implements PacketHandler, ActionHandler {
 
             shown.add(player.getUniqueId());
 
-            if (player.getLocation().distance(location) <= autoHideDistance) {
+            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location) <= autoHideDistance) {
                 sendShowPackets(player);
             } else {
                 autoHidden.add(player.getUniqueId());

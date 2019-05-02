@@ -73,7 +73,8 @@ public class PlayerListener implements Listener {
             // This will cause issues otherwise (e.g. custom skin disappearing).
             double hideDistance = npc.getAutoHideDistance();
             double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
-            boolean inRange = distanceSquared <= (hideDistance * hideDistance) && distanceSquared <= (Bukkit.getViewDistance() << 4);
+            boolean inRange = distanceSquared <= (Math.pow(hideDistance, 2))
+                    && distanceSquared <= (Math.pow(Bukkit.getViewDistance() << 4, 2));
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
                 if (inRange) {
