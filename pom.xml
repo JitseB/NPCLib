@@ -7,7 +7,7 @@
 
     <groupId>net.jitse</groupId>
     <artifactId>npclib-legacy</artifactId>
-    <version>1.4.1</version>
+    <version>1.0</version>
 
     <name>NPCLib-Legacy</name>
     <url>https://github.com/JitseB/NPCLib</url>
