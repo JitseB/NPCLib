@@ -1,0 +1,5 @@
+name: NPCLib-Plugin
+version: ${project.version}
+author: JitseB
+main: net.jitse.npclib.plugin.NPCLibPlugin
+description: Basic non-player character library.
