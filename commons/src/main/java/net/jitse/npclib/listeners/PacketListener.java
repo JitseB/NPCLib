@@ -4,7 +4,6 @@
 
 package net.jitse.npclib.listeners;
 
-import com.comphenix.tinyprotocol.LegacyTinyProtocol;
 import com.comphenix.tinyprotocol.Reflection;
 import com.comphenix.tinyprotocol.TinyProtocol;
 import net.jitse.npclib.NPCManager;
@@ -39,33 +38,13 @@ public class PacketListener {
     public void start(Plugin plugin) {
         this.plugin = plugin;
 
-        boolean legacyProtocol = false;
+        new TinyProtocol(plugin) {
 
-        try {
-            Class.forName("io.netty.channel.Channel");
-        } catch (ClassNotFoundException exception) {
-            legacyProtocol = true;
-        }
-
-        if (legacyProtocol) {
-            // 1.7 R4 packet interaction.
-            new LegacyTinyProtocol(plugin) {
-
-                @Override
-                public Object onPacketInAsync(Player player, Object packet) {
-                    return handleInteractPacket(player, packet) ? super.onPacketInAsync(player, packet) : null;
-                }
-            };
-        } else {
-            // 1.8 (and above) packet interaction.
-            new TinyProtocol(plugin) {
-
-                @Override
-                public Object onPacketInAsync(Player player, Object packet) {
-                    return handleInteractPacket(player, packet) ? super.onPacketInAsync(player, packet) : null;
-                }
-            };
-        }
+            @Override
+            public Object onPacketInAsync(Player player, Object packet) {
+                return handleInteractPacket(player, packet) ? super.onPacketInAsync(player, packet) : null;
+            }
+        };
     }
 
     private boolean handleInteractPacket(Player player, Object packet) {
