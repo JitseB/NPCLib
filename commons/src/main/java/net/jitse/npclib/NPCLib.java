@@ -10,6 +10,7 @@ import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
 import net.jitse.npclib.logging.NPCLibLogger;
 import net.jitse.npclib.skin.Skin;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,9 +76,9 @@ public class NPCLib {
      * @param lines            The text you want to sendShowPackets above the NPC (null = no text).
      * @return The NPC object you may use to sendShowPackets it to players.
      */
-    public NPC createNPC(Skin skin, double autoHideDistance, List<String> lines) {
+    public NPC createNPC(Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
         try {
-            return (NPC) npcClass.getConstructors()[0].newInstance(plugin, skin, autoHideDistance, lines);
+            return (NPC) npcClass.getConstructors()[0].newInstance(plugin, skin, autoHideDistance, lines, equipment);
         } catch (Exception exception) {
             logger.log(Level.SEVERE, "Failed to create NPC. Please report the following stacktrace", exception);
         }
@@ -93,7 +94,7 @@ public class NPCLib {
      * @return The NPC object you may use to sendShowPackets it to players.
      */
     public NPC createNPC(Skin skin, List<String> lines) {
-        return createNPC(skin, 50, lines);
+        return createNPC(skin, 50, lines, null);
     }
 
 
@@ -104,7 +105,7 @@ public class NPCLib {
      * @return The NPC object you may use to sendShowPackets it to players.
      */
     public NPC createNPC(Skin skin) {
-        return createNPC(skin, 50, null);
+        return createNPC(skin, 50, null, null);
     }
 
 
@@ -114,7 +115,7 @@ public class NPCLib {
      * @return The NPC object you may use to sendShowPackets it to players.
      */
     public NPC createNPC() {
-        return createNPC(null, 50, null);
+        return createNPC(null, 50, null, null);
     }
 
 }

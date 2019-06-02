@@ -4,7 +4,6 @@
 
 package net.jitse.npclib.nms.v1_14_R1;
 
-import net.jitse.npclib.Action;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.nms.v1_14_R1.packets.*;
 import net.jitse.npclib.skin.Skin;
@@ -32,8 +31,8 @@ public class NPC_v1_14_R1 extends NPC {
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
     private List<PacketPlayOutEntityEquipment> packetPlayOutEntityEquipment = new ArrayList<>();
 
-    public NPC_v1_14_R1(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment, Action action) {
-        super(plugin, skin, autoHideDistance, lines, equipment, action);
+    public NPC_v1_14_R1(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
+        super(plugin, skin, autoHideDistance, lines, equipment);
     }
 
     @Override
