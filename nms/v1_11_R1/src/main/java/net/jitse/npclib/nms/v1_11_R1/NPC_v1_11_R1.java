@@ -37,7 +37,7 @@ public class NPC_v1_11_R1 extends NPC {
 
 
     public NPC_v1_11_R1(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
-        super(plugin, skin, autoHideDistance, lines, equipment, null);
+        super(plugin, skin, autoHideDistance, lines, equipment);
     }
 
 

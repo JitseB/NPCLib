@@ -33,7 +33,7 @@ public class NPC_v1_13_R2 extends NPC {
     private List<PacketPlayOutEntityEquipment> packetPlayOutEntityEquipment = new ArrayList<>();
 
     public NPC_v1_13_R2(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
-        super(plugin, skin, autoHideDistance, lines, equipment, null);
+        super(plugin, skin, autoHideDistance, lines, equipment);
     }
 
     @Override

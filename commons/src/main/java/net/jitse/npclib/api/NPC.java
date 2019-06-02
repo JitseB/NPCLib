@@ -13,6 +13,7 @@ import net.jitse.npclib.skin.Skin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
@@ -37,13 +38,15 @@ public abstract class NPC implements PacketHandler, ActionHandler {
     protected final Skin skin;
     protected final List<String> lines;
 
+    protected List<ItemStack> equipment;
     protected JavaPlugin plugin;
     protected GameProfileWrapper gameProfile;
     protected Location location;
 
-    public NPC(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
+    public NPC(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
         this.plugin = plugin;
         this.skin = skin;
+        this.equipment = equipment;
         this.autoHideDistance = autoHideDistance;
         this.lines = lines == null ? Collections.emptyList() : lines;
 
@@ -101,6 +104,8 @@ public abstract class NPC implements PacketHandler, ActionHandler {
     public double getAutoHideDistance() {
         return autoHideDistance;
     }
+
+    public List<ItemStack> getEquipment() { return equipment; }
 
     public int getEntityId() {
         return entityId;
