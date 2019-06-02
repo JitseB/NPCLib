@@ -2,19 +2,16 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.nms.v1_9_R2;
+package net.jitse.npclib.nms.v1_14_R1;
 
+import net.jitse.npclib.Action;
 import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.nms.holograms.Hologram;
-import net.jitse.npclib.nms.v1_9_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_9_R2.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_9_R2.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_9_R2.packets.PacketPlayOutScoreboardTeamWrapper;
+import net.jitse.npclib.nms.v1_14_R1.packets.*;
 import net.jitse.npclib.skin.Skin;
-import net.minecraft.server.v1_9_R2.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,9 +22,9 @@ import java.util.List;
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_9_R2 extends NPC {
+public class NPC_v1_14_R1 extends NPC {
 
-    private Hologram hologram;
+    //private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister, packetPlayOutScoreboardTeamUnregister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -35,15 +32,14 @@ public class NPC_v1_9_R2 extends NPC {
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
     private List<PacketPlayOutEntityEquipment> packetPlayOutEntityEquipment = new ArrayList<>();
 
-
-    public NPC_v1_9_R2(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment) {
-        super(plugin, skin, autoHideDistance, lines, equipment, null);
+    public NPC_v1_14_R1(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines, List<ItemStack> equipment, Action action) {
+        super(plugin, skin, autoHideDistance, lines, equipment, action);
     }
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(location.clone().subtract(0, 0.5, 0), lines);
-        hologram.generatePackets(false, false);
+        //this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
+        //hologram.generatePackets(true, true);
 
         this.gameProfile = generateGameProfile(uuid, name);
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
@@ -77,6 +73,8 @@ public class NPC_v1_9_R2 extends NPC {
 
         // Second packet to send is "packetPlayOutPlayerInfoRemove".
 
+        new PacketPlayOutEntityMetadata().a();
+
         this.packetPlayOutScoreboardTeamUnregister = new PacketPlayOutScoreboardTeamWrapper()
                 .createUnregisterTeam(name); // Third packet to send.
     }
@@ -89,11 +87,12 @@ public class NPC_v1_9_R2 extends NPC {
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
+
         for(PacketPlayOutEntityEquipment equip : packetPlayOutEntityEquipment) {
             if (equip != null) playerConnection.sendPacket(equip);
         }
 
-        hologram.spawn(player);
+        //hologram.spawn(player);
 
 
         Bukkit.getScheduler().runTaskLater(plugin, () ->
@@ -107,7 +106,7 @@ public class NPC_v1_9_R2 extends NPC {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
 
-        hologram.destroy(player);
+        //hologram.destroy(player);
 
         if (scheduler) {
             // Sending this a bit later so the player doesn't see the name (for that split second).

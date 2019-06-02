@@ -79,10 +79,28 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>net.jitse</groupId>
+            <artifactId>npclib-nms-v1_14_R1</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
         <finalName>npclib-api-${project.version}</finalName>
+        <outputDirectory>C:\Users\EvanZ\Desktop\IntelliJ\NPCLib\jars1</outputDirectory>
     </build>
+
+    <profiles>
+        <profile>
+            <id>api</id>
+            <build>
+                <defaultGoal>clean install</defaultGoal>
+                <finalName>npclib-api-${project.version}</finalName>
+                <directory>C:\Users\EvanZ\Desktop\IntelliJ\NPCLib\jars</directory>
+            </build>
+        </profile>
+    </profiles>
 </project>
