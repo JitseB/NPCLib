@@ -9,4 +9,3 @@ echo "Building npclib-api.jar..."
 
 echo "Building npclib-plugin.jar..."
 /usr/local/apache-maven-3.5.4/bin/mvn clean install -Pplugin >> /dev/null 2>&1 && cp ./target/*.jar ./jars && echo "Finished building NPCLib plugin" || echo "Failed building NPCLib plugin. Please rebuild manually"
-print "test"
