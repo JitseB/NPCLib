@@ -16,7 +16,7 @@ public class GameProfileWrapper {
     // Written because of issue#10 (https://github.com/JitseB/NPCLib/issues/10).
     // This class acts as an NMS reflection wrapper for the GameProfileWrapper class.
 
-    // TODO: Add this class to the v1_7_R4 module of NPCLib.
+    // TODO: As of 1.4.2 1.7 support was removed, refactor this class.
 
     // TODO: This doesn't seem to work well with modified versions of Spigot (see issue #12).
     private final boolean is1_7 = Bukkit.getBukkitVersion().contains("1.7");
