@@ -10,15 +10,10 @@
     <artifactId>npclib</artifactId>
     <version>1.5-SNAPSHOT</version>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
     <scm>
-        <url>https://github.com/sonatype/nexus-oss.git</url>
-        <connection>scm:git:git://github.com/JitseB/NPClib</connection>
+        <url>git@github.com:JitseB/NPCLib.git</url>
+        <connection>scm:git:git@github.com:JitseB/NPClib.git</connection>
+        <developerConnection>scm:git:git@github.com:JitseB/NPCLib.git</developerConnection>
     </scm>
 
     <developers>
@@ -37,16 +32,13 @@
     </properties>
 
     <distributionManagement>
-        <!-- Repository for snapshots -->
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
+            <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <!-- Repository for releases -->
         <repository>
-            <id>nexus-releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
@@ -89,61 +81,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <quiet>true</quiet>
-                    <nonavbar>true</nonavbar>
-                    <notree>true</notree>
-                    <nocomment>true</nocomment>
-                    <nohelp>true</nohelp>
-
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <executions>
                     <execution>
@@ -155,24 +92,32 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <modules>
         <module>commons</module>
-        <module>nms</module>
-        <module>api</module>
+        <module>nms/v1_8_R1</module>
+        <module>nms/v1_8_R2</module>
+        <module>nms/v1_8_R3</module>
+        <module>nms/v1_9_R1</module>
+        <module>nms/v1_9_R2</module>
+        <module>nms/v1_10_R1</module>
+        <module>nms/v1_11_R1</module>
+        <module>nms/v1_12_R1</module>
+        <module>nms/v1_13_R1</module>
+        <module>nms/v1_13_R2</module>
+        <module>plugin</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>plugin</id>
-            <modules>
-                <module>commons</module>
-                <module>nms</module>
-                <module>api</module>
-                <module>plugin</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>

@@ -13,8 +13,6 @@
     <artifactId>npclib-plugin</artifactId>
 
     <build>
-        <directory>../target</directory>
-        <finalName>npclib-plugin-${project.parent.version}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
