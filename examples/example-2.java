@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.SortedSet;
 
 /**
@@ -24,7 +23,7 @@ public class NPCLibTest extends JavaPlugin implements Listener {
      */
 
     // To keep track of NPC IDs.
-    private final SortedSet<String> ids = new HashSet<>();
+    private final SortedSet<String> ids = new TreeSet<>();
     private NPCLib npclib;
 
     @Override
