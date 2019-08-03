@@ -1,4 +1,8 @@
 language: java
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
 cache:
   directories:
     - $HOME/.m2/
