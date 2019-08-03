@@ -93,6 +93,7 @@
         </plugins>
     </build>
 
+    <!-- NOTE: Build with mvn clean install -DperformRelease=true -->
     <profiles>
         <profile>
             <id>release-sign-artifacts</id>
