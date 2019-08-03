@@ -2,19 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
     <groupId>net.jitse</groupId>
     <artifactId>npclib</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
 
-    <scm>
-        <url>git@github.com:JitseB/NPCLib.git</url>
-        <connection>scm:git:git@github.com:JitseB/NPClib.git</connection>
-        <developerConnection>scm:git:git@github.com:JitseB/NPCLib.git</developerConnection>
-    </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <name>NPCLib</name>
+    <url>https://github.com/JitseB/NPCLib</url>
+    <description>Basic non-player character library for Minecraft.</description>
 
     <developers>
         <developer>
@@ -23,13 +24,25 @@
         </developer>
     </developers>
 
-    <name>NPCLib</name>
-    <url>https://github.com/JitseB/NPCLib</url>
-    <description>Basic non-player character library for Minecraft.</description>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <modules>
+        <module>api</module>
+        <module>nms</module>
+        <module>plugin</module>
+    </modules>
+
+    <scm>
+        <url>git@github.com:JitseB/NPCLib.git</url>
+        <connection>scm:git:git@github.com:JitseB/NPClib.git</connection>
+        <developerConnection>scm:git:git@github.com:JitseB/NPCLib.git</developerConnection>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -42,34 +55,21 @@
         </repository>
     </distributionManagement>
 
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <!--Spigot API-->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <build>
-        <defaultGoal>clean install</defaultGoal>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -82,6 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -105,19 +106,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <modules>
-        <module>commons</module>
-        <module>nms/v1_8_R1</module>
-        <module>nms/v1_8_R2</module>
-        <module>nms/v1_8_R3</module>
-        <module>nms/v1_9_R1</module>
-        <module>nms/v1_9_R2</module>
-        <module>nms/v1_10_R1</module>
-        <module>nms/v1_11_R1</module>
-        <module>nms/v1_12_R1</module>
-        <module>nms/v1_13_R1</module>
-        <module>nms/v1_13_R2</module>
-        <module>plugin</module>
-    </modules>
 </project>

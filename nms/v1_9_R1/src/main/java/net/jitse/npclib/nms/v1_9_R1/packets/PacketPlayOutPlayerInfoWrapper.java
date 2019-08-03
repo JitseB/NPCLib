@@ -6,7 +6,6 @@ package net.jitse.npclib.nms.v1_9_R1.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
-import net.jitse.npclib.api.wrapper.GameProfileWrapper;
 import net.minecraft.server.v1_9_R1.IChatBaseComponent;
 import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_9_R1.WorldSettings;
@@ -19,9 +18,7 @@ import java.util.List;
  */
 public class PacketPlayOutPlayerInfoWrapper {
 
-    public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfileWrapper gameProfileWrapper, String name) {
-        GameProfile gameProfile = (GameProfile) gameProfileWrapper.getGameProfile();
-
+    public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
         PacketPlayOutPlayerInfo packetPlayOutPlayerInfo = new PacketPlayOutPlayerInfo();
         Reflection.getField(packetPlayOutPlayerInfo.getClass(), "a", PacketPlayOutPlayerInfo.EnumPlayerInfoAction.class)
                 .set(packetPlayOutPlayerInfo, action);

@@ -1,5 +1,5 @@
-name: NPCLib-Plugin
+name: NPCLibPlugin
 version: ${project.parent.version}
 author: JitseB
+description: Dummy plugin for easy class-loading.
 main: net.jitse.npclib.plugin.NPCLibPlugin
-description: Basic non-player character library.

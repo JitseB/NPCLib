@@ -4,25 +4,25 @@
 
 package net.jitse.npclib.nms.v1_8_R3;
 
-import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.nms.holograms.Hologram;
+import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.internal.MinecraftVersion;
+import net.jitse.npclib.internal.SimpleNPC;
 import net.jitse.npclib.nms.v1_8_R3.packets.PacketPlayOutEntityHeadRotationWrapper;
 import net.jitse.npclib.nms.v1_8_R3.packets.PacketPlayOutNamedEntitySpawnWrapper;
 import net.jitse.npclib.nms.v1_8_R3.packets.PacketPlayOutPlayerInfoWrapper;
 import net.jitse.npclib.nms.v1_8_R3.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.jitse.npclib.skin.Skin;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_8_R3 extends NPC {
+public class NPC_v1_8_R3 extends SimpleNPC {
 
     private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
@@ -31,16 +31,15 @@ public class NPC_v1_8_R3 extends NPC {
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
 
-    public NPC_v1_8_R3(JavaPlugin plugin, Skin skin, double autoHideDistance, List<String> lines) {
-        super(plugin, skin, autoHideDistance, lines);
+    public NPC_v1_8_R3(NPCLib instance, List<String> lines) {
+        super(instance, lines);
     }
 
     @Override
     public void createPackets() {
         this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
-        hologram.generatePackets(false, false);
+        hologram.generatePackets(MinecraftVersion.V1_8_R3);
 
-        this.gameProfile = generateGameProfile(uuid, name);
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
         // Packets for spawning the NPC:
@@ -80,7 +79,7 @@ public class NPC_v1_8_R3 extends NPC {
         hologram.spawn(player);
 
 
-        Bukkit.getScheduler().runTaskLater(plugin, () ->
+        Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
     }
 
@@ -95,7 +94,7 @@ public class NPC_v1_8_R3 extends NPC {
 
         if (scheduler) {
             // Sending this a bit later so the player doesn't see the name (for that split second).
-            Bukkit.getScheduler().runTaskLater(plugin, () ->
+            Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                     playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
         } else {
             playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister);
