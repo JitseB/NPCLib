@@ -1,15 +1,15 @@
-![Banner](https://i.imgur.com/WL6QeUA.png)
+![Banner](https://i.imgur.com/9BgeVVy.png)
 NPCLib – Basic non-player character library.<br>
 [![Release](https://jitpack.io/v/JitseB/NPCLib.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Build Status](https://travis-ci.com/JitseB/NPCLib.svg?branch=master)](https://travis-ci.com/JitseB/NPCLib)
 [![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
-[![Versions](https://img.shields.io/badge/MC-1.7.10%20--%201.13.2-blue.svg)](https://github.com/JitseB/NPCLib/releases)
+[![Versions](https://img.shields.io/badge/MC-1.7.10%20--%201.14.4-blue.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Resource](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
 =
 
-This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.13.2**\*. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
+This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 - 1.14.4**\*. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
 
-\*You can find a version of NPCLib with basic support for 1.7.10 on the [legacy branch](https://github.com/JitseB/NPCLib/tree/legacy). This branch is not (as) actively maintained as the master branch. This version does not support multi-line text (yet).
+\*You can find a version of NPCLib with basic support for 1.7.10 on the [legacy branch](https://github.com/JitseB/NPCLib/tree/legacy). This branch is not actively maintained as the master branch. This version does not support multi-line text.
 
 ### Preview (click to play video)
 [![YouTube Video](http://img.youtube.com/vi/LqwdqIxPIvE/0.jpg)](http://www.youtube.com/watch?v=LqwdqIxPIvE "NPCLib – Basic non-player character library (Minecraft).")
@@ -20,40 +20,52 @@ This is an API made specifically for spigot servers (Minecraft). Current support
 
 Alternatively, you can help the project by starring the repository or telling others about NPCLib. :smile:
 
-## Roadmap
-
-- :heavy_check_mark: Spawn and destroy NPC (version 1.8 - latest).
-- :heavy_check_mark: Autohide NPC when out of range.
-- :heavy_check_mark: Add support for 1.7.10 (1.7 R4).
-- :heavy_check_mark: Documentation material.
-- :construction: Option to rotate head to player (when nearby).
-- :construction: Add support for animated text (update-able holograms).
-- :x: Give NPC armor and items in hand.
-- :x: Multi-line text support for 1.7.10 (1.7 R4).
-
-### Roadmad Legend
-:heavy_check_mark: Feature is fully implemented and functional. <br>
-:construction: Feature is still in development (or experimental). <br>
-:x: Development of feature has yet to be started. <br>
-
 ## Developers
 
 ### Usage
 
-It is recommended to shade `npclib-api-v*.jar` into your plugin.
-Alternatively, you can put `npclib-plugin-v*.jar` under your `plugins` folder. By doing this, you no longer need to shade the API JAR. Though, do not forget to add `NPCLib` as a dependency in your `plugin.yml`!
+There are multiple ways you can make use of NPCLib.
+
+1. The first option is to shade `npclib-plugin.jar` in to your plugin.
+2. The second option is to put `npclib-plugin.jar` under your `plugins` folder. By doing this, you no longer need to shade the API JAR. Though, do not forget to add `NPCLib` as a dependency in your `plugin.yml`!
+3. The third option (and the one I recommend most) is to shade the library using Maven. I recently added NPCLib to the OSSRH (OSS Repository Hosting) which allows you to easily import NPCLib into your project.
+
+#### Maven repository
+```xml
+<repositories>
+    <repository>
+        <id>ossrh</id>
+        <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+</repositories>
+```
+
+#### Maven dependency
+
+If you have NPCLib under your `plugins` folder, you may use the following:
+```xml
+<dependencies>
+    <dependency>
+        <groupId>net.jitse</groupId>
+        <artifactId>npclib-api</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>
+```
+If you do not want to have NPCLib in your `plugins` folder, you need to use the `npclib-plugin` artifact and [shade it](https://maven.apache.org/plugins/maven-shade-plugin/) accordingly.
 
 
 [Click here](https://github.com/JitseB/NPCLib/releases/latest) to download the latest release.
 
-[Click here](https://github.com/JitseB/NPCLib/blob/master/DOCUMENTATION.md) for an elaborate explanation on how to use NPCLib in your next project.
+**[Click here](https://github.com/JitseB/NPCLib/blob/master/DOCUMENTATION.md) for an elaborate explanation on how to use NPCLib in your next project.**
 
 ### Building your own version
 
 1. [Download](https://github.com/JitseB/NPCLib/archive/master.zip) or clone this repository.
-2. Build the plugin using `sh build.sh`. Alternatively, you can build the API JAR manually using `mvn clean install`.
+2. You can build the project using `mvn clean install`.
 
-You can build the plugin using `mvn clean install -pPlugin`.
+The API JAR will be under `/api/target/` and the plugin JAR (which includes all necessary NMS code) will be under `/plugins/target/`.
 
 ## License and plugins using NPCLib
 
