@@ -38,6 +38,7 @@ public class NPCLibTest extends JavaPlugin {
         MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
             NPC npc = npclib.createNPC(Arrays.asList(ChatColor.WHITE + "Hi there (#3)");
             npc.setLocation(event.getPlayer().getLocation());
+            npc.setSkin(skin);
             ids.add(npc.getId());
             npc.create();
             // The SkinFetcher fetches the skin async, you can only show the NPC to the player sync.
