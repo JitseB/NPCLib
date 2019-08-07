@@ -43,17 +43,6 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
         NPCManager.add(this);
     }
 
-    protected GameProfile generateGameProfile(UUID uuid, String name) {
-        GameProfile gameProfile = new GameProfile(uuid, name);
-
-        if (skin != null) {
-            gameProfile.getProperties().get("textures").clear();
-            gameProfile.getProperties().get("textures").add(new Property(skin.getValue(), skin.getSignature()));
-        }
-
-        return gameProfile;
-    }
-
     public NPCLib getInstance() {
         return instance;
     }
@@ -66,6 +55,13 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     @Override
     public NPC setSkin(Skin skin) {
         this.skin = skin;
+
+        gameProfile.getProperties().get("textures").clear();
+
+        if (skin != null) {
+            gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        }
+
         return this;
     }
 
