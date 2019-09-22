@@ -12,11 +12,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 /**
  * @author Jitse Boonstra
@@ -31,12 +29,18 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+        onPlayerLeave(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerKick(PlayerKickEvent event) {
+        onPlayerLeave(event.getPlayer());
+    }
+
+    private void onPlayerLeave(Player player) {
         for (SimpleNPC npc : NPCManager.getAllNPCs()) {
             npc.getAutoHidden().remove(player.getUniqueId());
-
-            // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-            npc.getShown().remove(player.getUniqueId());
+            npc.getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
         }
     }
 
