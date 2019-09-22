@@ -13,6 +13,7 @@ import net.jitse.npclib.api.events.NPCShowEvent;
 import net.jitse.npclib.api.skin.Skin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -102,6 +103,11 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public World getWorld() {
+        return location != null ? location.getWorld() : null;
     }
 
     public int getEntityId() {

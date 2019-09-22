@@ -6,6 +6,7 @@ package net.jitse.npclib.api;
 
 import net.jitse.npclib.api.skin.Skin;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public interface NPC {
@@ -34,6 +35,13 @@ public interface NPC {
      * @return The location of the NPC.
      */
     Location getLocation();
+
+    /**
+     * Get the world the NPC is located in.
+     *
+     * @return The world the NPC is located in.
+     */
+    World getWorld();
 
     /**
      * Create all necessary packets for the NPC so it can be shown to players.

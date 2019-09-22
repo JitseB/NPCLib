@@ -15,7 +15,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Jitse Boonstra
@@ -47,42 +50,40 @@ public class PacketListener {
     }
 
     private boolean handleInteractPacket(Player player, Object packet) {
-        if (packetPlayInUseEntityClazz.isInstance(packet)) {
-            SimpleNPC npc = null;
-            int packetEntityId = (int) entityIdField.get(packet);
+        if (!packetPlayInUseEntityClazz.isInstance(packet))
+            return true; // We aren't handling the packet.
 
+        SimpleNPC npc = null;
+        int packetEntityId = (int) entityIdField.get(packet);
 
-            // Not using streams here is an intentional choice.
-            // Packet listeners is one of the few places where it is important to write optimized code.
-            // Lambdas (And the stream api) create a massive amount of objects, especially if it isn't a static lambda.
-            // So, we're avoiding them here.
-            // ~ Kneesnap, 9 / 20 / 2019.
+        // Not using streams here is an intentional choice.
+        // Packet listeners is one of the few places where it is important to write optimized code.
+        // Lambdas (And the stream api) create a massive amount of objects, especially if it isn't a static lambda.
+        // So, we're avoiding them here.
+        // ~ Kneesnap, 9 / 20 / 2019.
 
-            for (SimpleNPC testNPC : NPCManager.getAllNPCs()) {
-                if (testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
-                    npc = testNPC;
-                    break;
-                }
+        for (SimpleNPC testNPC : NPCManager.getAllNPCs()) {
+            if (testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
+                npc = testNPC;
+                break;
             }
+        }
 
-            if (npc == null) {
-                // Default player, not doing magic with the packet.
-                return true;
-            }
+        if (npc == null) {
+            // Default player, not doing magic with the packet.
+            return true;
+        }
 
-            if (delay.contains(player.getUniqueId())) { // There is an active delay.
-                return false;
-            }
-
-            NPCInteractEvent.ClickType clickType = actionField.get(packet).toString().equals("ATTACK")
-                    ? NPCInteractEvent.ClickType.LEFT_CLICK : NPCInteractEvent.ClickType.RIGHT_CLICK;
-
-            delay.add(player.getUniqueId());
-            Bukkit.getScheduler().runTask(plugin, new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
+        if (delay.contains(player.getUniqueId())) { // There is an active delay.
             return false;
         }
 
-        return true;
+        NPCInteractEvent.ClickType clickType = actionField.get(packet).toString().equals("ATTACK")
+                ? NPCInteractEvent.ClickType.LEFT_CLICK : NPCInteractEvent.ClickType.RIGHT_CLICK;
+
+        delay.add(player.getUniqueId());
+        Bukkit.getScheduler().runTask(plugin, new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
+        return false;
     }
 
     // This would be a non-static lambda, and its usage matters, so we'll make it a full class.
@@ -102,7 +103,7 @@ public class PacketListener {
             Player player = eventToCall.getWhoClicked();
             this.listener.delay.remove(player.getUniqueId()); // Remove the NPC from the interact cooldown.
 
-            if (!Objects.equals(playerLocation.getWorld(), eventToCall.getNPC().getLocation().getWorld()))
+            if (!Objects.equals(playerLocation.getWorld(), eventToCall.getNPC().getWorld()))
                 return; // If the NPC and player are not in the same world, abort!
 
             double distance = player.getLocation(playerLocation).distanceSquared(eventToCall.getNPC().getLocation());
