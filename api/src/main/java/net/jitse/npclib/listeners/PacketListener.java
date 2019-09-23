@@ -102,8 +102,7 @@ public class PacketListener {
         public void run() {
             Player player = eventToCall.getWhoClicked();
             this.listener.delay.remove(player.getUniqueId()); // Remove the NPC from the interact cooldown.
-
-            if (!Objects.equals(playerLocation.getWorld(), eventToCall.getNPC().getWorld()))
+            if (!Objects.equals(player.getWorld(), eventToCall.getNPC().getWorld()))
                 return; // If the NPC and player are not in the same world, abort!
 
             double distance = player.getLocation(playerLocation).distanceSquared(eventToCall.getNPC().getLocation());
