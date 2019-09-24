@@ -93,8 +93,8 @@ public class NPC_v1_12_R1 extends SimpleNPC {
 
         if (scheduler) {
             // Sending this a bit later so the player doesn't see the name (for that split second).
-            Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
-                    playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
+            Bukkit.getScheduler().runTask(instance.getPlugin(), () ->
+                    playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister));
         } else {
             playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister);
         }
