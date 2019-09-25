@@ -15,5 +15,5 @@ interface PacketHandler {
 
     void sendShowPackets(Player player);
 
-    void sendHidePackets(Player player, boolean scheduler);
+    void sendHidePackets(Player player);
 }

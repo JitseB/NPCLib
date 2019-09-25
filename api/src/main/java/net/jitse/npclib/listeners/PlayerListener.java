@@ -38,10 +38,8 @@ public class PlayerListener implements Listener {
     }
 
     private void onPlayerLeave(Player player) {
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
-            npc.getAutoHidden().remove(player.getUniqueId());
-            npc.getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-        }
+        for (SimpleNPC npc : NPCManager.getAllNPCs())
+            npc.onLogout(player);
     }
 
     @EventHandler
@@ -54,7 +52,7 @@ public class PlayerListener implements Listener {
             if (npc.getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true, false);
+                    npc.hide(player, true);
                 }
             }
         }
@@ -103,7 +101,7 @@ public class PlayerListener implements Listener {
                 // Check if the player and NPC are out of range to sendHidePackets it.
                 if (!inRange) {
                     npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true, true);
+                    npc.hide(player, true);
                 }
             }
         }
