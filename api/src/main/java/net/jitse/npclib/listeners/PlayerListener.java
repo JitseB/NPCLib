@@ -8,14 +8,13 @@ import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.internal.NPCManager;
 import net.jitse.npclib.internal.SimpleNPC;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 /**
  * @author Jitse Boonstra
@@ -30,13 +29,17 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
-            npc.getAutoHidden().remove(player.getUniqueId());
+        onPlayerLeave(event.getPlayer());
+    }
 
-            // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-            npc.getShown().remove(player.getUniqueId());
-        }
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerKick(PlayerKickEvent event) {
+        onPlayerLeave(event.getPlayer());
+    }
+
+    private void onPlayerLeave(Player player) {
+        for (SimpleNPC npc : NPCManager.getAllNPCs())
+            npc.onLogout(player);
     }
 
     @EventHandler
@@ -46,10 +49,10 @@ public class PlayerListener implements Listener {
 
         // The PlayerTeleportEvent is call, and will handle visibility in the new world.
         for (SimpleNPC npc : NPCManager.getAllNPCs()) {
-            if (npc.getLocation().getWorld().equals(from)) {
+            if (npc.getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true, false);
+                    npc.hide(player, true);
                 }
             }
         }
@@ -57,7 +60,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        handleMove(event.getPlayer());
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (to == null || (from.getBlockX() != to.getBlockX()
+                || from.getBlockY() != to.getBlockY()
+                || from.getBlockZ() != to.getBlockZ()))
+            handleMove(event.getPlayer()); // Verify the player changed which block they are on. Since PlayerMoveEvent is one of the most called events, this is worth it.
     }
 
     @EventHandler
@@ -72,7 +80,7 @@ public class PlayerListener implements Listener {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
-            if (!npc.getLocation().getWorld().equals(world)) {
+            if (!npc.getWorld().equals(world)) {
                 continue; // NPC is not in the same world.
             }
 
@@ -80,8 +88,9 @@ public class PlayerListener implements Listener {
             // This will cause issues otherwise (e.g. custom skin disappearing).
             double hideDistance = instance.getAutoHideDistance();
             double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
-            boolean inRange = distanceSquared <= (Math.pow(hideDistance, 2))
-                    && distanceSquared <= (Math.pow(Bukkit.getViewDistance() << 4, 2));
+
+            int tempRange = Bukkit.getViewDistance() << 4;
+            boolean inRange = distanceSquared <= (hideDistance * hideDistance) && distanceSquared <= (tempRange * tempRange); // Avoids Math.pow due to how intensive it is. Could make a static utility function for it.
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
                 if (inRange) {
@@ -92,7 +101,7 @@ public class PlayerListener implements Listener {
                 // Check if the player and NPC are out of range to sendHidePackets it.
                 if (!inRange) {
                     npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true, true);
+                    npc.hide(player, true);
                 }
             }
         }

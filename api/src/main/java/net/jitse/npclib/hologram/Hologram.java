@@ -87,9 +87,9 @@ public class Hologram {
                 Reflection.getMethod(ENTITY_CLAZZ, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setGravity", boolean.class));
 
-        Reflection.MethodInvoker customNameMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1) ?
-                Reflection.getMethod(ENTITY_CLAZZ, "setCustomName", CHAT_BASE_COMPONENT_CLAZZ) :
-                Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setCustomName", String.class));
+        Reflection.MethodInvoker customNameMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1)
+                ? Reflection.getMethod(ENTITY_CLAZZ, "setCustomName", version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLAZZ : String.class)
+                : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setCustomName", String.class));
 
         Reflection.MethodInvoker customNameVisibilityMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1) ?
                 Reflection.getMethod(ENTITY_CLAZZ, "setCustomNameVisible", boolean.class) :
@@ -115,7 +115,7 @@ public class Hologram {
                 SET_LOCATION_METHOD.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
             }
 
-            customNameMethod.invoke(entityArmorStand, version.isAboveOrEqual(MinecraftVersion.V1_12_R1) ?
+            customNameMethod.invoke(entityArmorStand, version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ?
                     CHAT_COMPONENT_TEXT_CONSTRUCTOR.invoke(line) : line);
             customNameVisibilityMethod.invoke(entityArmorStand, true);
             gravityMethod.invoke(entityArmorStand, version.isAboveOrEqual(MinecraftVersion.V1_9_R2));

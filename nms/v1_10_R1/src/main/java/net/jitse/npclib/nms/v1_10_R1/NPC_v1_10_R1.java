@@ -17,7 +17,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Jitse Boonstra
@@ -26,10 +29,11 @@ public class NPC_v1_10_R1 extends SimpleNPC {
 
     private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
-    private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister, packetPlayOutScoreboardTeamUnregister;
+    private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
+    private Set<UUID> hasTeamRegistered = new HashSet<>();
 
     public NPC_v1_10_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
@@ -60,18 +64,20 @@ public class NPC_v1_10_R1 extends SimpleNPC {
 
         // Packet for destroying the NPC:
         this.packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityId); // First packet to send.
+    }
 
-        // Second packet to send is "packetPlayOutPlayerInfoRemove".
-
-        this.packetPlayOutScoreboardTeamUnregister = new PacketPlayOutScoreboardTeamWrapper()
-                .createUnregisterTeam(name); // Third packet to send.
+    @Override
+    public void onLogout(Player player) {
+        super.onLogout(player);
+        hasTeamRegistered.remove(player.getUniqueId());
     }
 
     @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
+        if (hasTeamRegistered.add(player.getUniqueId()))
+            playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
@@ -84,20 +90,11 @@ public class NPC_v1_10_R1 extends SimpleNPC {
     }
 
     @Override
-    public void sendHidePackets(Player player, boolean scheduler) {
+    public void sendHidePackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-
         hologram.destroy(player);
-
-        if (scheduler) {
-            // Sending this a bit later so the player doesn't see the name (for that split second).
-            Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
-                    playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister), 5);
-        } else {
-            playerConnection.sendPacket(packetPlayOutScoreboardTeamUnregister);
-        }
     }
 }
