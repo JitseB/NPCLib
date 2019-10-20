@@ -5,17 +5,17 @@
 package net.jitse.npclib.nms.v1_13_R2;
 
 import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.SimpleNPC;
-import net.jitse.npclib.nms.v1_13_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_13_R2.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_13_R2.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_13_R2.packets.PacketPlayOutScoreboardTeamWrapper;
+import net.jitse.npclib.nms.v1_13_R2.packets.*;
 import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
@@ -77,7 +77,7 @@ public class NPC_v1_13_R2 extends SimpleNPC {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
         if (hasTeamRegistered.add(player.getUniqueId()))
-           playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
+            playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
@@ -96,5 +96,55 @@ public class NPC_v1_13_R2 extends SimpleNPC {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
         hologram.destroy(player);
+    }
+
+    @Override
+    public void sendMetadataPacket(Player player) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+        PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadataWrapper().create(activeStates, entityId);
+
+        playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        EnumItemSlot nmsSlot;
+        ItemStack item;
+        switch (slot) {
+            case HELMET:
+                item = helmet;
+                nmsSlot = EnumItemSlot.HEAD;
+                break;
+            case CHESTPLATE:
+                item = chestplate;
+                nmsSlot = EnumItemSlot.CHEST;
+                break;
+            case LEGGINGS:
+                item = leggings;
+                nmsSlot = EnumItemSlot.LEGS;
+                break;
+            case BOOTS:
+                item = boots;
+                nmsSlot = EnumItemSlot.FEET;
+                break;
+            case MAINHAND:
+                item = inHand;
+                nmsSlot = EnumItemSlot.MAINHAND;
+                break;
+            case OFFHAND:
+                item = offHand;
+                nmsSlot = EnumItemSlot.OFFHAND;
+                break;
+            default:
+                if (!auto) {
+                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
+                }
+                return;
+        }
+
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
+        playerConnection.sendPacket(packet);
     }
 }

@@ -284,6 +284,9 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
             case MAINHAND:
                 this.inHand = item;
                 break;
+            case OFFHAND:
+                this.offHand = item;
+                break;
             default:
                 throw new IllegalArgumentException("Entered an invalid inventory slot");
         }

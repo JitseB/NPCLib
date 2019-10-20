@@ -37,7 +37,7 @@ public class PacketPlayOutNamedEntitySpawnWrapper {
                 .set(packetPlayOutNamedEntitySpawn, (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
 
         DataWatcher dataWatcher = new DataWatcher(null);
-        dataWatcher.register(new DataWatcherObject<>(13, DataWatcherRegistry.a), (byte) 127);
+        dataWatcher.register(new DataWatcherObject<>(15, DataWatcherRegistry.a), (byte) 127);
 
         Reflection.getField(packetPlayOutNamedEntitySpawn.getClass(), "h", DataWatcher.class)
                 .set(packetPlayOutNamedEntitySpawn, dataWatcher);
