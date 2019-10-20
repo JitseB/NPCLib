@@ -41,7 +41,8 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     protected Location location;
     protected Skin skin;
 
-    protected ItemStack helmet, chestplate, leggings, boots, inHand;
+    // offHand support in 1.9 R1 and later.
+    protected ItemStack helmet, chestplate, leggings, boots, inHand, offHand;
 
     public SimpleNPC(NPCLib instance, List<String> lines) {
         this.instance = instance;
@@ -280,7 +281,7 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
             case BOOTS:
                 this.boots = item;
                 break;
-            case IN_HAND:
+            case MAINHAND:
                 this.inHand = item;
                 break;
             default:
@@ -290,7 +291,7 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
             if (player != null && isShown(player)) {
-                sendEquipmentPacket(player, slot);
+                sendEquipmentPacket(player, slot, false);
             }
         }
         return this;

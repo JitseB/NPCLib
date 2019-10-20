@@ -20,10 +20,10 @@ interface PacketHandler {
 
     void sendMetadataPacket(Player player);
 
-    void sendEquipmentPacket(Player player, NPCSlot slot);
+    void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto);
 
     default void sendEquipmentPackets(Player player) {
         for (NPCSlot slot : NPCSlot.values())
-            sendEquipmentPacket(player, slot);
+            sendEquipmentPacket(player, slot, true);
     }
 }

@@ -107,7 +107,7 @@ public class NPC_v1_8_R1 extends SimpleNPC {
     }
 
     @Override
-    public void sendEquipmentPacket(Player player, NPCSlot slot) {
+    public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
         ItemStack item;
@@ -124,11 +124,14 @@ public class NPC_v1_8_R1 extends SimpleNPC {
             case BOOTS:
                 item = boots;
                 break;
-            case IN_HAND:
+            case MAINHAND:
                 item = inHand;
                 break;
             default:
-                throw new IllegalArgumentException("Slot is not recognized");
+                if (!auto) {
+                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
+                }
+                return;
         }
 
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, slot.getSlot(), CraftItemStack.asNMSCopy(item));

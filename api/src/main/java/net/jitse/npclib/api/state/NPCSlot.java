@@ -6,7 +6,8 @@ public enum NPCSlot {
     CHESTPLATE(3),
     LEGGINGS(2),
     BOOTS(1),
-    IN_HAND(0);
+    MAINHAND(0),
+    OFFHAND(5);
 
     int slot;
 

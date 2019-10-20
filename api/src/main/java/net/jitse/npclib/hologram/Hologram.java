@@ -83,6 +83,7 @@ public class Hologram {
     }
 
     public void generatePackets(MinecraftVersion version) {
+        // TODO: Check when this method was changed (1.9 R2 is giving an exception...
         Reflection.MethodInvoker gravityMethod = (version.isAboveOrEqual(MinecraftVersion.V1_9_R2) ?
                 Reflection.getMethod(ENTITY_CLAZZ, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setGravity", boolean.class));
