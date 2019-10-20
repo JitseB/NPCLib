@@ -11,10 +11,13 @@ import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.api.events.NPCHideEvent;
 import net.jitse.npclib.api.events.NPCShowEvent;
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.api.state.NPCState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -32,10 +35,13 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     private final Set<UUID> autoHidden = new HashSet<>();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
+    protected NPCState[] activeStates = new NPCState[]{};
 
     protected NPCLib instance;
     protected Location location;
     protected Skin skin;
+
+    protected ItemStack helmet, chestplate, leggings, boots, inHand;
 
     public SimpleNPC(NPCLib instance, List<String> lines) {
         this.instance = instance;
@@ -153,6 +159,8 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
 
         if (auto) {
             sendShowPackets(player);
+            sendMetadataPacket(player);
+            sendEquipmentPackets(player);
         } else {
             if (isShown(player)) {
                 throw new RuntimeException("Cannot call show method twice.");
@@ -167,6 +175,8 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
             if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
                     <= instance.getAutoHideDistance()) {
                 sendShowPackets(player);
+                sendMetadataPacket(player);
+                sendEquipmentPackets(player);
             } else {
                 autoHidden.add(player.getUniqueId());
             }
@@ -206,5 +216,83 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
                 autoHidden.remove(player.getUniqueId());
             }
         }
+    }
+
+    @Override
+    public NPC toggleState(NPCState state) {
+        int inActiveStatesIndex = -1;
+        if (activeStates.length == 0) { // If there're no active states, this is the first to be toggled (on).
+            activeStates = new NPCState[]{state};
+        } else { // Otherwise, there have been states that were toggled, check if we need to toggle something off.
+            for (int i = 0; i < activeStates.length; i++) {
+                if (activeStates[i] == state) { // If the state is to be toggled off, save the index so we can remove it.
+                    inActiveStatesIndex = i;
+                    break;
+                }
+            }
+
+            if (inActiveStatesIndex > -1) { // If there's a state to be toggled of, create a new array with all items but the one to be toggled off.
+                NPCState[] newArr = new NPCState[activeStates.length - 1];
+                for (int i = 0; i < newArr.length; i++) {
+                    if (inActiveStatesIndex == i) {
+                        continue;
+                    } else if (i < inActiveStatesIndex) {
+                        newArr[i] = activeStates[i];
+                    } else {
+                        newArr[i] = activeStates[i + 1];
+                    }
+                }
+                activeStates = newArr;
+            } else { // Else, we need to add a state by appending our state to the array.
+                NPCState[] newArr = new NPCState[activeStates.length + 1];
+                System.arraycopy(activeStates, 0, newArr, 0, activeStates.length);
+                newArr[activeStates.length] = state;
+                activeStates = newArr;
+            }
+        }
+
+        // Send a new metadata packet to all players that can see the NPC.
+        for (UUID shownUuid : shown) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                sendMetadataPacket(player);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public NPC setItem(NPCSlot slot, ItemStack item) {
+        if (slot == null) {
+            throw new NullPointerException("Slot cannot be null");
+        }
+
+        switch (slot) {
+            case HELMET:
+                this.helmet = item;
+                break;
+            case CHESTPLATE:
+                this.chestplate = item;
+                break;
+            case LEGGINGS:
+                this.leggings = item;
+                break;
+            case BOOTS:
+                this.boots = item;
+                break;
+            case IN_HAND:
+                this.inHand = item;
+                break;
+            default:
+                throw new IllegalArgumentException("Entered an invalid inventory slot");
+        }
+
+        for (UUID shownUuid : shown) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                sendEquipmentPacket(player, slot);
+            }
+        }
+        return this;
     }
 }

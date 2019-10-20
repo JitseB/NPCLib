@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * @author Jitse Boonstras
+ * @author Jitse Boonstra
  */
 public class ChunkListener implements Listener {
 
@@ -35,7 +35,7 @@ public class ChunkListener implements Listener {
         Chunk chunk = event.getChunk();
 
         for (SimpleNPC npc : NPCManager.getAllNPCs()) {
-            if (!isSameChunk(npc.getLocation(), chunk))
+            if (npc.getLocation() == null || !isSameChunk(npc.getLocation(), chunk))
                 continue; // We aren't unloading the chunk with the NPC in it.
 
             // We found an NPC in the chunk being unloaded. Time to hide this NPC from all players.

@@ -5,9 +5,12 @@
 package net.jitse.npclib.api;
 
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.api.state.NPCState;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public interface NPC {
 
@@ -88,4 +91,21 @@ public interface NPC {
      * Requires {@link NPC#create} to be used first.
      */
     void destroy();
+
+    /**
+     * Toggle a state of the NPC.
+     *
+     * @param state The state to be toggled.
+     * @return Object instance.
+     */
+    NPC toggleState(NPCState state);
+
+    /**
+     * Change the item in the inventory of the NPC.
+     *
+     * @param slot The slot to set the item of.
+     * @param item The item to set.
+     * @return Object instance.
+     */
+    NPC setItem(NPCSlot slot, ItemStack item);
 }
