@@ -12,6 +12,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public interface NPC {
 
     /**
@@ -108,4 +110,6 @@ public interface NPC {
      * @return Object instance.
      */
     NPC setItem(NPCSlot slot, ItemStack item);
+
+    NPC setText(List<String> text);
 }

@@ -22,14 +22,12 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public abstract class SimpleNPC implements NPC, PacketHandler {
+public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     protected final UUID uuid = UUID.randomUUID();
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     protected final GameProfile gameProfile = new GameProfile(uuid, name);
-
-    protected final List<String> lines;
 
     private final Set<UUID> shown = new HashSet<>();
     private final Set<UUID> autoHidden = new HashSet<>();
@@ -38,15 +36,16 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     protected NPCState[] activeStates = new NPCState[]{};
 
     protected NPCLib instance;
+    protected List<String> text;
     protected Location location;
     protected Skin skin;
 
     // offHand support in 1.9 R1 and later.
     protected ItemStack helmet, chestplate, leggings, boots, inHand, offHand;
 
-    public SimpleNPC(NPCLib instance, List<String> lines) {
+    public NPCBase(NPCLib instance, List<String> text) {
         this.instance = instance;
-        this.lines = lines == null ? Collections.emptyList() : lines;
+        this.text = text == null ? Collections.emptyList() : text;
 
         NPCManager.add(this);
     }
@@ -297,6 +296,18 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
                 sendEquipmentPacket(player, slot, false);
             }
         }
+        return this;
+    }
+
+    @Override
+    public NPC setText(List<String> text) {
+        for (UUID shownUuid : shown) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                sendTextUpdatePackets(this.text, text, player);
+            }
+        }
+        this.text = text;
         return this;
     }
 }

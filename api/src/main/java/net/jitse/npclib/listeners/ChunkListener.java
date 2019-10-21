@@ -5,8 +5,8 @@
 package net.jitse.npclib.listeners;
 
 import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
-import net.jitse.npclib.internal.SimpleNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -34,7 +34,7 @@ public class ChunkListener implements Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
 
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (npc.getLocation() == null || !isSameChunk(npc.getLocation(), chunk))
                 continue; // We aren't unloading the chunk with the NPC in it.
 
@@ -55,7 +55,7 @@ public class ChunkListener implements Listener {
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
 
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!isSameChunk(npc.getLocation(), chunk))
                 continue; // The NPC is not in the loaded chunk.
 

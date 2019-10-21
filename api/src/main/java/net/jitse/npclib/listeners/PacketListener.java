@@ -8,8 +8,8 @@ import com.comphenix.tinyprotocol.Reflection;
 import com.comphenix.tinyprotocol.TinyProtocol;
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.events.NPCInteractEvent;
+import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
-import net.jitse.npclib.internal.SimpleNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -53,7 +53,7 @@ public class PacketListener {
         if (!packetPlayInUseEntityClazz.isInstance(packet))
             return true; // We aren't handling the packet.
 
-        SimpleNPC npc = null;
+        NPCBase npc = null;
         int packetEntityId = (int) entityIdField.get(packet);
 
         // Not using streams here is an intentional choice.
@@ -62,7 +62,7 @@ public class PacketListener {
         // So, we're avoiding them here.
         // ~ Kneesnap, 9 / 20 / 2019.
 
-        for (SimpleNPC testNPC : NPCManager.getAllNPCs()) {
+        for (NPCBase testNPC : NPCManager.getAllNPCs()) {
             if (testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
                 npc = testNPC;
                 break;

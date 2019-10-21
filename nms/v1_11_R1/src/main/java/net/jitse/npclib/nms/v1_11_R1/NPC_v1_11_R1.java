@@ -6,9 +6,9 @@ package net.jitse.npclib.nms.v1_11_R1;
 
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.state.NPCSlot;
-import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.hologram._Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
-import net.jitse.npclib.internal.SimpleNPC;
+import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.nms.v1_11_R1.packets.*;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
@@ -25,9 +25,9 @@ import java.util.UUID;
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_11_R1 extends SimpleNPC {
+public class NPC_v1_11_R1 extends NPCBase {
 
-    private Hologram hologram;
+    private _Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -41,7 +41,7 @@ public class NPC_v1_11_R1 extends SimpleNPC {
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
+        this.hologram = new _Hologram(location.clone().add(0, 0.5, 0), text);
         hologram.generatePackets(MinecraftVersion.V1_11_R1);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();

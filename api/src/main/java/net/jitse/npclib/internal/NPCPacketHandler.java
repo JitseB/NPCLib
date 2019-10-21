@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Jitse Boonstra
  */
-interface PacketHandler {
+interface NPCPacketHandler {
 
     void createPackets();
 

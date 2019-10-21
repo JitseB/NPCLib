@@ -5,8 +5,8 @@
 package net.jitse.npclib.listeners;
 
 import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
-import net.jitse.npclib.internal.SimpleNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -38,7 +38,7 @@ public class PlayerListener implements Listener {
     }
 
     private void onPlayerLeave(Player player) {
-        for (SimpleNPC npc : NPCManager.getAllNPCs())
+        for (NPCBase npc : NPCManager.getAllNPCs())
             npc.onLogout(player);
     }
 
@@ -48,7 +48,7 @@ public class PlayerListener implements Listener {
         World from = event.getFrom();
 
         // The PlayerTeleportEvent is call, and will handle visibility in the new world.
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (npc.getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
@@ -75,7 +75,7 @@ public class PlayerListener implements Listener {
 
     private void handleMove(Player player) {
         World world = player.getWorld();
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
             }
