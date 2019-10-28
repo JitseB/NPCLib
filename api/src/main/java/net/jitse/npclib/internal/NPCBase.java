@@ -13,6 +13,7 @@ import net.jitse.npclib.api.events.NPCShowEvent;
 import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
+import net.jitse.npclib.hologram.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -39,6 +40,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected List<String> text;
     protected Location location;
     protected Skin skin;
+    protected Hologram hologram;
 
     // offHand support in 1.9 R1 and later.
     protected ItemStack helmet, chestplate, leggings, boots, inHand, offHand;
@@ -304,7 +306,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
             if (player != null && isShown(player)) {
-                sendTextUpdatePackets(this.text, text, player);
+                hologram.updateText(text);
             }
         }
         this.text = text;

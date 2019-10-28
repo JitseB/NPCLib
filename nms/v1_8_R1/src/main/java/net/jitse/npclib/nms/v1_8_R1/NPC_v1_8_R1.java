@@ -6,7 +6,6 @@ package net.jitse.npclib.nms.v1_8_R1;
 
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.state.NPCSlot;
-import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.nms.v1_8_R1.hologram.Hologram_v1_8_R1;
 import net.jitse.npclib.nms.v1_8_R1.packets.*;
@@ -27,7 +26,6 @@ import java.util.UUID;
  */
 public class NPC_v1_8_R1 extends NPCBase {
 
-    private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
