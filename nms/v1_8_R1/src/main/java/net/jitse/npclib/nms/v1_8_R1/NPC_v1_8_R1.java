@@ -6,8 +6,9 @@ package net.jitse.npclib.nms.v1_8_R1;
 
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_8_R1.hologram.Hologram_v1_8_R1;
 import net.jitse.npclib.nms.v1_8_R1.packets.*;
 import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Bukkit;
@@ -39,7 +40,7 @@ public class NPC_v1_8_R1 extends NPCBase {
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram_v1_8_R1(location.clone().add(0, 0.5, 0), text);
+        this.hologram = new Hologram(MinecraftVersion.V1_8_R1, location.clone().add(0, 0.5, 0), text);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 

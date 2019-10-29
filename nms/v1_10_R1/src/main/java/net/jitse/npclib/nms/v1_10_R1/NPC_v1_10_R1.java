@@ -6,7 +6,7 @@ package net.jitse.npclib.nms.v1_10_R1;
 
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.state.NPCSlot;
-import net.jitse.npclib.hologram._Hologram;
+import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.nms.v1_10_R1.packets.*;
@@ -27,7 +27,6 @@ import java.util.UUID;
  */
 public class NPC_v1_10_R1 extends NPCBase {
 
-    private _Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -41,8 +40,7 @@ public class NPC_v1_10_R1 extends NPCBase {
 
     @Override
     public void createPackets() {
-        this.hologram = new _Hologram(location.clone().subtract(0, 0.5, 0), text);
-        hologram.generatePackets(MinecraftVersion.V1_10_R1);
+        this.hologram = new Hologram(MinecraftVersion.V1_10_R1, location.clone().subtract(0, 0.5, 0), text);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
@@ -82,8 +80,7 @@ public class NPC_v1_10_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
 
-        hologram.spawn(player);
-
+        hologram.show(player);
 
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
@@ -95,7 +92,8 @@ public class NPC_v1_10_R1 extends NPCBase {
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-        hologram.destroy(player);
+
+        hologram.hide(player);
     }
 
     @Override

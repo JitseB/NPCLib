@@ -303,12 +303,15 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public NPC setText(List<String> text) {
+        List<Object> updatePackets = hologram.getUpdatePackets(text);
+
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
             if (player != null && isShown(player)) {
-                hologram.updateText(text);
+                hologram.update(player, updatePackets);
             }
         }
+
         this.text = text;
         return this;
     }
