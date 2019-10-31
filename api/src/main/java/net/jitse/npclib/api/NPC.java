@@ -112,4 +112,19 @@ public interface NPC {
     NPC setItem(NPCSlot slot, ItemStack item);
 
     NPC setText(List<String> text);
+    
+    /**
+     * Get the text of an NPC
+     *
+     * @return List<String> text
+     */
+    List<String> getText();
+    
+    /**
+     * Get a NPC's item.
+     *
+     * @param slot The slot the item is in.
+     * @return ItemStack item.
+     */
+    ItemStack getItem(NPCSlot slot);
 }
