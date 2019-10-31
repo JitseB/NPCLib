@@ -264,6 +264,29 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
+    public ItemStack getItem(NPCSlot slot) {
+        if (slot == null) {
+            throw new NullPointerException("Slot cannot be null");
+        }
+        switch (slot) {
+            case HELMET:
+                return this.helmet;
+            case CHESTPLATE:
+                return this.chestplate;
+            case LEGGINGS:
+                return this.leggings;
+            case BOOTS:
+                return this.boots;
+            case MAINHAND:
+                return this.inHand;
+            case OFFHAND:
+                return this.offHand;
+            default:
+                throw new IllegalArgumentException("Entered an invalid inventory slot");
+        }
+    }
+    
+    @Override
     public NPC setItem(NPCSlot slot, ItemStack item) {
         if (slot == null) {
             throw new NullPointerException("Slot cannot be null");
@@ -314,5 +337,10 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
         this.text = text;
         return this;
+    }
+    
+    @Override
+    public List<String> getText() {
+        return text;
     }
 }
