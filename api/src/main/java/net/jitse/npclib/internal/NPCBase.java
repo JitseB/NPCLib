@@ -221,6 +221,18 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
+    public boolean getState(NPCState state) {
+        if (activeStates.length != 0) {
+            for (int i = 0; i < activeStates.length; i++) {
+                if (activeStates[i] == state) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public NPC toggleState(NPCState state) {
         int inActiveStatesIndex = -1;
         if (activeStates.length == 0) { // If there're no active states, this is the first to be toggled (on).
@@ -263,6 +275,29 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return this;
     }
 
+    @Override
+    public ItemStack getItem(NPCSlot slot) {
+        if (slot == null) {
+            throw new NullPointerException("Slot cannot be null");
+        }
+        switch (slot) {
+            case HELMET:
+                return this.helmet;
+            case CHESTPLATE:
+                return this.chestplate;
+            case LEGGINGS:
+                return this.leggings;
+            case BOOTS:
+                return this.boots;
+            case MAINHAND:
+                return this.inHand;
+            case OFFHAND:
+                return this.offHand;
+            default:
+                throw new IllegalArgumentException("Entered an invalid inventory slot");
+        }
+    }
+    
     @Override
     public NPC setItem(NPCSlot slot, ItemStack item) {
         if (slot == null) {
@@ -314,5 +349,10 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
         this.text = text;
         return this;
+    }
+    
+    @Override
+    public List<String> getText() {
+        return text;
     }
 }
