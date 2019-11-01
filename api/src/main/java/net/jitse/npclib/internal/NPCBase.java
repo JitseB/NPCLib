@@ -221,6 +221,18 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
+    public boolean getState(NPCState state) {
+        if (activeStates.length != 0) {
+            for (int i = 0; i < activeStates.length; i++) {
+                if (activeStates[i] == state) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public NPC toggleState(NPCState state) {
         int inActiveStatesIndex = -1;
         if (activeStates.length == 0) { // If there're no active states, this is the first to be toggled (on).
