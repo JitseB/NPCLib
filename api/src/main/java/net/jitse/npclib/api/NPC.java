@@ -101,6 +101,14 @@ public interface NPC {
      * @return Object instance.
      */
     NPC toggleState(NPCState state);
+    
+    /**
+     * Get state of NPC.
+     *
+     * @param state The state requested.
+     * @return boolean on/off status.
+     */
+    boolean getState(NPCState state);
 
     /**
      * Change the item in the inventory of the NPC.
@@ -112,4 +120,19 @@ public interface NPC {
     NPC setItem(NPCSlot slot, ItemStack item);
 
     NPC setText(List<String> text);
+    
+    /**
+     * Get the text of an NPC
+     *
+     * @return List<String> text
+     */
+    List<String> getText();
+    
+    /**
+     * Get a NPC's item.
+     *
+     * @param slot The slot the item is in.
+     * @return ItemStack item.
+     */
+    ItemStack getItem(NPCSlot slot);
 }
