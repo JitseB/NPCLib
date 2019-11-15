@@ -45,8 +45,12 @@ public class ChunkListener implements Listener {
                 if (npc.getAutoHidden().contains(uuid)) {
                     continue;
                 }
-
-                npc.hide(Bukkit.getPlayer(uuid), true);
+                
+                // Bukkit.getPlayer(uuid) sometimes returns null
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    npc.hide(player, true);
+                }
             }
         }
     }
