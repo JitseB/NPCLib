@@ -57,12 +57,6 @@ public class NPC_v1_15_R1 extends NPCBase {
     }
 
     @Override
-    public void onLogout(Player player) {
-        super.onLogout(player);
-        hasTeamRegistered.remove(player.getUniqueId());
-    }
-
-    @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
