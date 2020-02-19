@@ -17,10 +17,7 @@ import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author Jitse Boonstra
@@ -32,7 +29,6 @@ public class NPC_v1_10_R1 extends NPCBase {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
-    private Set<UUID> hasTeamRegistered = new HashSet<>();
 
     public NPC_v1_10_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
@@ -62,12 +58,6 @@ public class NPC_v1_10_R1 extends NPCBase {
 
         // Packet for destroying the NPC:
         this.packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityId); // First packet to send.
-    }
-
-    @Override
-    public void onLogout(Player player) {
-        super.onLogout(player);
-        hasTeamRegistered.remove(player.getUniqueId());
     }
 
     @Override
@@ -108,39 +98,8 @@ public class NPC_v1_10_R1 extends NPCBase {
     public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        EnumItemSlot nmsSlot;
-        ItemStack item;
-        switch (slot) {
-            case HELMET:
-                item = helmet;
-                nmsSlot = EnumItemSlot.HEAD;
-                break;
-            case CHESTPLATE:
-                item = chestplate;
-                nmsSlot = EnumItemSlot.CHEST;
-                break;
-            case LEGGINGS:
-                item = leggings;
-                nmsSlot = EnumItemSlot.LEGS;
-                break;
-            case BOOTS:
-                item = boots;
-                nmsSlot = EnumItemSlot.FEET;
-                break;
-            case MAINHAND:
-                item = inHand;
-                nmsSlot = EnumItemSlot.MAINHAND;
-                break;
-            case OFFHAND:
-                item = offHand;
-                nmsSlot = EnumItemSlot.OFFHAND;
-                break;
-            default:
-                if (!auto) {
-                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
-                }
-                return;
-        }
+        EnumItemSlot nmsSlot = slot.getNmsEnum(EnumItemSlot.class);
+        ItemStack item = getItem(slot);
 
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
         playerConnection.sendPacket(packet);

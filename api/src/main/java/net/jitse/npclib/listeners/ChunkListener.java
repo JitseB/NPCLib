@@ -60,7 +60,7 @@ public class ChunkListener implements Listener {
         Chunk chunk = event.getChunk();
 
         for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (!isSameChunk(npc.getLocation(), chunk))
+            if (npc.getLocation() == null || !isSameChunk(npc.getLocation(), chunk))
                 continue; // The NPC is not in the loaded chunk.
 
             // The chunk being loaded has this NPC in it. Showing it to all the players again.
@@ -89,7 +89,6 @@ public class ChunkListener implements Listener {
             }
         }
     }
-
 
     private static int getChunkCoordinate(int coordinate) {
         return coordinate >> 4;

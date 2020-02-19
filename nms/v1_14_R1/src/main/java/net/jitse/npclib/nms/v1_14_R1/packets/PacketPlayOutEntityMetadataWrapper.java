@@ -6,9 +6,11 @@ import net.minecraft.server.v1_14_R1.DataWatcherObject;
 import net.minecraft.server.v1_14_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_14_R1.PacketPlayOutEntityMetadata;
 
+import java.util.Collection;
+
 public class PacketPlayOutEntityMetadataWrapper {
 
-    public PacketPlayOutEntityMetadata create(NPCState[] activateStates, int entityId) {
+    public PacketPlayOutEntityMetadata create(Collection<NPCState> activateStates, int entityId) {
         DataWatcher dataWatcher = new DataWatcher(null);
         byte masked = NPCState.getMasked(activateStates);
         // TODO: Find out why NPCState#CROUCHED doesn't work.

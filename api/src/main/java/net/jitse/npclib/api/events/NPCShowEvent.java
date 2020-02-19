@@ -54,6 +54,7 @@ public class NPCShowEvent extends Event implements Cancellable {
         return cancelled;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

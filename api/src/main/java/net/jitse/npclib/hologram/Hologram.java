@@ -51,7 +51,7 @@ public class Hologram {
             .getConstructor(PACKET_PLAY_OUT_ENTITY_METADATA_CLAZZ, int.class, DATAWATCHER_CLAZZ, boolean.class);
 
     // Fields:
-    private static final Reflection.FieldAccessor playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
+    private static final Reflection.FieldAccessor<?> playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
             "playerConnection", PLAYER_CONNECTION_CLAZZ);
 
     // Methods:
@@ -92,8 +92,7 @@ public class Hologram {
     }
 
     private void createPackets() {
-        // TODO: Check when this method was changed (1.9 R2 is giving an exception...)
-        Reflection.MethodInvoker gravityMethod = (version.isAboveOrEqual(MinecraftVersion.V1_9_R2) ?
+        Reflection.MethodInvoker gravityMethod = (version.isAboveOrEqual(MinecraftVersion.V1_10_R1) ?
                 Reflection.getMethod(ENTITY_CLAZZ, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setGravity", boolean.class));
 
@@ -213,4 +212,3 @@ public class Hologram {
         }
     }
 }
-

@@ -6,9 +6,11 @@ import net.minecraft.server.v1_13_R2.DataWatcherObject;
 import net.minecraft.server.v1_13_R2.DataWatcherRegistry;
 import net.minecraft.server.v1_13_R2.PacketPlayOutEntityMetadata;
 
+import java.util.Collection;
+
 public class PacketPlayOutEntityMetadataWrapper {
 
-    public PacketPlayOutEntityMetadata create(NPCState[] activateStates, int entityId) {
+    public PacketPlayOutEntityMetadata create(Collection<NPCState> activateStates, int entityId) {
         DataWatcher dataWatcher = new DataWatcher(null);
         byte masked = NPCState.getMasked(activateStates);
         dataWatcher.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), masked);
