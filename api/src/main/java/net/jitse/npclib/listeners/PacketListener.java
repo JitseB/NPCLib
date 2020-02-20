@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,8 +28,8 @@ public class PacketListener {
     private final Class<?> packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
 
     // Fields:
-    private final Reflection.FieldAccessor entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
-    private final Reflection.FieldAccessor actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
+    private final Reflection.FieldAccessor<Integer> entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
+    private final Reflection.FieldAccessor<?> actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
 
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();
@@ -54,7 +53,7 @@ public class PacketListener {
             return true; // We aren't handling the packet.
 
         NPCBase npc = null;
-        int packetEntityId = (int) entityIdField.get(packet);
+        int packetEntityId = entityIdField.get(packet);
 
         // Not using streams here is an intentional choice.
         // Packet listeners is one of the few places where it is important to write optimized code.
@@ -102,7 +101,7 @@ public class PacketListener {
         public void run() {
             Player player = eventToCall.getWhoClicked();
             this.listener.delay.remove(player.getUniqueId()); // Remove the NPC from the interact cooldown.
-            if (!Objects.equals(player.getWorld(), eventToCall.getNPC().getWorld()))
+            if (!player.getWorld().equals(eventToCall.getNPC().getWorld()))
                 return; // If the NPC and player are not in the same world, abort!
 
             double distance = player.getLocation(playerLocation).distanceSquared(eventToCall.getNPC().getLocation());

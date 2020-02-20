@@ -38,6 +38,7 @@ public class NPCInteractEvent extends Event {
         return this.npc;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

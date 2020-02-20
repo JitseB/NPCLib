@@ -1,19 +1,15 @@
-/*
- * Copyright (c) 2018 Jitse Boonstra
- */
-
-package net.jitse.npclib.nms.v1_12_R1;
+package net.jitse.npclib.nms.v1_15_R1;
 
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_12_R1.packets.*;
-import net.minecraft.server.v1_12_R1.*;
+import net.jitse.npclib.nms.v1_15_R1.packets.*;
+import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,7 +18,7 @@ import java.util.List;
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_12_R1 extends NPCBase {
+public class NPC_v1_15_R1 extends NPCBase {
 
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
@@ -30,13 +26,13 @@ public class NPC_v1_12_R1 extends NPCBase {
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
 
-    public NPC_v1_12_R1(NPCLib instance, List<String> lines) {
+    public NPC_v1_15_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(MinecraftVersion.V1_12_R1, location.clone().add(0, 0.5, 0), text);
+        this.hologram = new Hologram(MinecraftVersion.V1_15_R1, location.clone().add(0, 0.5, 0), text);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
@@ -69,6 +65,7 @@ public class NPC_v1_12_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
+        sendMetadataPacket(player);
 
         hologram.show(player);
 

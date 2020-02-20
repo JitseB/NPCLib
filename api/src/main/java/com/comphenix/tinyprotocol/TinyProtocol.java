@@ -6,6 +6,7 @@ package com.comphenix.tinyprotocol;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
+import com.mojang.authlib.GameProfile;
 import io.netty.channel.*;
 import net.jitse.npclib.NPCLib;
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Minimized version of TinyProtocol by Kristian suited for NPCLib.
  */
 public abstract class TinyProtocol {
-
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
@@ -44,8 +44,7 @@ public abstract class TinyProtocol {
 
     // Packets we have to intercept
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-    private static final Reflection.FieldAccessor getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START,
-            Reflection.getClass("com.mojang.authlib.GameProfile"), 0);
+    private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
     // Speedup channel lookup
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
@@ -85,7 +84,7 @@ public abstract class TinyProtocol {
             instance.getLogger().info("Attempting to inject into netty");
             registerChannelHandler();
             registerPlayers(plugin);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException ex) {
             // Damn you, late bind
             instance.getLogger().warning("Attempting to delay injection");
 
@@ -115,9 +114,8 @@ public abstract class TinyProtocol {
                             channel.eventLoop().submit(() -> injectChannelInternal(channel));
                         }
                     }
-                } catch (Exception exception) {
-                    instance.getLogger().severe("Cannot inject incomming channel " + channel + ". Message: "
-                            + exception.getMessage());
+                } catch (Exception e) {
+                    instance.getLogger().severe("Cannot inject incomming channel " + channel, e);
                 }
             }
 
@@ -126,9 +124,8 @@ public abstract class TinyProtocol {
         // This is executed before Minecraft's channel handler
         beginInitProtocol = new ChannelInitializer<Channel>() {
 
-            @SuppressWarnings("all")
             @Override
-            protected void initChannel(Channel channel) throws Exception {
+            protected void initChannel(Channel channel) {
                 channel.pipeline().addLast(endInitProtocol);
             }
 
@@ -136,9 +133,8 @@ public abstract class TinyProtocol {
 
         serverChannelHandler = new ChannelInboundHandlerAdapter() {
 
-            @SuppressWarnings("all")
             @Override
-            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            public void channelRead(ChannelHandlerContext ctx, Object msg) {
                 Channel channel = (Channel) msg;
 
                 // Prepare to initialize ths channel
@@ -152,7 +148,6 @@ public abstract class TinyProtocol {
     private void registerBukkitEvents() {
         listener = new Listener() {
 
-            @SuppressWarnings("unused")
             @EventHandler(priority = EventPriority.LOWEST)
             public final void onPlayerLogin(PlayerLoginEvent e) {
                 if (closed)
@@ -166,7 +161,6 @@ public abstract class TinyProtocol {
                 }
             }
 
-            @SuppressWarnings("unused")
             @EventHandler
             public final void onPluginDisable(PluginDisableEvent e) {
                 if (e.getPlugin().equals(plugin)) {
@@ -251,7 +245,7 @@ public abstract class TinyProtocol {
             }
 
             return interceptor;
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException e) {
             // Try again
             return (PacketInterceptor) channel.pipeline().get(handlerName);
         }
@@ -305,8 +299,8 @@ public abstract class TinyProtocol {
 
             try {
                 msg = onPacketInAsync(player, msg);
-            } catch (Exception exception) {
-                instance.getLogger().severe("Error in onPacketInAsync(). Message: " + exception.getMessage());
+            } catch (Exception e) {
+                instance.getLogger().severe("Error in onPacketInAsync().", e);
             }
 
             if (msg != null) {
@@ -316,8 +310,8 @@ public abstract class TinyProtocol {
 
         private void handleLoginStart(Channel channel, Object packet) {
             if (PACKET_LOGIN_IN_START.isInstance(packet)) {
-                Object profile = getGameProfile.get(packet);
-                channelLookup.put((String) Reflection.getMethod(profile.getClass(), "getName").invoke(profile), channel);
+                GameProfile profile = getGameProfile.get(packet);
+                channelLookup.put(profile.getName(), channel);
             }
         }
     }

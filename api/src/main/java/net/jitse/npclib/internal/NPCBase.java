@@ -29,12 +29,13 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     protected final GameProfile gameProfile = new GameProfile(uuid, name);
+    protected final Set<UUID> hasTeamRegistered = new HashSet<>();
+    protected final Set<NPCState> activeStates = EnumSet.noneOf(NPCState.class);
 
     private final Set<UUID> shown = new HashSet<>();
     private final Set<UUID> autoHidden = new HashSet<>();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
-    protected NPCState[] activeStates = new NPCState[]{};
 
     protected NPCLib instance;
     protected List<String> text;
@@ -42,8 +43,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected Skin skin;
     protected Hologram hologram;
 
-    // offHand support in 1.9 R1 and later.
-    protected ItemStack helmet, chestplate, leggings, boots, inHand, offHand;
+    protected final Map<NPCSlot, ItemStack> items = new EnumMap<>(NPCSlot.class);
 
     public NPCBase(NPCLib instance, List<String> text) {
         this.instance = instance;
@@ -136,6 +136,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     public void onLogout(Player player) {
         getAutoHidden().remove(player.getUniqueId());
         getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
+        hasTeamRegistered.remove(player.getUniqueId());
     }
 
     @Override
@@ -165,7 +166,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             sendEquipmentPackets(player);
         } else {
             if (isShown(player)) {
-                throw new RuntimeException("Cannot call show method twice.");
+                throw new IllegalStateException("Cannot call show method twice.");
             }
 
             if (shown.contains(player.getUniqueId())) {
@@ -206,7 +207,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             sendHidePackets(player);
         } else {
             if (!shown.contains(player.getUniqueId())) {
-                throw new RuntimeException("Cannot call hide method without calling NPC#show.");
+                throw new IllegalStateException("Cannot call hide method without calling NPC#show.");
             }
 
             shown.remove(player.getUniqueId());
@@ -222,47 +223,15 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public boolean getState(NPCState state) {
-        if (activeStates.length != 0) {
-            for (int i = 0; i < activeStates.length; i++) {
-                if (activeStates[i] == state) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return activeStates.contains(state);
     }
-    
+
     @Override
     public NPC toggleState(NPCState state) {
-        int inActiveStatesIndex = -1;
-        if (activeStates.length == 0) { // If there're no active states, this is the first to be toggled (on).
-            activeStates = new NPCState[]{state};
-        } else { // Otherwise, there have been states that were toggled, check if we need to toggle something off.
-            for (int i = 0; i < activeStates.length; i++) {
-                if (activeStates[i] == state) { // If the state is to be toggled off, save the index so we can remove it.
-                    inActiveStatesIndex = i;
-                    break;
-                }
-            }
-
-            if (inActiveStatesIndex > -1) { // If there's a state to be toggled of, create a new array with all items but the one to be toggled off.
-                NPCState[] newArr = new NPCState[activeStates.length - 1];
-                for (int i = 0; i < newArr.length; i++) {
-                    if (inActiveStatesIndex == i) {
-                        continue;
-                    } else if (i < inActiveStatesIndex) {
-                        newArr[i] = activeStates[i];
-                    } else {
-                        newArr[i] = activeStates[i + 1];
-                    }
-                }
-                activeStates = newArr;
-            } else { // Else, we need to add a state by appending our state to the array.
-                NPCState[] newArr = new NPCState[activeStates.length + 1];
-                System.arraycopy(activeStates, 0, newArr, 0, activeStates.length);
-                newArr[activeStates.length] = state;
-                activeStates = newArr;
-            }
+        if (activeStates.contains(state)) {
+            activeStates.remove(state);
+        } else {
+            activeStates.add(state);
         }
 
         // Send a new metadata packet to all players that can see the NPC.
@@ -277,55 +246,16 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public ItemStack getItem(NPCSlot slot) {
-        if (slot == null) {
-            throw new NullPointerException("Slot cannot be null");
-        }
-        switch (slot) {
-            case HELMET:
-                return this.helmet;
-            case CHESTPLATE:
-                return this.chestplate;
-            case LEGGINGS:
-                return this.leggings;
-            case BOOTS:
-                return this.boots;
-            case MAINHAND:
-                return this.inHand;
-            case OFFHAND:
-                return this.offHand;
-            default:
-                throw new IllegalArgumentException("Entered an invalid inventory slot");
-        }
+        Objects.requireNonNull(slot, "Slot cannot be null");
+
+        return items.get(slot);
     }
-    
+
     @Override
     public NPC setItem(NPCSlot slot, ItemStack item) {
-        if (slot == null) {
-            throw new NullPointerException("Slot cannot be null");
-        }
+        Objects.requireNonNull(slot, "Slot cannot be null");
 
-        switch (slot) {
-            case HELMET:
-                this.helmet = item;
-                break;
-            case CHESTPLATE:
-                this.chestplate = item;
-                break;
-            case LEGGINGS:
-                this.leggings = item;
-                break;
-            case BOOTS:
-                this.boots = item;
-                break;
-            case MAINHAND:
-                this.inHand = item;
-                break;
-            case OFFHAND:
-                this.offHand = item;
-                break;
-            default:
-                throw new IllegalArgumentException("Entered an invalid inventory slot");
-        }
+        items.put(slot, item);
 
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
@@ -350,7 +280,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         this.text = text;
         return this;
     }
-    
+
     @Override
     public List<String> getText() {
         return text;

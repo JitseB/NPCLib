@@ -39,8 +39,7 @@ public final class NPCLib {
         this.npcClass = npcClass;
 
         if (npcClass == null) {
-            logger.severe("Failed to initiate. Your server's version ("
-                    + versionName + ") is not supported");
+            logger.severe("Failed to initiate. Your server's version (" + versionName + ") is not supported");
             return;
         }
 
@@ -96,7 +95,7 @@ public final class NPCLib {
         try {
             return (NPC) npcClass.getConstructors()[0].newInstance(this, text);
         } catch (Exception exception) {
-            logger.warning("Failed to create NPC. Please report the following stacktrace message: " + exception.getMessage());
+            logger.warning("Failed to create NPC. Please report the following stacktrace message", exception);
         }
 
         return null;
