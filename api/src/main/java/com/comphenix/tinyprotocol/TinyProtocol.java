@@ -40,7 +40,9 @@ public abstract class TinyProtocol {
     private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
     private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
     private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+    // This depends on the arrangement of fields in the ServerConnection class, check in every new version for updates!
+    private static final Reflection.FieldAccessor<List> networkMarkers = Reflection.getField(serverConnectionClass, List.class, 1);
+//    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
     // Packets we have to intercept
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
@@ -180,7 +182,10 @@ public abstract class TinyProtocol {
         boolean looking = true;
 
         // We need to synchronize against this list
-        networkManagers = (List<Object>) getNetworkMarkers.invoke(null, serverConnection);
+        // Update 8/3/20 JMB: Fetch from field, the method doesn't exist...
+        // The field getter should do the job, though I'll leave the old code here for now.
+        networkManagers = (List<Object>) networkMarkers.get(serverConnection);
+//        networkManagers = (List<Object>) getNetworkMarkers.invoke(null, serverConnection);
         createServerChannelHandler();
 
         // Find the correct list, or implicitly throw an exception
