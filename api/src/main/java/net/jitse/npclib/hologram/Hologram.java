@@ -90,8 +90,6 @@ public class Hologram {
                 .invoke(CRAFT_BUKKIT_CLASS.cast(location.getWorld()));
 
         createPackets();
-        // Create update packets so we can send the metadata packet for V1.15 R1 and up.
-        getUpdatePackets(text);
     }
 
     private void createPackets() {
