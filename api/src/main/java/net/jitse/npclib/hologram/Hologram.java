@@ -18,6 +18,7 @@ public class Hologram {
     private final List<Object> armorStands = new ArrayList<>();
     private final List<Object> showPackets = new ArrayList<>();
     private final List<Object> hidePackets = new ArrayList<>();
+    private final List<Object> metaPackets = new ArrayList<>();
 
     private static final double DELTA = 0.3;
 
@@ -89,6 +90,8 @@ public class Hologram {
                 .invoke(CRAFT_BUKKIT_CLASS.cast(location.getWorld()));
 
         createPackets();
+        // Create update packets so we can send the metadata packet for V1.15 R1 and up.
+        getUpdatePackets(text);
     }
 
     private void createPackets() {
@@ -139,6 +142,11 @@ public class Hologram {
             showPackets.add(PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CONSTRUCTOR.invoke(entityArmorStand));
             hidePackets.add(PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR
                     .invoke(new int[]{(int) GET_ID_METHOD.invoke(entityArmorStand)}));
+            // For 1.15 R1 and up.
+            metaPackets.add(PACKET_PLAY_OUT_ENTITY_METADATA_CONSTRUCTOR.invoke(
+                    GET_ID_METHOD.invoke(entityArmorStand),
+                    GET_DATAWATCHER_METHOD.invoke(entityArmorStand),
+                    true));
 
             location.subtract(0, DELTA, 0);
         }
@@ -199,6 +207,9 @@ public class Hologram {
         for (int i = 0; i < text.size(); i++) {
             if (text.get(i).isEmpty()) continue; // No need to spawn the line.
             SEND_PACKET_METHOD.invoke(playerConnection, showPackets.get(i));
+            if (version.isAboveOrEqual(MinecraftVersion.V1_15_R1)) {
+                SEND_PACKET_METHOD.invoke(playerConnection, metaPackets.get(i));
+            }
         }
     }
 
