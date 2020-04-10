@@ -15,11 +15,6 @@ import java.util.List;
 
 public class Hologram {
 
-    private final List<Object> armorStands = new ArrayList<>();
-    private final List<Object> showPackets = new ArrayList<>();
-    private final List<Object> hidePackets = new ArrayList<>();
-    private final List<Object> metaPackets = new ArrayList<>();
-
     private static final double DELTA = 0.3;
 
     // Classes:
@@ -52,7 +47,7 @@ public class Hologram {
             .getConstructor(PACKET_PLAY_OUT_ENTITY_METADATA_CLAZZ, int.class, DATAWATCHER_CLAZZ, boolean.class);
 
     // Fields:
-    private static final Reflection.FieldAccessor<?> playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
+    private static final Reflection.FieldAccessor<?> PLAYER_CONNECTION_FIELD = Reflection.getField(ENTITY_PLAYER_CLAZZ,
             "playerConnection", PLAYER_CONNECTION_CLAZZ);
 
     // Methods:
@@ -75,6 +70,11 @@ public class Hologram {
     private static final Reflection.MethodInvoker GET_DATAWATCHER_METHOD = Reflection.getMethod(ENTITY_CLAZZ,
             "getDataWatcher");
 
+    private final List<Object> armorStands = new ArrayList<>();
+    private final List<Object> showPackets = new ArrayList<>();
+    private final List<Object> hidePackets = new ArrayList<>();
+    private final List<Object> metaPackets = new ArrayList<>();
+
     private final MinecraftVersion version;
     private final Location start;
     private final Object worldServer;
@@ -86,8 +86,7 @@ public class Hologram {
         this.start = location;
         this.text = text;
 
-        this.worldServer = Reflection.getMethod(CRAFT_BUKKIT_CLASS, "getHandle")
-                .invoke(CRAFT_BUKKIT_CLASS.cast(location.getWorld()));
+        this.worldServer = Reflection.getMethod(CRAFT_BUKKIT_CLASS, "getHandle").invoke(location.getWorld());
 
         createPackets();
     }
@@ -97,13 +96,10 @@ public class Hologram {
                 Reflection.getMethod(ENTITY_CLAZZ, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setGravity", boolean.class));
 
-        Reflection.MethodInvoker customNameMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1)
-                ? Reflection.getMethod(ENTITY_CLAZZ, "setCustomName", version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLAZZ : String.class)
-                : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setCustomName", String.class));
+        Reflection.MethodInvoker customNameMethod = Reflection.getMethod(ENTITY_CLAZZ, "setCustomName",
+                version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLAZZ : String.class);
 
-        Reflection.MethodInvoker customNameVisibilityMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1) ?
-                Reflection.getMethod(ENTITY_CLAZZ, "setCustomNameVisible", boolean.class) :
-                Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setCustomNameVisible", boolean.class));
+        Reflection.MethodInvoker customNameVisibilityMethod = Reflection.getMethod(ENTITY_CLAZZ, "setCustomNameVisible", boolean.class);
 
         Location location = start.clone().add(0, DELTA * text.size(), 0);
         Class<?> worldClass = worldServer.getClass().getSuperclass();
@@ -157,9 +153,8 @@ public class Hologram {
             throw new IllegalArgumentException("When updating the text, the old and new text should have the same amount of lines");
         }
 
-        Reflection.MethodInvoker customNameMethod = (version.isAboveOrEqual(MinecraftVersion.V1_12_R1)
-                ? Reflection.getMethod(ENTITY_CLAZZ, "setCustomName", version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLAZZ : String.class)
-                : Reflection.getMethod(ENTITY_ARMOR_STAND_CLAZZ, "setCustomName", String.class));
+        Reflection.MethodInvoker customNameMethod = Reflection.getMethod(ENTITY_CLAZZ, "setCustomName",
+                version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLAZZ : String.class);
 
         for (int i = 0; i < text.size(); i++) {
             Object entityArmorStand = armorStands.get(i);
@@ -190,8 +185,7 @@ public class Hologram {
     }
 
     public void update(Player player, List<Object> updatePackets) {
-        Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
-                .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
+        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
 
         for (Object packet : updatePackets) {
             SEND_PACKET_METHOD.invoke(playerConnection, packet);
@@ -199,8 +193,7 @@ public class Hologram {
     }
 
     public void show(Player player) {
-        Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
-                .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
+        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
 
         for (int i = 0; i < text.size(); i++) {
             if (text.get(i).isEmpty()) continue; // No need to spawn the line.
@@ -212,8 +205,7 @@ public class Hologram {
     }
 
     public void hide(Player player) {
-        Object playerConnection = playerConnectionField.get(PLAYER_GET_HANDLE_METHOD
-                .invoke(CRAFT_PLAYER_CLAZZ.cast(player)));
+        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
 
         for (int i = 0; i < text.size(); i++) {
             if (text.get(i).isEmpty()) continue; // No need to hide the line (as it was never spawned).
