@@ -98,8 +98,11 @@ public class NPC_v1_8_R3 extends NPCBase {
     public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        if (slot == NPCSlot.OFFHAND && !auto) {
-            throw new UnsupportedOperationException("Offhand is not supported on servers below 1.9");
+        if (slot == NPCSlot.OFFHAND) {
+            if (!auto) {
+                throw new UnsupportedOperationException("Offhand is not supported on servers below 1.9");
+            }
+            return;
         }
 
         ItemStack item = getItem(slot);
