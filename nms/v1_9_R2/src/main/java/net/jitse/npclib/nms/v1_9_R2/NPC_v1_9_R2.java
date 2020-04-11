@@ -72,8 +72,9 @@ public class NPC_v1_9_R2 extends NPCBase {
 
         hologram.show(player);
 
+        // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
-                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
+                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 200);
     }
 
     @Override

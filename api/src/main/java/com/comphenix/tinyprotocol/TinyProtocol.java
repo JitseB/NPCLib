@@ -150,7 +150,7 @@ public abstract class TinyProtocol {
     private void registerBukkitEvents() {
         listener = new Listener() {
 
-            @EventHandler(priority = EventPriority.LOWEST)
+            @EventHandler(priority = EventPriority.MONITOR)
             public final void onPlayerLogin(PlayerLoginEvent e) {
                 if (closed)
                     return;
@@ -248,7 +248,6 @@ public abstract class TinyProtocol {
                 channel.pipeline().addBefore("packet_handler", handlerName, interceptor);
                 uninjectedChannels.remove(channel);
             }
-
             return interceptor;
         } catch (IllegalArgumentException e) {
             // Try again
