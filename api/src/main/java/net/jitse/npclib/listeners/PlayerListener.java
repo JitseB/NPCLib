@@ -62,7 +62,10 @@ public class PlayerListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (to == null || (from.getBlockX() != to.getBlockX()
+        // 11/4/20: Added pitch and yaw to the if statement. If the change in this is 10 or more degrees, check the movement.
+        if (to == null || (Math.abs(from.getPitch() - to.getPitch()) <= 10
+                || Math.abs(from.getYaw() - to.getYaw()) <= 10
+                || from.getBlockX() != to.getBlockX()
                 || from.getBlockY() != to.getBlockY()
                 || from.getBlockZ() != to.getBlockZ()))
             handleMove(event.getPlayer()); // Verify the player changed which block they are on. Since PlayerMoveEvent is one of the most called events, this is worth it.

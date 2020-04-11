@@ -108,9 +108,23 @@ public class Hologram {
             worldClass = worldClass.getSuperclass();
         }
 
-        Reflection.ConstructorInvoker entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
-                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
-                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
+//        Reflection.ConstructorInvoker entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
+//                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
+//                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
+        // Replacement for issue #59
+        Reflection.ConstructorInvoker entityArmorStandConstructor = null;
+        try {
+            entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
+                    Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
+                    Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
+        } catch (IllegalStateException exception) {
+            worldClass = worldClass.getSuperclass();
+
+            entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
+                    Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
+                    Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
+        }
+        // end #59
 
         for (String line : text) {
             Object entityArmorStand = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
