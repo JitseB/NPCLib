@@ -2,7 +2,6 @@
 NPCLib – Basic non-player character library.<br>
 [![Release](https://jitpack.io/v/JitseB/NPCLib.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Build Status](https://travis-ci.com/JitseB/NPCLib.svg?branch=master)](https://travis-ci.com/JitseB/NPCLib)
-[![JDK](https://img.shields.io/badge/Using-Java%208-blue.svg)](http://jdk.java.net/8/)
 [![Versions](https://img.shields.io/badge/MC-1.8%20R2%20--%20latest-blue.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Resource](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
 =
