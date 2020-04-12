@@ -101,7 +101,7 @@ public interface NPC {
      * @return Object instance.
      */
     NPC toggleState(NPCState state);
-    
+
     /**
      * Get state of NPC.
      *
@@ -120,14 +120,14 @@ public interface NPC {
     NPC setItem(NPCSlot slot, ItemStack item);
 
     NPC setText(List<String> text);
-    
+
     /**
      * Get the text of an NPC
      *
      * @return List<String> text
      */
     List<String> getText();
-    
+
     /**
      * Get a NPC's item.
      *
@@ -135,4 +135,14 @@ public interface NPC {
      * @return ItemStack item.
      */
     ItemStack getItem(NPCSlot slot);
+
+    /**
+     * LABYMOD ONLY
+     * Let the NPC play an emote.
+     * (https://docs.labymod.net/pages/server/emote_api/)
+     *
+     * @param receiver The player who should see the emote.
+     * @param emoteId  The emote id (see link).
+     */
+    void forceLabyModEmote(Player receiver, int emoteId);
 }

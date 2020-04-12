@@ -4,6 +4,8 @@
 
 package net.jitse.npclib.internal;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCLib;
@@ -14,6 +16,7 @@ import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
+import net.labymod.utilities.LMCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,10 +28,7 @@ import java.util.*;
 
 public abstract class NPCBase implements NPC, NPCPacketHandler {
 
-    protected final UUID uuid = UUID.randomUUID();
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
-    protected final String name = uuid.toString().replace("-", "").substring(0, 10);
-    protected final GameProfile gameProfile = new GameProfile(uuid, name);
     protected final Set<UUID> hasTeamRegistered = new HashSet<>();
     protected final Set<NPCState> activeStates = EnumSet.noneOf(NPCState.class);
 
@@ -36,6 +36,11 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     private final Set<UUID> autoHidden = new HashSet<>();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
+    // 12/4/20, JMB: Changed the UUID in order to enable LabyMod Emotes:
+    // This gives a format similar to: 528086a2-4f5f-2ec2-0000-000000000000
+    protected UUID uuid = new UUID(new Random().nextLong(), 0);
+    protected String name = uuid.toString().replace("-", "").substring(0, 10);
+    protected GameProfile gameProfile = new GameProfile(uuid, name);
 
     protected NPCLib instance;
     protected List<String> text;
@@ -84,6 +89,16 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
             hide(Bukkit.getPlayer(uuid), true);
         }
+    }
+
+    @Override
+    public void forceLabyModEmote(Player receiver, int emoteId) {
+        JsonArray array = new JsonArray();
+        JsonObject forcedEmote = new JsonObject();
+        forcedEmote.addProperty("uuid", uuid.toString());
+        forcedEmote.addProperty("emote_id", emoteId);
+        array.add(forcedEmote);
+        LMCUtils.sendLMCMessage(receiver, "emote_api", array.getAsJsonObject());
     }
 
     public void disableFOV() {
