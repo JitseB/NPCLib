@@ -98,7 +98,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         forcedEmote.addProperty("uuid", uuid.toString());
         forcedEmote.addProperty("emote_id", emoteId);
         array.add(forcedEmote);
-        LMCUtils.sendLMCMessage(receiver, "emote_api", array.getAsJsonObject());
+        LMCUtils.sendLMCMessage(receiver, "emote_api", array);
     }
 
     public void disableFOV() {
