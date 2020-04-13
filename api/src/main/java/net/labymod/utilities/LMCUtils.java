@@ -1,6 +1,7 @@
 package net.labymod.utilities;
 
 import com.comphenix.tinyprotocol.Reflection;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -30,9 +31,9 @@ public class LMCUtils {
      *
      * @param player         Minecraft Client
      * @param key            LMC message key
-     * @param messageContent json object content
+     * @param messageContent json element
      */
-    public static void sendLMCMessage(Player player, String key, JsonObject messageContent) {
+    public static void sendLMCMessage(Player player, String key, JsonElement messageContent) {
         byte[] bytes = LMCUtils.getBytesToSend(key, messageContent.toString());
 
         // 12/4/20, JMB: Converted into reflections for multi-version support:
