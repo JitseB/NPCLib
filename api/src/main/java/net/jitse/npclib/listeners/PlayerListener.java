@@ -129,7 +129,7 @@ public class PlayerListener implements Listener {
             double distanceSquared = location.distanceSquared(npc.getLocation());
 
             int tempRange = Bukkit.getViewDistance() << 4;
-            boolean inRange = distanceSquared <= (hideDistance * hideDistance) && distanceSquared <= (tempRange * tempRange); // Avoids Math.pow due to how intensive it is. Could make a static utility function for it.
+            boolean inRange = distanceSquared <= square(hideDistance) && distanceSquared <= square(tempRange);
             if (npc.getAutoHidden().contains(player.getUniqueId())) {
                 // Check if the player and NPC are within the range to sendShowPackets it again.
                 if (inRange) {
@@ -144,5 +144,10 @@ public class PlayerListener implements Listener {
                 }
             }
         }
+    }
+
+    // Avoiding Math.pow due to how resource intensive it is.
+    private double square(double val) {
+        return val * val;
     }
 }
