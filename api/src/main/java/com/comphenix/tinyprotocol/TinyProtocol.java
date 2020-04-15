@@ -291,6 +291,11 @@ public abstract class TinyProtocol {
         }
     }
 
+    // Keeping this here for testing purposes:
+//    public Object onPacketOutAsync(Player receiver, Channel channel, Object packet) {
+//        return packet;
+//    }
+
     private final class PacketInterceptor extends ChannelDuplexHandler {
         // Updated by the login event
         public volatile Player player;
@@ -311,6 +316,20 @@ public abstract class TinyProtocol {
                 super.channelRead(ctx, msg);
             }
         }
+
+        // Keeping this here for testing purposes:
+//        @Override
+//        public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+//            try {
+//                msg = onPacketOutAsync(player, ctx.channel(), msg);
+//            } catch (Exception e) {
+//                instance.getLogger().severe("Error in onPacketOutAsync().", e);
+//            }
+//
+//            if (msg != null) {
+//                super.write(ctx, msg, promise);
+//            }
+//        }
 
         private void handleLoginStart(Channel channel, Object packet) {
             if (PACKET_LOGIN_IN_START.isInstance(packet)) {
