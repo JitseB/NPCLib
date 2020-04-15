@@ -14,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Jitse Boonstra
@@ -40,6 +42,40 @@ public class PlayerListener implements Listener {
     private void onPlayerLeave(Player player) {
         for (NPCBase npc : NPCManager.getAllNPCs())
             npc.onLogout(player);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        // Need to auto hide the NPCs from the player, or else the system will think they can see the NPC on respawn.
+        Player player = event.getEntity();
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
+            if (npc.getWorld().equals(player.getWorld())) {
+                if (!npc.getAutoHidden().contains(player.getUniqueId())) {
+                    npc.getAutoHidden().add(player.getUniqueId());
+                    npc.hide(player, true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        // If the player dies in the server spawn world, the world change event isn't called (nor is the PlayerTeleportEvent).
+        Player player = event.getPlayer();
+        Location respawn = event.getRespawnLocation();
+        if (respawn.getWorld() != null && respawn.getWorld().equals(player.getWorld())) {
+            // Waiting until the player is moved to the new location or else it'll mess things up.
+            // I.e. if the player is at great distance from the NPC spawning, they won't be able to see it.
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.isOnline() && player.getLocation().equals(respawn)) {
+                        handleMove(player);
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimerAsynchronously(instance.getPlugin(), 0, 1);
+        }
     }
 
     @EventHandler
@@ -77,20 +113,20 @@ public class PlayerListener implements Listener {
     }
 
     private void handleMove(Player player) {
-        World world = player.getWorld();
+        Location location = player.getLocation();
         for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
-            if (!npc.getWorld().equals(world)) {
+            if (!npc.getWorld().equals(location.getWorld())) {
                 continue; // NPC is not in the same world.
             }
 
             // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
             // This will cause issues otherwise (e.g. custom skin disappearing).
             double hideDistance = instance.getAutoHideDistance();
-            double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
+            double distanceSquared = location.distanceSquared(npc.getLocation());
 
             int tempRange = Bukkit.getViewDistance() << 4;
             boolean inRange = distanceSquared <= (hideDistance * hideDistance) && distanceSquared <= (tempRange * tempRange); // Avoids Math.pow due to how intensive it is. Could make a static utility function for it.
