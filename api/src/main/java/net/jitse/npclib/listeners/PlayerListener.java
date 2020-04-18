@@ -65,7 +65,11 @@ public class PlayerListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (player.isOnline() && player.getLocation().equals(respawn)) {
+                    if (!player.isOnline()) {
+                        this.cancel();
+                        return;
+                    }
+                    if (player.getLocation().equals(respawn)) {
                         handleMove(player);
                         this.cancel();
                     }
