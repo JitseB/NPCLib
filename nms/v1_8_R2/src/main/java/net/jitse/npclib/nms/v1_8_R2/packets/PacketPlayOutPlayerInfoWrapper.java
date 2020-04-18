@@ -10,6 +10,7 @@ import net.minecraft.server.v1_8_R2.IChatBaseComponent;
 import net.minecraft.server.v1_8_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R2.WorldSettings;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,14 +24,10 @@ public class PacketPlayOutPlayerInfoWrapper {
                 .set(packetPlayOutPlayerInfo, action);
 
         PacketPlayOutPlayerInfo.PlayerInfoData playerInfoData = packetPlayOutPlayerInfo.new PlayerInfoData(gameProfile, 1,
-                WorldSettings.EnumGamemode.NOT_SET, IChatBaseComponent.ChatSerializer.a(name));
+                WorldSettings.EnumGamemode.NOT_SET, IChatBaseComponent.ChatSerializer.a("{\"text\":\"[NPC] " + name + "\",\"color\":\"dark_gray\"}"));
 
-        Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(),
-                "b", List.class);
-
-        List<PacketPlayOutPlayerInfo.PlayerInfoData> list = fieldAccessor.get(packetPlayOutPlayerInfo);
-        list.add(playerInfoData);
-        fieldAccessor.set(packetPlayOutPlayerInfo, list);
+        Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(), "b", List.class);
+        fieldAccessor.set(packetPlayOutPlayerInfo, Collections.singletonList(playerInfoData));
 
         return packetPlayOutPlayerInfo;
     }

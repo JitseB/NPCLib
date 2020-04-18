@@ -9,8 +9,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.v1_9_R1.IChatBaseComponent;
 import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_9_R1.WorldSettings;
-import org.bukkit.ChatColor;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,14 +24,10 @@ public class PacketPlayOutPlayerInfoWrapper {
                 .set(packetPlayOutPlayerInfo, action);
 
         PacketPlayOutPlayerInfo.PlayerInfoData playerInfoData = new PacketPlayOutPlayerInfo().new PlayerInfoData(gameProfile, 1,
-                WorldSettings.EnumGamemode.NOT_SET, IChatBaseComponent.ChatSerializer.b("{\"text\":\"" + ChatColor.BLUE + "[NPC] " + name + "\"}"));
+                WorldSettings.EnumGamemode.NOT_SET, IChatBaseComponent.ChatSerializer.a("{\"text\":\"[NPC] " + name + "\",\"color\":\"dark_gray\"}"));
 
-        Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(),
-                "b", List.class);
-
-        List<PacketPlayOutPlayerInfo.PlayerInfoData> list = fieldAccessor.get(packetPlayOutPlayerInfo);
-        list.add(playerInfoData);
-        fieldAccessor.set(packetPlayOutPlayerInfo, list);
+        Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(), "b", List.class);
+        fieldAccessor.set(packetPlayOutPlayerInfo, Collections.singletonList(playerInfoData));
 
         return packetPlayOutPlayerInfo;
     }

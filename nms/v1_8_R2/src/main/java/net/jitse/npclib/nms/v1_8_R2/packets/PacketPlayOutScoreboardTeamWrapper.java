@@ -6,9 +6,9 @@ package net.jitse.npclib.nms.v1_8_R2.packets;
 
 import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_8_R2.PacketPlayOutScoreboardTeam;
-import org.bukkit.ChatColor;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Jitse Boonstra
@@ -28,14 +28,9 @@ public class PacketPlayOutScoreboardTeamWrapper {
                 .set(packetPlayOutScoreboardTeam, "never");
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)
                 .set(packetPlayOutScoreboardTeam, 1);
-        // Could not get this working in the PacketPlayOutPlayerInfoWrapper class.
-        Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "c", String.class)
-                .set(packetPlayOutScoreboardTeam, ChatColor.BLUE + "[NPC] ");
         Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
                 packetPlayOutScoreboardTeam.getClass(), "g", Collection.class);
-        Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
-        collection.add(name);
-        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, collection);
+        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, Collections.singletonList(name));
 
         return packetPlayOutScoreboardTeam;
     }

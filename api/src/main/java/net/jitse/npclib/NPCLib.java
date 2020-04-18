@@ -9,6 +9,7 @@ import net.jitse.npclib.api.utilities.Logger;
 import net.jitse.npclib.listeners.ChunkListener;
 import net.jitse.npclib.listeners.PacketListener;
 import net.jitse.npclib.listeners.PlayerListener;
+import net.jitse.npclib.metrics.NPCLibMetrics;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,6 +51,10 @@ public final class NPCLib {
 
         // Boot the according packet listener.
         new PacketListener().start(this);
+
+        // Start the bStats metrics system and disable the silly relocate check.
+        System.setProperty("bstats.relocatecheck", "false");
+        new NPCLibMetrics(this);
 
         logger.info("Enabled for Minecraft " + versionName);
     }

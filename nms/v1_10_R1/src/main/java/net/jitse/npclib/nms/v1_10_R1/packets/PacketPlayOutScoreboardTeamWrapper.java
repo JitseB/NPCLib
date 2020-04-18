@@ -8,6 +8,7 @@ import com.comphenix.tinyprotocol.Reflection;
 import net.minecraft.server.v1_10_R1.PacketPlayOutScoreboardTeam;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Jitse Boonstra
@@ -31,9 +32,7 @@ public class PacketPlayOutScoreboardTeamWrapper {
                 .set(packetPlayOutScoreboardTeam, 0);
         Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
                 packetPlayOutScoreboardTeam.getClass(), "h", Collection.class);
-        Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
-        collection.add(name);
-        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, collection);
+        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, Collections.singletonList(name));
 
         return packetPlayOutScoreboardTeam;
     }
