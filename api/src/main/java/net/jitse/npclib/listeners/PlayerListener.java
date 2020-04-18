@@ -7,7 +7,6 @@ package net.jitse.npclib.listeners;
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -49,11 +48,8 @@ public class PlayerListener implements Listener {
         // Need to auto hide the NPCs from the player, or else the system will think they can see the NPC on respawn.
         Player player = event.getEntity();
         for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (npc.getWorld().equals(player.getWorld())) {
-                if (!npc.getAutoHidden().contains(player.getUniqueId())) {
-                    npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
-                }
+            if (npc.isShown(player) && npc.getWorld().equals(player.getWorld())) {
+                npc.hide(player, true);
             }
         }
     }
@@ -83,13 +79,10 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         World from = event.getFrom();
 
-        // The PlayerTeleportEvent is call, and will handle visibility in the new world.
+        // The PlayerTeleportEvent is called, and will handle visibility in the new world.
         for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (npc.getWorld().equals(from)) {
-                if (!npc.getAutoHidden().contains(player.getUniqueId())) {
-                    npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
-                }
+            if (npc.isShown(player) && npc.getWorld().equals(from)) {
+                npc.hide(player, true);
             }
         }
     }
@@ -98,13 +91,12 @@ public class PlayerListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
-        // 11/4/20: Added pitch and yaw to the if statement. If the change in this is 10 or more degrees, check the movement.
-        if (to == null || (Math.abs(from.getPitch() - to.getPitch()) <= 10
-                || Math.abs(from.getYaw() - to.getYaw()) <= 10
-                || from.getBlockX() != to.getBlockX()
+        // Only check movement when the player moves from one block to another. The event is called often
+        // as it is also called when the pitch or yaw change. This is worth it from a performance view.
+        if (to == null || from.getBlockX() != to.getBlockX()
                 || from.getBlockY() != to.getBlockY()
-                || from.getBlockZ() != to.getBlockZ()))
-            handleMove(event.getPlayer()); // Verify the player changed which block they are on. Since PlayerMoveEvent is one of the most called events, this is worth it.
+                || from.getBlockZ() != to.getBlockZ())
+            handleMove(event.getPlayer());
     }
 
     @EventHandler
@@ -113,41 +105,18 @@ public class PlayerListener implements Listener {
     }
 
     private void handleMove(Player player) {
-        Location location = player.getLocation();
         for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
             }
 
-            if (!npc.getWorld().equals(location.getWorld())) {
-                continue; // NPC is not in the same world.
-            }
-
-            // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
-            // This will cause issues otherwise (e.g. custom skin disappearing).
-            double hideDistance = instance.getAutoHideDistance();
-            double distanceSquared = location.distanceSquared(npc.getLocation());
-
-            int tempRange = Bukkit.getViewDistance() << 4;
-            boolean inRange = distanceSquared <= square(hideDistance) && distanceSquared <= square(tempRange);
-            if (npc.getAutoHidden().contains(player.getUniqueId())) {
-                // Check if the player and NPC are within the range to sendShowPackets it again.
-                if (inRange) {
-                    npc.getAutoHidden().remove(player.getUniqueId());
-                    npc.show(player, true);
-                }
-            } else {
-                // Check if the player and NPC are out of range to sendHidePackets it.
-                if (!inRange) {
-                    npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
-                }
+            if (!npc.isShown(player) && npc.inRangeOf(player) && npc.inViewOf(player)) {
+                // The player is in range and can see the NPC, auto-show it.
+                npc.show(player, true);
+            } else if (npc.isShown(player) && !npc.inRangeOf(player)) {
+                // The player is not in range of the NPC anymore, auto-hide it.
+                npc.hide(player, true);
             }
         }
-    }
-
-    // Avoiding Math.pow due to how resource intensive it is.
-    private double square(double val) {
-        return val * val;
     }
 }

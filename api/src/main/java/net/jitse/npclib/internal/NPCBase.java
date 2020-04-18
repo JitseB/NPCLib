@@ -16,6 +16,7 @@ import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.utilities.MathUtil;
 import net.labymod.utilities.LMCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -102,7 +103,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     public void disableFOV() {
-        this.cosFOV = 0; // Or equals Math.cos(1/2 * Math.PI).
+        this.cosFOV = 0;
     }
 
     public void setFOV(double fov) {
@@ -154,6 +155,26 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         hasTeamRegistered.remove(player.getUniqueId());
     }
 
+    public boolean inRangeOf(Player player) {
+        if (!player.getWorld().equals(location.getWorld())) {
+            // No need to continue our checks, they are in different worlds.
+            return false;
+        }
+
+        // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
+        // This will cause issues otherwise (e.g. custom skin disappearing).
+        double hideDistance = instance.getAutoHideDistance();
+        double distanceSquared = player.getLocation().distanceSquared(location);
+        double bukkitRange = Bukkit.getViewDistance() << 4;
+
+        return distanceSquared <= MathUtil.square(hideDistance) && distanceSquared <= MathUtil.square(bukkitRange);
+    }
+
+    public boolean inViewOf(Player player) {
+        Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
+        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
+    }
+
     @Override
     public void show(Player player) {
         show(player, false);
@@ -166,44 +187,31 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             return;
         }
 
-        if (!canSeeNPC(player)) {
-            if (!auto) {
-                shown.add(player.getUniqueId());
-            }
-
-            autoHidden.add(player.getUniqueId());
-            return;
+        if (isShown(player)) {
+            throw new IllegalArgumentException("NPC is already shown to player");
         }
 
         if (auto) {
             sendShowPackets(player);
             sendMetadataPacket(player);
             sendEquipmentPackets(player);
+
+            // NPC is auto-shown now, we can remove the UUID from the set.
+            autoHidden.remove(player.getUniqueId());
         } else {
-            if (isShown(player)) {
-                throw new IllegalStateException("Cannot call show method twice.");
-            }
-
-            if (shown.contains(player.getUniqueId())) {
-                return;
-            }
-
+            // Adding the UUID to the set.
             shown.add(player.getUniqueId());
 
-            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
-                    <= instance.getAutoHideDistance()) {
+            if (inRangeOf(player) && inViewOf(player)) {
+                // The player can see the NPC and is in range, send the packets.
                 sendShowPackets(player);
                 sendMetadataPacket(player);
                 sendEquipmentPackets(player);
             } else {
+                // We'll wait until we can show the NPC to the player via auto-show.
                 autoHidden.add(player.getUniqueId());
             }
         }
-    }
-
-    private boolean canSeeNPC(Player player) {
-        Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
-        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
     }
 
     @Override
@@ -218,19 +226,28 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             return;
         }
 
+        if (!shown.contains(player.getUniqueId())) {
+            throw new IllegalArgumentException("NPC cannot be hidden from player before calling NPC#show first");
+        }
+
         if (auto) {
-            sendHidePackets(player);
-        } else {
-            if (!shown.contains(player.getUniqueId())) {
-                throw new IllegalStateException("Cannot call hide method without calling NPC#show.");
+            if (autoHidden.contains(player.getUniqueId())) {
+                throw new IllegalStateException("NPC cannot be auto-hidden twice");
             }
 
+            sendHidePackets(player);
+
+            // NPC is auto-hidden now, we will add the UUID to the set.
+            autoHidden.add(player.getUniqueId());
+        } else {
+            // Removing the UUID from the set.
             shown.remove(player.getUniqueId());
 
-            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
-                    <= instance.getAutoHideDistance()) {
+            if (inRangeOf(player)) {
+                // The player is in range of the NPC, send the packets.
                 sendHidePackets(player);
             } else {
+                // We don't have to send any packets, just don't let it auto-show again by removing the UUID from the set.
                 autoHidden.remove(player.getUniqueId());
             }
         }
