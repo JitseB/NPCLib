@@ -30,17 +30,8 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        onPlayerLeave(event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerKick(PlayerKickEvent event) {
-        onPlayerLeave(event.getPlayer());
-    }
-
-    private void onPlayerLeave(Player player) {
-        for (NPCBase npc : NPCManager.getAllNPCs())
-            npc.onLogout(player);
+    	for (NPCBase npc : NPCManager.getAllNPCs())
+            npc.onLogout(event.getPlayer());
     }
 
     @EventHandler
