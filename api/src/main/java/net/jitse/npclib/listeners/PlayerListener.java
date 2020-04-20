@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -20,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author Jitse Boonstra
  */
-public class PlayerListener implements Listener {
+public class PlayerListener extends HandleMoveBase implements Listener {
 
     private final NPCLib instance;
 
@@ -83,35 +82,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        // Only check movement when the player moves from one block to another. The event is called often
-        // as it is also called when the pitch or yaw change. This is worth it from a performance view.
-        if (to == null || from.getBlockX() != to.getBlockX()
-                || from.getBlockY() != to.getBlockY()
-                || from.getBlockZ() != to.getBlockZ())
-            handleMove(event.getPlayer());
-    }
-
-    @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         handleMove(event.getPlayer());
-    }
-
-    private void handleMove(Player player) {
-        for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (!npc.getShown().contains(player.getUniqueId())) {
-                continue; // NPC was never supposed to be shown to the player.
-            }
-
-            if (!npc.isShown(player) && npc.inRangeOf(player) && npc.inViewOf(player)) {
-                // The player is in range and can see the NPC, auto-show it.
-                npc.show(player, true);
-            } else if (npc.isShown(player) && !npc.inRangeOf(player)) {
-                // The player is not in range of the NPC anymore, auto-hide it.
-                npc.hide(player, true);
-            }
-        }
     }
 }

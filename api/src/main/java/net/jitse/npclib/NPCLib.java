@@ -4,11 +4,14 @@
 
 package net.jitse.npclib;
 
+import net.jitse.npclib.NPCLibOptions.MovementHandling;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.api.utilities.Logger;
 import net.jitse.npclib.listeners.ChunkListener;
 import net.jitse.npclib.listeners.PacketListener;
+import net.jitse.npclib.listeners.PeriodicMoveListener;
 import net.jitse.npclib.listeners.PlayerListener;
+import net.jitse.npclib.listeners.PlayerMoveEventListener;
 import net.jitse.npclib.metrics.NPCLibMetrics;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,7 +26,7 @@ public final class NPCLib {
 
     private double autoHideDistance = 50.0;
 
-    public NPCLib(JavaPlugin plugin) {
+    private NPCLib(JavaPlugin plugin, MovementHandling moveHandling) {
         this.plugin = plugin;
         this.logger = new Logger("NPCLib");
 
@@ -49,6 +52,12 @@ public final class NPCLib {
         pluginManager.registerEvents(new PlayerListener(this), plugin);
         pluginManager.registerEvents(new ChunkListener(this), plugin);
 
+        if (moveHandling.usePme) {
+        	pluginManager.registerEvents(new PlayerMoveEventListener(), plugin);
+        } else {
+        	pluginManager.registerEvents(new PeriodicMoveListener(this, moveHandling.updateInterval), plugin);
+        }
+
         // Boot the according packet listener.
         new PacketListener().start(this);
 
@@ -57,6 +66,14 @@ public final class NPCLib {
         new NPCLibMetrics(this);
 
         logger.info("Enabled for Minecraft " + versionName);
+    }
+
+    public NPCLib(JavaPlugin plugin) {
+    	this(plugin, MovementHandling.playerMoveEvent());
+    }
+
+    public NPCLib(JavaPlugin plugin, NPCLibOptions options) {
+    	this(plugin, options.moveHandling);
     }
 
     /**
