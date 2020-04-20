@@ -64,7 +64,7 @@ public class PlayerListener extends HandleMoveBase implements Listener {
                         this.cancel();
                     }
                 }
-            }.runTaskTimerAsynchronously(instance.getPlugin(), 0, 1);
+            }.runTaskTimer(instance.getPlugin(), 0L, 1L);
         }
     }
 
