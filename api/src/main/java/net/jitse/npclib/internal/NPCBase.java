@@ -62,7 +62,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return instance;
     }
     
-    public UUID getUUID() {
+    public UUID getUniqueId() {
         return uuid;
     }
 
