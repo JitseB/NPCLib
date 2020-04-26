@@ -54,8 +54,38 @@ If you have NPCLib under your `plugins` folder, you may use the following:
 ```
 If you do not want to have NPCLib in your `plugins` folder, you need to use the `npclib-plugin` artifact and [shade it](https://maven.apache.org/plugins/maven-shade-plugin/) accordingly.
 
-
 [Click here](https://github.com/JitseB/NPCLib/releases/latest) to view the latest release.
+
+To make sure the classes won't be twice at the same place. I recommend repacking the library into your package. (Otherwise issue #79 might occur.) You can do that as follow:
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>3.1.0</version>
+      <!-- Do not include the <configuration>...</configuration> part if you are using Sponge! -->
+      <configuration>
+        <relocations>
+          <relocation>
+            <pattern>net.jitse.npclib</pattern>
+            <!-- Replace this with your package! -->
+            <shadedPattern>your.package</shadedPattern>
+          </relocation>
+        </relocations>
+      </configuration>
+      <executions>
+        <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>shade</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+```
 
 **[Click here](https://github.com/JitseB/NPCLib/blob/master/DOCUMENTATION.md) for an elaborate explanation on how to use NPCLib in your next project.**
 
