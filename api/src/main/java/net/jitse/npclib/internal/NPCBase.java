@@ -4,8 +4,6 @@
 
 package net.jitse.npclib.internal;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCLib;
@@ -17,7 +15,6 @@ import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.utilities.MathUtil;
-import net.labymod.utilities.LMCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -61,7 +58,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     public NPCLib getInstance() {
         return instance;
     }
-    
+
     public UUID getUniqueId() {
         return uuid;
     }
@@ -94,16 +91,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
             hide(Bukkit.getPlayer(uuid), true);
         }
-    }
-
-    @Override
-    public void forceLabyModEmote(Player receiver, int emoteId) {
-        JsonArray array = new JsonArray();
-        JsonObject forcedEmote = new JsonObject();
-        forcedEmote.addProperty("uuid", uuid.toString());
-        forcedEmote.addProperty("emote_id", emoteId);
-        array.add(forcedEmote);
-        LMCUtils.sendLMCMessage(receiver, "emote_api", array);
     }
 
     public void disableFOV() {

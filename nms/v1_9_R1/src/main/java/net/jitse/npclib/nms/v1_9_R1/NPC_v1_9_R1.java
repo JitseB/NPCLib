@@ -4,7 +4,10 @@
 
 package net.jitse.npclib.nms.v1_9_R1;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
@@ -104,5 +107,20 @@ public class NPC_v1_9_R1 extends NPCBase {
 
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
         playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void updateSkin(Skin skin) {
+        GameProfile newProfile = new GameProfile(uuid, name);
+        newProfile.getProperties().get("textures").clear();
+        newProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        this.packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, newProfile, name);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
+            playerConnection.sendPacket(packetPlayOutEntityDestroy);
+            playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
+            playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
+        }
     }
 }

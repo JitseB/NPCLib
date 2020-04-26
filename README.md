@@ -59,6 +59,12 @@ If you do not want to have NPCLib in your `plugins` folder, you need to use the 
 
 **[Click here](https://github.com/JitseB/NPCLib/blob/master/DOCUMENTATION.md) for an elaborate explanation on how to use NPCLib in your next project.**
 
+### Versioning
+For NPCLib I use the follow versioning system:
+* 1.x.x: Where the 1 indicates the major version of the library. When this number changes, it's highly likely there're big API changes.
+* x.1.x: Where the 1 indicates the minor version of the library. When this number changes, a feature is added or a high priority bug is fixed.
+* x.x.1: Where the 1 indicates another minor version of the library. When this number changes, a small bug has been fixed.
+
 ### Building your own version
 
 1. [Download](https://github.com/JitseB/NPCLib/archive/master.zip) or clone this repository.

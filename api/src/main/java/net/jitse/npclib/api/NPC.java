@@ -137,12 +137,9 @@ public interface NPC {
     ItemStack getItem(NPCSlot slot);
 
     /**
-     * LABYMOD ONLY
-     * Let the NPC play an emote.
-     * (https://docs.labymod.net/pages/server/emote_api/)
+     * Update the skin for every play that can see the NPC.
      *
-     * @param receiver The player who should see the emote.
-     * @param emoteId  The emote id (see link).
+     * @param skin The new skin for the NPC.
      */
-    void forceLabyModEmote(Player receiver, int emoteId);
+    void updateSkin(Skin skin);
 }
