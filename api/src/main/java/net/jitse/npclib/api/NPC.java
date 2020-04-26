@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface NPC {
 
@@ -142,4 +143,11 @@ public interface NPC {
      * @param skin The new skin for the NPC.
      */
     void updateSkin(Skin skin);
+
+    /**
+     * Get the UUID of the NPC.
+     *
+     * @return The UUID of the NPC.
+     */
+    UUID getUniqueId();
 }

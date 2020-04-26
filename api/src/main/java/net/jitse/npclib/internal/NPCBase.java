@@ -59,6 +59,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return instance;
     }
 
+    @Override
     public UUID getUniqueId() {
         return uuid;
     }
