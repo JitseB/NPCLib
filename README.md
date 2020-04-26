@@ -56,7 +56,7 @@ If you do not want to have NPCLib in your `plugins` folder, you need to use the 
 
 [Click here](https://github.com/JitseB/NPCLib/releases/latest) to view the latest release.
 
-To make sure the classes won't be twice at the same place. I recommend repacking the library into your package. (Otherwise issue #79 might occur.) You can do that as follow:
+To make sure the classes won't be twice at the same place. I recommend repacking the library into your package. (Otherwise [issue #79](https://github.com/MinecraftLibraries/NPCLib/issues/79) might occur.) You can do that as follow:
 ```xml
 <build>
   <plugins>
