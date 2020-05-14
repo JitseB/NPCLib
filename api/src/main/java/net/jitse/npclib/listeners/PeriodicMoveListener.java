@@ -42,7 +42,10 @@ public class PeriodicMoveListener extends HandleMoveBase implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent evt) {
-		tasks.remove(evt.getPlayer().getUniqueId()).cancel();
+		BukkitTask task = tasks.remove(evt.getPlayer().getUniqueId());
+		if (task != null) {
+			task.cancel();
+		}
 	}
 
 }
