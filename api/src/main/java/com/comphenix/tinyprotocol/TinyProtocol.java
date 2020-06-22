@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
@@ -68,6 +69,7 @@ public abstract class TinyProtocol {
 
     // Current handler name
     private String handlerName;
+    private boolean injected = false;
 
     private volatile boolean closed;
     protected Plugin plugin;
@@ -86,6 +88,7 @@ public abstract class TinyProtocol {
             instance.getLogger().info("Attempting to inject into netty");
             registerChannelHandler();
             registerPlayers(plugin);
+            injected = true;
         } catch (IllegalArgumentException ex) {
             // Damn you, late bind
             instance.getLogger().warning("Attempting to delay injection");
@@ -95,10 +98,15 @@ public abstract class TinyProtocol {
                 public void run() {
                     registerChannelHandler();
                     registerPlayers(plugin);
+                    injected = true;
                     instance.getLogger().info("Injection complete");
                 }
             }.runTask(plugin);
         }
+    }
+
+    public boolean isInjected() {
+        return injected;
     }
 
     private void createServerChannelHandler() {
@@ -151,15 +159,22 @@ public abstract class TinyProtocol {
         listener = new Listener() {
 
             @EventHandler(priority = EventPriority.MONITOR)
-            public final void onPlayerLogin(PlayerLoginEvent e) {
+            public final void onPlayerLogin(PlayerLoginEvent event) {
                 if (closed)
                     return;
 
-                Channel channel = getChannel(e.getPlayer());
+                Channel channel = getChannel(event.getPlayer());
 
                 // Don't inject players that have been explicitly uninjected
                 if (!uninjectedChannels.contains(channel)) {
-                    injectPlayer(e.getPlayer());
+                    injectPlayer(event.getPlayer());
+                }
+            }
+
+            @EventHandler(priority = EventPriority.MONITOR)
+            public final void onPlayerAsyncPreLogin(AsyncPlayerPreLoginEvent event) {
+                if (!injected) {
+                    event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "TinyProtocol not injected yet");
                 }
             }
 
