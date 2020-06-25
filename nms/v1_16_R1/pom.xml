@@ -11,13 +11,13 @@
         <version>2.8-SNAPSHOT</version>
     </parent>
 
-    <artifactId>npclib-nms-v1_13_R1</artifactId>
+    <artifactId>npclib-nms-v1_16_R1</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
