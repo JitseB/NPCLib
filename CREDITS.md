@@ -14,5 +14,5 @@ I used this module of ProtocolLib to intercept packets sent by players whilst in
 ### [MineSkin](https://mineskin.org) by Haylee Schäfer
 I integrated MineSkin into NPCLib as an easy way for developers to give NPCs a custom skin without buying multiple Minecraft accounts or saving the skin data themselves.
 
-### [bStats](https://bstats.org) by BtoBastian
+### [bStats](https://bstats.org) by Bastian Oppermann
 I use bStats to see how much server are using NPCLib, keeps me motivated and gives me insight in which version are used most. You can see the statistics of NPCLib [here](https://bstats.org/plugin/bukkit/JMB-NPCLib).
