@@ -8,6 +8,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
@@ -106,6 +107,14 @@ public class NPC_v1_13_R2 extends NPCBase {
         ItemStack item = getItem(slot);
 
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
+        playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendAnimationPacket(Player player, NPCAnimation animation) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimationWrapper().create(animation, entityId);
         playerConnection.sendPacket(packet);
     }
 

@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import net.jitse.npclib.NPCLib;
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
@@ -30,6 +31,7 @@ public class NPC_v1_16_R1 extends NPCBase {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
+    private PacketPlayOutAnimation packetPlayOutAnimation;
 
     public NPC_v1_16_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
@@ -106,6 +108,14 @@ public class NPC_v1_16_R1 extends NPCBase {
 
         Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pair = new Pair<>(nmsSlot, CraftItemStack.asNMSCopy(item));
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, Collections.singletonList(pair));
+        playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendAnimationPacket(Player player, NPCAnimation animation) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        PacketPlayOutAnimation packet = new PacketPlayOutAnimationWrapper().create(animation, entityId);
         playerConnection.sendPacket(packet);
     }
 

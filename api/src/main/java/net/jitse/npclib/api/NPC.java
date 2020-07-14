@@ -5,6 +5,7 @@
 package net.jitse.npclib.api;
 
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import org.bukkit.Location;
@@ -102,6 +103,13 @@ public interface NPC {
      * @return Object instance.
      */
     NPC toggleState(NPCState state);
+
+    /**
+     * Plays an animation as the the NPC.
+     *
+     * @param animation The animation to play.
+     */
+    void playAnimation(NPCAnimation animation);
 
     /**
      * Get state of NPC.
