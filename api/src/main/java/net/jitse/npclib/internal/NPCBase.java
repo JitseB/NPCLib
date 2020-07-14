@@ -11,6 +11,7 @@ import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.api.events.NPCHideEvent;
 import net.jitse.npclib.api.events.NPCShowEvent;
 import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
@@ -266,6 +267,16 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             }
         }
         return this;
+    }
+
+    @Override
+    public void playAnimation(NPCAnimation animation) {
+        for (UUID shownUuid : shown) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                sendAnimationPacket(player, animation);
+            }
+        }
     }
 
     @Override
