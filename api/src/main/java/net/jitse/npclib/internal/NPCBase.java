@@ -87,10 +87,12 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
                 originalhologram.hide(targetPlayer); // essentially destroy the hologram
                 textDisplayHolograms.remove(targetPlayer.getUniqueId()); // remove the old obj
             }
-
-            Hologram hologram = getPlayerHologram(targetPlayer); //
-            List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
-            hologram.update(targetPlayer, updatePackets);
+            
+            if (isShown(targetPlayer)) { //only show hologram if the player is in range
+                Hologram hologram = getPlayerHologram(targetPlayer);
+                List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
+                hologram.update(targetPlayer, updatePackets);
+            }
         }
         return this;
     }
