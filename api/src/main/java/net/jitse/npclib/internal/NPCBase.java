@@ -132,8 +132,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             if (autoHidden.contains(uuid)) {
                 continue;
             }
-
-            hide(Bukkit.getPlayer(uuid), true);
+            Player plyr = Bukkit.getPlayer(uuid); // destroy the per player holograms
+            getPlayerHologram(plyr).hide(plyr);
+            hide(plyr, true);
         }
     }
 
