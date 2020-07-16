@@ -45,7 +45,8 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected List<String> text;
     protected Location location;
     protected Skin skin;
-    protected Hologram hologram;
+
+    //protected Hologram hologram;
 
     protected final Map<NPCSlot, ItemStack> items = new EnumMap<>(NPCSlot.class);
 
@@ -90,7 +91,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             Hologram hologram = getPlayerHologram(targetPlayer); //
             List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
             hologram.update(targetPlayer, updatePackets);
-            hologram.show(targetPlayer);
         }
         return this;
     }
@@ -348,8 +348,8 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
             if (player != null && isShown(player)) {
-                Hologram originalhologram = getPlayerHologram(player);
-                originalhologram.hide(player); // essentially destroy the hologram
+                Hologram originalHologram = getPlayerHologram(player);
+                originalHologram.hide(player); // essentially destroy the hologram
                 textDisplayHolograms.remove(player.getUniqueId()); // remove the old obj
                 Hologram hologram = getPlayerHologram(player); // let it regenerate
                 List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(player));

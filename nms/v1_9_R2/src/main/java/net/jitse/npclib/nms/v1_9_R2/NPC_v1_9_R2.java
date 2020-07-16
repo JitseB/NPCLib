@@ -104,7 +104,7 @@ public class NPC_v1_9_R2 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
 
-        hologram.hide(player);
+        getPlayerHologram(player).hide(player);
     }
 
     @Override
