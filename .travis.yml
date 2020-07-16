@@ -18,5 +18,6 @@ install:
   - ls $HOME/.m2/repository/org/spigotmc/spigot/1.13.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.13.2 >> /dev/null 2>&1
   - ls $HOME/.m2/repository/org/spigotmc/spigot/1.14.4-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.14.4 >> /dev/null 2>&1
   - ls $HOME/.m2/repository/org/spigotmc/spigot/1.15.2-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.15.2 >> /dev/null 2>&1
+  - ls $HOME/.m2/repository/org/spigotmc/spigot/1.16.1-R0.1-SNAPSHOT >> /dev/null 2>&1 || java -jar BuildTools.jar --rev 1.16.1 >> /dev/null 2>&1
 script:
   - mvn clean install
