@@ -8,6 +8,7 @@ import com.comphenix.tinyprotocol.Reflection;
 import net.jitse.npclib.internal.MinecraftVersion;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class Hologram {
     private static final Class<?> ENTITY_CLASS = Reflection.getMinecraftClass("Entity");
     private static final Class<?> CRAFT_WORLD_CLASS = Reflection.getCraftBukkitClass("CraftWorld");
     private static final Class<?> CRAFT_PLAYER_CLASS = Reflection.getCraftBukkitClass("entity.CraftPlayer");
+
+    private static final Class<?> BUKKIT_ENTITY_ARMOR_STAND_CLASS = Reflection.getClass("org.bukkit.entity.ArmorStand");
+
     private static final Class<?> PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CLASS = Reflection.getMinecraftClass(
             "PacketPlayOutSpawnEntityLiving");
     private static final Class<?> PACKET_PLAY_OUT_ENTITY_DESTROY_CLASS = Reflection.getMinecraftClass(
@@ -61,6 +65,10 @@ public class Hologram {
             "setBasePlate", boolean.class);
     private static final Reflection.MethodInvoker SET_ARMS_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS,
             "setArms", boolean.class);
+
+    private static final Reflection.MethodInvoker GET_BUKKIT_ENTITY = Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS,
+            "getBukkitEntity");
+
     private static final Reflection.MethodInvoker PLAYER_GET_HANDLE_METHOD = Reflection.getMethod(CRAFT_PLAYER_CLASS,
             "getHandle");
     private static final Reflection.MethodInvoker SEND_PACKET_METHOD = Reflection.getMethod(PLAYER_CONNECTION_CLASS,
@@ -96,12 +104,16 @@ public class Hologram {
                 Reflection.getMethod(ENTITY_CLASS, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS, "setGravity", boolean.class));
 
+        Reflection.MethodInvoker SET_MARKER_METHOD = (version.isAboveOrEqual(MinecraftVersion.V1_8_R3) ?
+                Reflection.getMethod(BUKKIT_ENTITY_ARMOR_STAND_CLASS,
+                        "setMarker", boolean.class) : null);
+
         Reflection.MethodInvoker customNameMethod = Reflection.getMethod(ENTITY_CLASS, "setCustomName",
                 version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLASS : String.class);
 
         Reflection.MethodInvoker customNameVisibilityMethod = Reflection.getMethod(ENTITY_CLASS, "setCustomNameVisible", boolean.class);
 
-        Location location = start.clone().add(0, DELTA * text.size(), 0);
+        Location location = start.clone().add(0, (DELTA * text.size()) + (SET_MARKER_METHOD != null ? 1f : 0f), 0); // markers drop the armor stand's nametag by around 1 block
         Class<?> worldClass = worldServer.getClass().getSuperclass();
 
         if (start.getWorld().getEnvironment() != World.Environment.NORMAL) {
@@ -144,12 +156,19 @@ public class Hologram {
             SET_BASE_PLATE_METHOD.invoke(entityArmorStand, false);
             SET_ARMS_METHOD.invoke(entityArmorStand, false);
 
+            if (SET_MARKER_METHOD != null) { // setMarker isn't a method in 1.8_R2, so still check if it exists in the first place.
+                Object bukkitEntity = GET_BUKKIT_ENTITY.invoke(entityArmorStand); // if it does, grab the Bukkit Entity
+                ArmorStand as = (ArmorStand)bukkitEntity; // reflection wasn't working here for some reason- just using a regular ArmorStand object since it's not version-dependent.
+                as.setMarker(true); // set the marker state
+            }
+
             armorStands.add(entityArmorStand);
 
             // Create and add the associated show and hide packets.
             showPackets.add(PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CONSTRUCTOR.invoke(entityArmorStand));
             hidePackets.add(PACKET_PLAY_OUT_ENTITY_DESTROY_CONSTRUCTOR
                     .invoke(new int[]{(int) GET_ID_METHOD.invoke(entityArmorStand)}));
+
             // For 1.15 R1 and up.
             metaPackets.add(PACKET_PLAY_OUT_ENTITY_METADATA_CONSTRUCTOR.invoke(
                     GET_ID_METHOD.invoke(entityArmorStand),
