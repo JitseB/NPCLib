@@ -15,6 +15,8 @@ interface NPCPacketHandler {
 
     void createPackets();
 
+    void createPackets(Player player);
+
     void sendShowPackets(Player player);
 
     void sendHidePackets(Player player);

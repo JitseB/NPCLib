@@ -8,6 +8,7 @@ import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
+import net.jitse.npclib.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,6 +18,39 @@ import java.util.List;
 import java.util.UUID;
 
 public interface NPC {
+
+    /**
+     *
+     * @param player
+     * @return unique hologram for that user
+     */
+    Hologram getPlayerHologram(Player player);
+
+    /**
+     *
+     * @param uniqueLines The text that the targetPlayer will see
+     * @param targetPlayer The target player
+     * @return object instance
+     * @author Gatt
+     */
+    NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer);
+
+    /**
+     *
+     * @param uniqueLines The text that the targetPlayer will see
+     * @param targetPlayer The target player
+     * @param update whether or not to send the update packets
+     * @return object instance
+     * @author Gatt
+     */
+    NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update);
+
+    /**
+     *
+     * @param targetPlayer The target player
+     * @return the lines that the targetPlayer will see, if null; default lines.
+     */
+    List<String> getPlayerLines(Player targetPlayer);
 
     /**
      * Set the NPC's location.

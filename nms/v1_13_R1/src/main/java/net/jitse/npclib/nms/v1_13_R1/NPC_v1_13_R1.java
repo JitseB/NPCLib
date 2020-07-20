@@ -39,8 +39,23 @@ public class NPC_v1_13_R1 extends NPCBase {
     }
 
     @Override
+    public Hologram getPlayerHologram(Player player) {
+        Hologram holo = super.getPlayerHologram(player);
+        if (holo == null){
+            holo = new Hologram(MinecraftVersion.V1_13_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
+        }
+        super.textDisplayHolograms.put(player.getUniqueId(), holo);
+        return holo;
+    }
+
+
+    @Override
     public void createPackets() {
-        this.hologram = new Hologram(MinecraftVersion.V1_13_R1, location.clone().add(0, 0.5, 0), text);
+        Bukkit.getOnlinePlayers().forEach(this::createPackets);
+    }
+
+    @Override
+    public void createPackets(Player player) {
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
@@ -74,7 +89,7 @@ public class NPC_v1_13_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
 
-        hologram.show(player);
+        getPlayerHologram(player).show(player);
 
         // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
@@ -88,7 +103,7 @@ public class NPC_v1_13_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
 
-        hologram.hide(player);
+        getPlayerHologram(player).hide(player);
     }
 
     @Override

@@ -45,9 +45,14 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected List<String> text;
     protected Location location;
     protected Skin skin;
-    protected Hologram hologram;
+
+    //protected Hologram hologram;
 
     protected final Map<NPCSlot, ItemStack> items = new EnumMap<>(NPCSlot.class);
+
+    // Storage for per-player text;
+    protected final Map<UUID, List<String>> uniqueText = new HashMap<>();
+    protected final Map<UUID, Hologram> textDisplayHolograms = new HashMap<>();
 
     public NPCBase(NPCLib instance, List<String> text) {
         this.instance = instance;
@@ -58,6 +63,43 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     public NPCLib getInstance() {
         return instance;
+    }
+
+    @Override
+    public Hologram getPlayerHologram(Player player){
+        Hologram playerHologram = textDisplayHolograms.getOrDefault(player.getUniqueId(), null);
+        return playerHologram;
+    }
+
+    @Override
+    public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer) {
+        uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
+        return this;
+    }
+
+    @Override
+    public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update) {
+        List<String> originalLines = getPlayerLines(targetPlayer);
+        setPlayerLines(uniqueLines, targetPlayer);
+        if (update){
+            if (originalLines.size() != uniqueLines.size()){ // recreate the entire hologram
+                Hologram originalhologram = getPlayerHologram(targetPlayer);
+                originalhologram.hide(targetPlayer); // essentially destroy the hologram
+                textDisplayHolograms.remove(targetPlayer.getUniqueId()); // remove the old obj
+            }
+            
+            if (isShown(targetPlayer)) { //only show hologram if the player is in range
+                Hologram hologram = getPlayerHologram(targetPlayer);
+                List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
+                hologram.update(targetPlayer, updatePackets);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public List<String> getPlayerLines(Player targetPlayer) {
+        return uniqueText.getOrDefault(targetPlayer.getUniqueId(), text);
     }
 
     @Override
@@ -90,8 +132,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             if (autoHidden.contains(uuid)) {
                 continue;
             }
-
-            hide(Bukkit.getPlayer(uuid), true);
+            Player plyr = Bukkit.getPlayer(uuid); // destroy the per player holograms
+            getPlayerHologram(plyr).hide(plyr);
+            hide(plyr, true);
         }
     }
 
@@ -303,11 +346,16 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public NPC setText(List<String> text) {
-        List<Object> updatePackets = hologram.getUpdatePackets(text);
+        uniqueText.clear();
 
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
             if (player != null && isShown(player)) {
+                Hologram originalHologram = getPlayerHologram(player);
+                originalHologram.hide(player); // essentially destroy the hologram
+                textDisplayHolograms.remove(player.getUniqueId()); // remove the old obj
+                Hologram hologram = getPlayerHologram(player); // let it regenerate
+                List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(player));
                 hologram.update(player, updatePackets);
             }
         }
