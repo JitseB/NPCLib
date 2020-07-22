@@ -7,9 +7,7 @@ NPCLib – Basic non-player character library.<br>
 [![Discord](https://img.shields.io/badge/Support-Discord-blue.svg)](https://discord.gg/pvJGhEq)
 =
 
-This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8 R2 - latest**\*. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
-
-\*You can find a version of NPCLib with basic support for 1.7.10 on the [legacy branch](https://github.com/JitseB/NPCLib/tree/legacy). This branch is not actively maintained as the master branch. This version does not support multi-line text.
+This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8.8 - latest**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
 
 ### Preview (click to play video)
 [![YouTube Video](http://img.youtube.com/vi/LqwdqIxPIvE/0.jpg)](http://www.youtube.com/watch?v=LqwdqIxPIvE "NPCLib – Basic non-player character library (Minecraft).")
@@ -48,7 +46,7 @@ If you have NPCLib under your `plugins` folder, you may use the following:
     <dependency>
         <groupId>net.jitse</groupId>
         <artifactId>npclib-api</artifactId>
-        <version>2.7-SNAPSHOT</version>
+        <version>2.9-SNAPSHOT</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
