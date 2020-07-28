@@ -67,7 +67,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
-    public Hologram getPlayerHologram(Player player){
+    public Hologram getPlayerHologram(Player player) {
         Validate.notNull(player, "Player cannot be null.");
         Hologram playerHologram = textDisplayHolograms.getOrDefault(player.getUniqueId(), null);
         return playerHologram;
