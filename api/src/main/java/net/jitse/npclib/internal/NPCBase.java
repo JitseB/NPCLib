@@ -85,13 +85,13 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         Validate.notNull(targetPlayer, "Player cannot be null.");
         List<String> originalLines = getPlayerLines(targetPlayer);
         setPlayerLines(uniqueLines, targetPlayer);
-        if (update){
-            if (originalLines.size() != uniqueLines.size()){ // recreate the entire hologram
+        if (update) {
+            if (originalLines.size() != uniqueLines.size()) { // recreate the entire hologram
                 Hologram originalhologram = getPlayerHologram(targetPlayer);
                 originalhologram.hide(targetPlayer); // essentially destroy the hologram
                 textDisplayHolograms.remove(targetPlayer.getUniqueId()); // remove the old obj
             }
-            
+
             if (isShown(targetPlayer)) { //only show hologram if the player is in range
                 Hologram hologram = getPlayerHologram(targetPlayer);
                 List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
@@ -217,7 +217,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     public boolean inViewOf(Player player) {
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
-        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
+        return dir.dot(player.getEyeLocation().getDirection()) >= cosFOV;
     }
 
     @Override
