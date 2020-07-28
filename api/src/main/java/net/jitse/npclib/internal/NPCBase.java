@@ -177,6 +177,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public boolean isShown(Player player) {
+        if (player == null) return false;
         return shown.contains(player.getUniqueId()) && !autoHidden.contains(player.getUniqueId());
     }
 
@@ -199,6 +200,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     public boolean inRangeOf(Player player) {
+        if (player == null) return false;
         if (!player.getWorld().equals(location.getWorld())) {
             // No need to continue our checks, they are in different worlds.
             return false;
