@@ -16,6 +16,7 @@ import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.utilities.MathUtil;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -66,28 +67,31 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
-    public Hologram getPlayerHologram(Player player){
+    public Hologram getPlayerHologram(Player player) {
+        Validate.notNull(player, "Player cannot be null.");
         Hologram playerHologram = textDisplayHolograms.getOrDefault(player.getUniqueId(), null);
         return playerHologram;
     }
 
     @Override
     public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
         uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
         return this;
     }
 
     @Override
     public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
         List<String> originalLines = getPlayerLines(targetPlayer);
         setPlayerLines(uniqueLines, targetPlayer);
-        if (update){
-            if (originalLines.size() != uniqueLines.size()){ // recreate the entire hologram
+        if (update) {
+            if (originalLines.size() != uniqueLines.size()) { // recreate the entire hologram
                 Hologram originalhologram = getPlayerHologram(targetPlayer);
                 originalhologram.hide(targetPlayer); // essentially destroy the hologram
                 textDisplayHolograms.remove(targetPlayer.getUniqueId()); // remove the old obj
             }
-            
+
             if (isShown(targetPlayer)) { //only show hologram if the player is in range
                 Hologram hologram = getPlayerHologram(targetPlayer);
                 List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
@@ -99,6 +103,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public List<String> getPlayerLines(Player targetPlayer) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
         return uniqueText.getOrDefault(targetPlayer.getUniqueId(), text);
     }
 
@@ -133,8 +138,10 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
                 continue;
             }
             Player plyr = Bukkit.getPlayer(uuid); // destroy the per player holograms
-            getPlayerHologram(plyr).hide(plyr);
-            hide(plyr, true);
+            if (plyr != null) {
+                getPlayerHologram(plyr).hide(plyr);
+                hide(plyr, true);
+            }
         }
     }
 
@@ -170,6 +177,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public boolean isShown(Player player) {
+        if (player == null) return false;
         return shown.contains(player.getUniqueId()) && !autoHidden.contains(player.getUniqueId());
     }
 
@@ -192,6 +200,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     public boolean inRangeOf(Player player) {
+        if (player == null) return false;
         if (!player.getWorld().equals(location.getWorld())) {
             // No need to continue our checks, they are in different worlds.
             return false;
@@ -208,7 +217,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     public boolean inViewOf(Player player) {
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
-        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
+        return dir.dot(player.getEyeLocation().getDirection()) >= cosFOV;
     }
 
     @Override
