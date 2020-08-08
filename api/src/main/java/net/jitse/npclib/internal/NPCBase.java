@@ -74,10 +74,26 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return playerHologram;
     }
 
+
+    @Override
+    public NPC removePlayerLines(Player targetPlayer) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
+        setPlayerLines(null, targetPlayer);
+        return this;
+    }
+
+    @Override
+    public NPC removePlayerLines(Player targetPlayer, boolean update) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
+        setPlayerLines(null, targetPlayer, update);
+        return this;
+    }
+
     @Override
     public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer) {
         Validate.notNull(targetPlayer, "Player cannot be null.");
-        uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
+        if (uniqueLines == null) uniqueText.remove(targetPlayer.getUniqueId());
+        else uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
         return this;
     }
 
@@ -87,6 +103,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         List<String> originalLines = getPlayerLines(targetPlayer);
         setPlayerLines(uniqueLines, targetPlayer);
         if (update) {
+
+            uniqueLines = getPlayerLines(targetPlayer); // retrieve the player lines from this function, incase it's been removed.
+
             if (originalLines.size() != uniqueLines.size()) { // recreate the entire hologram
                 Hologram originalhologram = getPlayerHologram(targetPlayer);
                 originalhologram.hide(targetPlayer); // essentially destroy the hologram

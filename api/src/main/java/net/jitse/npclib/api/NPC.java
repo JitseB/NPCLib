@@ -26,7 +26,24 @@ public interface NPC {
     Hologram getPlayerHologram(Player player);
 
     /**
-     * @param uniqueLines  The text that the targetPlayer will see
+     *
+     * @param targetPlayer The target player
+     * @return object instance
+     * @author Gatt
+     */
+    NPC removePlayerLines(Player targetPlayer);
+    /**
+     *
+     * @param targetPlayer The target player
+     * @param update whether or not to update the hologram
+     * @return object instance
+     * @author Gatt
+     */
+    NPC removePlayerLines(Player targetPlayer, boolean update);
+
+    /**
+     *
+     * @param uniqueLines The text that the targetPlayer will see. Null to remove
      * @param targetPlayer The target player
      * @return object instance
      * @author Gatt
@@ -45,6 +62,7 @@ public interface NPC {
     /**
      * @param targetPlayer The target player
      * @return the lines that the targetPlayer will see, if null; default lines.
+     * @author Gatt
      */
     List<String> getPlayerLines(Player targetPlayer);
 
