@@ -20,15 +20,13 @@ import java.util.UUID;
 public interface NPC {
 
     /**
-     *
      * @param player
      * @return unique hologram for that user
      */
     Hologram getPlayerHologram(Player player);
 
     /**
-     *
-     * @param uniqueLines The text that the targetPlayer will see
+     * @param uniqueLines  The text that the targetPlayer will see
      * @param targetPlayer The target player
      * @return object instance
      * @author Gatt
@@ -36,17 +34,15 @@ public interface NPC {
     NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer);
 
     /**
-     *
-     * @param uniqueLines The text that the targetPlayer will see
+     * @param uniqueLines  The text that the targetPlayer will see
      * @param targetPlayer The target player
-     * @param update whether or not to send the update packets
+     * @param update       whether or not to send the update packets
      * @return object instance
      * @author Gatt
      */
     NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update);
 
     /**
-     *
      * @param targetPlayer The target player
      * @return the lines that the targetPlayer will see, if null; default lines.
      */
@@ -90,6 +86,13 @@ public interface NPC {
      * @return object instance.
      */
     NPC create();
+
+    /**
+     * Check whether the NPCs packets have already been generated.
+     *
+     * @return Whether NPC#create has been called yet.
+     */
+    boolean isCreated();
 
     /**
      * Get the ID of the NPC.
