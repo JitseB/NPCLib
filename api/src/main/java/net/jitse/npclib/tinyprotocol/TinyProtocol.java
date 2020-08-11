@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package com.comphenix.tinyprotocol;
+package net.jitse.npclib.tinyprotocol;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;

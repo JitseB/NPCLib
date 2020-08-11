@@ -4,7 +4,7 @@
 
 package net.jitse.npclib.nms.v1_15_R1.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
+import net.jitse.npclib.tinyprotocol.Reflection;
 import net.minecraft.server.v1_15_R1.ChatComponentText;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.PacketPlayOutScoreboardTeam;

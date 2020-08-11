@@ -4,8 +4,8 @@
 
 package net.jitse.npclib.nms.v1_9_R2.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
+import net.jitse.npclib.tinyprotocol.Reflection;
 import net.minecraft.server.v1_9_R2.IChatBaseComponent;
 import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_9_R2.WorldSettings;

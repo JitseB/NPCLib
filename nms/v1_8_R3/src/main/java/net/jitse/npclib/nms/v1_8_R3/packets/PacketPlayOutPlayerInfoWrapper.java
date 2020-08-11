@@ -4,8 +4,8 @@
 
 package net.jitse.npclib.nms.v1_8_R3.packets;
 
-import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
+import net.jitse.npclib.tinyprotocol.Reflection;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_8_R3.WorldSettings;

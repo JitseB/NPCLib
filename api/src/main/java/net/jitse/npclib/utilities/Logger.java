@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.api.utilities;
+package net.jitse.npclib.utilities;
 
 import org.bukkit.Bukkit;
 
@@ -15,7 +15,7 @@ public class Logger {
     private boolean enabled = true;
 
     public Logger(String prefix) {
-        this.prefix = prefix + " ";
+        this.prefix = "[" + prefix + "] ";
     }
 
     public void disable() {

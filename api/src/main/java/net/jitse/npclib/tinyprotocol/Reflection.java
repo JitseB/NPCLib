@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package com.comphenix.tinyprotocol;
+package net.jitse.npclib.tinyprotocol;
 
 import org.bukkit.Bukkit;
 

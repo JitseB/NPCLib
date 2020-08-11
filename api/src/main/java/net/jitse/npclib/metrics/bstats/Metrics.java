@@ -1,4 +1,4 @@
-package org.bstats.bukkit;
+package net.jitse.npclib.metrics.bstats;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

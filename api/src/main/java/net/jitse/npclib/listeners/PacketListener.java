@@ -4,16 +4,14 @@
 
 package net.jitse.npclib.listeners;
 
-import com.comphenix.tinyprotocol.Reflection;
-import com.comphenix.tinyprotocol.TinyProtocol;
 import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.api.events.NPCInteractEvent;
-import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.internal.NPCManager;
+import net.jitse.npclib.tinyprotocol.Reflection;
+import net.jitse.npclib.tinyprotocol.TinyProtocol;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,10 +32,10 @@ public class PacketListener {
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();
 
-    private Plugin plugin;
+    private NPCLib instance;
 
     public void start(NPCLib instance) {
-        this.plugin = instance.getPlugin();
+        this.instance = instance;
 
         new TinyProtocol(instance) {
 
@@ -52,7 +50,7 @@ public class PacketListener {
         if (!packetPlayInUseEntityClazz.isInstance(packet) || player == null)
             return true; // We aren't handling the packet.
 
-        NPCBase npc = null;
+        NPC npc = null;
         int packetEntityId = entityIdField.get(packet);
 
         // Not using streams here is an intentional choice.
@@ -61,7 +59,7 @@ public class PacketListener {
         // So, we're avoiding them here.
         // ~ Kneesnap, 9 / 20 / 2019.
 
-        for (NPCBase testNPC : NPCManager.getAllNPCs()) {
+        for (NPC testNPC : instance.getNPCs()) {
             if (testNPC.isCreated() && testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
                 npc = testNPC;
                 break;
@@ -81,7 +79,7 @@ public class PacketListener {
                 ? NPCInteractEvent.ClickType.LEFT_CLICK : NPCInteractEvent.ClickType.RIGHT_CLICK;
 
         delay.add(player.getUniqueId());
-        Bukkit.getScheduler().runTask(plugin, new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
+        Bukkit.getScheduler().runTask(instance.getPlugin(), new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
         return false;
     }
 

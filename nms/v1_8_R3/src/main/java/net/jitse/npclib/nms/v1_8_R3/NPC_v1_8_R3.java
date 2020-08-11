@@ -41,7 +41,7 @@ public class NPC_v1_8_R3 extends NPCBase {
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
-        if (holo == null){
+        if (holo == null) {
             holo = new Hologram(MinecraftVersion.V1_8_R3, location.clone().add(0, 0.5, 0), getPlayerLines(player));
         }
         super.textDisplayHolograms.put(player.getUniqueId(), holo);
@@ -132,7 +132,7 @@ public class NPC_v1_8_R3 extends NPCBase {
 
     @Override
     public void sendAnimationPacket(Player player, NPCAnimation animation) {
-        if(animation == NPCAnimation.SWING_OFFHAND) {
+        if (animation == NPCAnimation.SWING_OFFHAND) {
             throw new IllegalArgumentException("Offhand Swing Animations are only available on 1.9 and up.");
         }
 

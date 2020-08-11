@@ -37,7 +37,10 @@ public class NPC_v1_16_R1 extends NPCBase {
         super(instance, lines);
     }
 
+    PacketPlayOutMapChunk
+
     @Override
+
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
         if (holo == null) {

@@ -26,24 +26,22 @@ public interface NPC {
     Hologram getPlayerHologram(Player player);
 
     /**
-     *
      * @param targetPlayer The target player
      * @return object instance
      * @author Gatt
      */
     NPC removePlayerLines(Player targetPlayer);
+
     /**
-     *
      * @param targetPlayer The target player
-     * @param update whether or not to update the hologram
+     * @param update       whether or not to update the hologram
      * @return object instance
      * @author Gatt
      */
     NPC removePlayerLines(Player targetPlayer, boolean update);
 
     /**
-     *
-     * @param uniqueLines The text that the targetPlayer will see. Null to remove
+     * @param uniqueLines  The text that the targetPlayer will see. Null to remove
      * @param targetPlayer The target player
      * @return object instance
      * @author Gatt
@@ -146,12 +144,6 @@ public interface NPC {
     void hide(Player player);
 
     /**
-     * Destroy the NPC, i.e. remove it from the registry.
-     * Requires {@link NPC#create} to be used first.
-     */
-    void destroy();
-
-    /**
      * Toggle a state of the NPC.
      *
      * @param state The state to be toggled.
@@ -213,4 +205,6 @@ public interface NPC {
      * @return The UUID of the NPC.
      */
     UUID getUniqueId();
+
+    int getEntityId();
 }

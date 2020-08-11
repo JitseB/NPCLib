@@ -4,8 +4,8 @@
 
 package net.jitse.npclib.hologram;
 
-import com.comphenix.tinyprotocol.Reflection;
 import net.jitse.npclib.internal.MinecraftVersion;
+import net.jitse.npclib.tinyprotocol.Reflection;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -158,7 +158,7 @@ public class Hologram {
 
             if (SET_MARKER_METHOD != null) { // setMarker isn't a method in 1.8_R2, so still check if it exists in the first place.
                 Object bukkitEntity = GET_BUKKIT_ENTITY.invoke(entityArmorStand); // if it does, grab the Bukkit Entity
-                ArmorStand as = (ArmorStand)bukkitEntity; // reflection wasn't working here for some reason- just using a regular ArmorStand object since it's not version-dependent.
+                ArmorStand as = (ArmorStand) bukkitEntity; // reflection wasn't working here for some reason- just using a regular ArmorStand object since it's not version-dependent.
                 as.setMarker(true); // set the marker state
             }
 

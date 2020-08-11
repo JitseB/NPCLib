@@ -6,13 +6,19 @@ package net.jitse.npclib;
 
 import net.jitse.npclib.NPCLibOptions.MovementHandling;
 import net.jitse.npclib.api.NPC;
-import net.jitse.npclib.api.utilities.Logger;
 import net.jitse.npclib.listeners.*;
 import net.jitse.npclib.metrics.NPCLibMetrics;
+import net.jitse.npclib.utilities.Logger;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class NPCLib {
 
@@ -21,8 +27,12 @@ public final class NPCLib {
     private final Class<?> npcClass;
 
     private double autoHideDistance = 50.0;
+    private Set<NPC> npcs = new HashSet<>();
 
-    private NPCLib(JavaPlugin plugin, MovementHandling moveHandling) {
+    protected NPCLib(JavaPlugin plugin, MovementHandling moveHandling) {
+        Validate.notNull(plugin, "Plugin cannot be null");
+        Validate.notNull(moveHandling, "moveHandling cannot be null");
+
         this.plugin = plugin;
         this.logger = new Logger("NPCLib");
 
@@ -45,8 +55,12 @@ public final class NPCLib {
 
         PluginManager pluginManager = plugin.getServer().getPluginManager();
 
-        pluginManager.registerEvents(new PlayerListener(this), plugin);
+        pluginManager.registerEvents(new PlayerRespawnListener(this), plugin);
         pluginManager.registerEvents(new ChunkListener(this), plugin);
+        pluginManager.registerEvents(new PlayerChangeWorldListener(this), plugin);
+        pluginManager.registerEvents(new PlayerDeathListener(this), plugin);
+        pluginManager.registerEvents(new PlayerQuitListener(this), plugin);
+        pluginManager.registerEvents(new PlayerTeleportListener(), plugin);
 
         if (moveHandling.usePme) {
             pluginManager.registerEvents(new PlayerMoveEventListener(), plugin);
@@ -57,19 +71,10 @@ public final class NPCLib {
         // Boot the according packet listener.
         new PacketListener().start(this);
 
-        // Start the bStats metrics system and disable the silly relocate check.
-        System.setProperty("bstats.relocatecheck", "false");
+        // Start metrics.
         new NPCLibMetrics(this);
 
         logger.info("Enabled for Minecraft " + versionName);
-    }
-
-    public NPCLib(JavaPlugin plugin) {
-        this(plugin, MovementHandling.playerMoveEvent());
-    }
-
-    public NPCLib(JavaPlugin plugin, NPCLibOptions options) {
-        this(plugin, options.moveHandling);
     }
 
     /**
@@ -111,7 +116,9 @@ public final class NPCLib {
      */
     public NPC createNPC(List<String> text) {
         try {
-            return (NPC) npcClass.getConstructors()[0].newInstance(this, text);
+            NPC npc = (NPC) npcClass.getConstructors()[0].newInstance(this, text);
+            npcs.add(npc);
+            return npc;
         } catch (Exception exception) {
             logger.warning("Failed to create NPC. Please report the following stacktrace message", exception);
         }
@@ -126,5 +133,50 @@ public final class NPCLib {
      */
     public NPC createNPC() {
         return createNPC(null);
+    }
+
+    /**
+     * Get all NPCs created using NPCLib (from all plugins).
+     *
+     * @return A set with all NPCs.
+     */
+    public Set<NPC> getNPCs() {
+        return npcs;
+    }
+
+    /**
+     * Destroy the NPC, i.e. remove it from the registry.
+     * Sets up object for removal by GC (garbage-collector).
+     *
+     * @param npc The NPC to destroy.
+     */
+    public void destroyNPC(NPC npc) {
+        // Destroy NPC for every player that is still seeing it.
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!npc.isShown(player) || npc.isAutoHidden(player)) {
+                continue;
+            }
+
+            // destroy the per player holograms and hide the NPC.
+            npc.getPlayerHologram(player).hide(player);
+            npc.hide(player);
+        }
+    }
+
+    /**
+     * Get all NPCs created using NPCLib (from all plugins) shown to a player.
+     * This method does not account for auto hiding of NPCs (these are included).
+     *
+     * @param player The player who can see the NPCs.
+     * @return A set with all visible NPCs to the player.
+     */
+    public Set<NPC> getNPCs(Player player) {
+        Set<NPC> set = Collections.emptySet();
+        for (NPC npc : npcs) {
+            if (npc.isShown(player)) {
+                set.add(npc);
+            }
+        }
+        return set;
     }
 }
