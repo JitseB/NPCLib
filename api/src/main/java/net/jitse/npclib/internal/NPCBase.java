@@ -28,7 +28,7 @@ import java.util.*;
 public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     protected final int entityId = Integer.MAX_VALUE - NPCLibManager.getLibrary().getNPCs().size();
-    protected final Set<UUID> hasTeamRegistered = new HashSet<>();
+    protected final Set<UUID> team = new HashSet<>();
     protected final Set<NPCState> activeStates = EnumSet.noneOf(NPCState.class);
 
     private final Set<UUID> shown = new HashSet<>();
@@ -46,77 +46,37 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected Skin skin;
 
     protected final Map<NPCSlot, ItemStack> items = new EnumMap<>(NPCSlot.class);
-    // Per-player holograms
-    protected final Map<UUID, List<String>> uniqueText = new HashMap<>();
-    protected final Map<UUID, Hologram> textDisplayHolograms = new HashMap<>();
+    protected final Map<UUID, Hologram> holograms = new HashMap<>(); // Per player holograms
 
-    public NPCBase(NPCLib instance, List<String> text) {
+    public NPCBase(NPCLib instance, Location location, List<String> text) {
         this.instance = instance;
         this.text = text == null ? Collections.emptyList() : text;
     }
 
-    public NPCLib getInstance() {
-        return instance;
+    @Override
+    public List<String> getText(Player player) {
+        return holograms.get(player.getUniqueId()).getText();
     }
 
     @Override
-    public Hologram getPlayerHologram(Player player) {
-        Validate.notNull(player, "Player cannot be null");
-        return textDisplayHolograms.getOrDefault(player.getUniqueId(), null);
-    }
-
-
-    @Override
-    public NPC removePlayerLines(Player targetPlayer) {
-        Validate.notNull(targetPlayer, "Player cannot be null");
-        setPlayerLines(null, targetPlayer);
-        return this;
+    public List<String> getText() {
+        // TODO: Throw error if per-player holograms are used
+        Hologram hologram = holograms.values().stream().findFirst().orElse(null);
+        return hologram != null ? hologram.getText() : null;
     }
 
     @Override
-    public NPC removePlayerLines(Player targetPlayer, boolean update) {
-        Validate.notNull(targetPlayer, "Player cannot be null");
-        setPlayerLines(null, targetPlayer, update);
-        return this;
+    public void updateText(Player player, List<String> text) {
+        holograms.get(player.getUniqueId()).update(player, text == null ? Collections.emptyList() : text);
     }
 
     @Override
-    public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer) {
-        Validate.notNull(targetPlayer, "Player cannot be null");
-        if (uniqueLines == null) uniqueText.remove(targetPlayer.getUniqueId());
-        else uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
-        return this;
-    }
-
-    @Override
-    public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update) {
-        Validate.notNull(targetPlayer, "Player cannot be null");
-
-        List<String> originalLines = getPlayerLines(targetPlayer);
-        setPlayerLines(uniqueLines, targetPlayer);
-        if (update) {
-
-            uniqueLines = getPlayerLines(targetPlayer); // retrieve the player lines from this function, incase it's been removed.
-
-            if (originalLines.size() != uniqueLines.size()) { // recreate the entire hologram
-                Hologram originalhologram = getPlayerHologram(targetPlayer);
-                originalhologram.hide(targetPlayer); // essentially destroy the hologram
-                textDisplayHolograms.remove(targetPlayer.getUniqueId()); // remove the old obj
-            }
-
-            if (isShown(targetPlayer)) { //only show hologram if the player is in range
-                Hologram hologram = getPlayerHologram(targetPlayer);
-                List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(targetPlayer));
-                hologram.update(targetPlayer, updatePackets);
-            }
+    public void teleport(Location location) {
+        this.location = location;
+        for (UUID uuid : shown) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) sendTeleportationPacket(player);
         }
-        return this;
-    }
-
-    @Override
-    public List<String> getPlayerLines(Player targetPlayer) {
-        Validate.notNull(targetPlayer, "Player cannot be null");
-        return uniqueText.getOrDefault(targetPlayer.getUniqueId(), text);
     }
 
     @Override
@@ -156,12 +116,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     @Override
-    public NPC setLocation(Location location) {
-        this.location = location;
-        return this;
-    }
-
-    @Override
     public NPC create() {
         createPackets();
         this.created = true;
@@ -175,11 +129,8 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public void show(Player player) {
-        show(player, false);
-    }
-
-    public void show(Player player, boolean auto) {
         Validate.notNull(player, "Player cannot be null");
+        if (!created) throw new IllegalStateException("NPC packets have not been generated yet. Use NPC#create");
 
         NPCShowEvent event = new NPCShowEvent(this, player);
         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -188,6 +139,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         if (!player.isOnline()) throw new IllegalArgumentException("Player is not online");
 
         shown.add(player.getUniqueId());
+
         sendShowPackets(player);
         sendMetadataPacket(player);
         sendEquipmentPackets(player);
@@ -196,18 +148,17 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     @Override
     public void hide(Player player) {
         Validate.notNull(player, "Player cannot be null");
-
-        // TODO: Handle holograms
+        if (!created) throw new IllegalStateException("NPC packets have not been generated yet. Use NPC#create");
 
         NPCHideEvent event = new NPCHideEvent(this, player);
         Bukkit.getServer().getPluginManager().callEvent(event);
-
         if (event.isCancelled()) return;
-
-        if (!isShown(player))
-            throw new IllegalArgumentException("NPC was never shown to the player");
+        if (!isShown(player)) throw new IllegalArgumentException("NPC was never shown to the player");
 
         shown.remove(player.getUniqueId());
+        holograms.remove(player.getUniqueId());
+        team.remove(player.getUniqueId());
+
         if (player.isOnline()) sendHidePackets(player);
     }
 
@@ -225,10 +176,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         else activeStates.add(state);
 
         // Send a new metadata packet to all players that can see the NPC.
-        for (UUID shownUuid : shown) {
-            Player player = Bukkit.getPlayer(shownUuid);
-            if (player != null && isShown(player))
-                sendMetadataPacket(player);
+        for (UUID uuid : shown) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) sendMetadataPacket(player);
         }
         return this;
     }
@@ -237,10 +187,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     public void playAnimation(NPCAnimation animation) {
         Validate.notNull(animation, "Animation cannot be null");
 
-        for (UUID shownUuid : shown) {
-            Player player = Bukkit.getPlayer(shownUuid);
-            if (player != null && isShown(player))
-                sendAnimationPacket(player, animation);
+        for (UUID uuid : shown) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) sendAnimationPacket(player, animation);
         }
     }
 
@@ -255,37 +204,11 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         Validate.notNull(slot, "Slot cannot be null");
         items.put(slot, item);
 
-        for (UUID shownUuid : shown) {
-            Player player = Bukkit.getPlayer(shownUuid);
-            if (player != null && isShown(player))
-                sendEquipmentPacket(player, slot, false);
+        for (UUID uuid : shown) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) sendEquipmentPacket(player, slot, false);
         }
         return this;
-    }
-
-    @Override
-    public NPC setText(List<String> text) {
-        uniqueText.clear();
-
-        for (UUID shownUuid : shown) {
-            Player player = Bukkit.getPlayer(shownUuid);
-            if (player != null && isShown(player)) {
-                Hologram originalHologram = getPlayerHologram(player);
-                originalHologram.hide(player); // essentially destroy the hologram
-                textDisplayHolograms.remove(player.getUniqueId()); // remove the old obj
-                Hologram hologram = getPlayerHologram(player); // let it regenerate
-                List<Object> updatePackets = hologram.getUpdatePackets(getPlayerLines(player));
-                hologram.update(player, updatePackets);
-            }
-        }
-
-        this.text = text;
-        return this;
-    }
-
-    @Override
-    public List<String> getText() {
-        return text;
     }
 
     @Override

@@ -13,6 +13,7 @@ import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.nms.v1_16_R1.packets.*;
 import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -33,18 +34,15 @@ public class NPC_v1_16_R1 extends NPCBase {
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
     private PacketPlayOutAnimation packetPlayOutAnimation;
 
-    public NPC_v1_16_R1(NPCLib instance, List<String> lines) {
-        super(instance, lines);
+    public NPC_v1_16_R1(NPCLib instance, Location location, List<String> lines) {
+        super(instance, location, lines);
     }
 
-    PacketPlayOutMapChunk
-
     @Override
-
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
         if (holo == null) {
-            holo = new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
+            holo = new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 1.5, 0), getPlayerLines(player));
         }
         super.textDisplayHolograms.put(player.getUniqueId(), holo);
         return holo;
@@ -84,7 +82,7 @@ public class NPC_v1_16_R1 extends NPCBase {
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        if (hasTeamRegistered.add(player.getUniqueId()))
+        if (team.add(player.getUniqueId()))
             playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
@@ -149,5 +147,10 @@ public class NPC_v1_16_R1 extends NPCBase {
             playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         }
+    }
+
+    @Override
+    public void sendTeleportationPacket(Player player) {
+        // TODO
     }
 }

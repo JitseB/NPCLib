@@ -26,9 +26,7 @@ public class Hologram {
     private static final Class<?> ENTITY_CLASS = Reflection.getMinecraftClass("Entity");
     private static final Class<?> CRAFT_WORLD_CLASS = Reflection.getCraftBukkitClass("CraftWorld");
     private static final Class<?> CRAFT_PLAYER_CLASS = Reflection.getCraftBukkitClass("entity.CraftPlayer");
-
     private static final Class<?> BUKKIT_ENTITY_ARMOR_STAND_CLASS = Reflection.getClass("org.bukkit.entity.ArmorStand");
-
     private static final Class<?> PACKET_PLAY_OUT_SPAWN_ENTITY_LIVING_CLASS = Reflection.getMinecraftClass(
             "PacketPlayOutSpawnEntityLiving");
     private static final Class<?> PACKET_PLAY_OUT_ENTITY_DESTROY_CLASS = Reflection.getMinecraftClass(
@@ -65,10 +63,8 @@ public class Hologram {
             "setBasePlate", boolean.class);
     private static final Reflection.MethodInvoker SET_ARMS_METHOD = Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS,
             "setArms", boolean.class);
-
     private static final Reflection.MethodInvoker GET_BUKKIT_ENTITY = Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS,
             "getBukkitEntity");
-
     private static final Reflection.MethodInvoker PLAYER_GET_HANDLE_METHOD = Reflection.getMethod(CRAFT_PLAYER_CLASS,
             "getHandle");
     private static final Reflection.MethodInvoker SEND_PACKET_METHOD = Reflection.getMethod(PLAYER_CONNECTION_CLASS,
@@ -104,26 +100,20 @@ public class Hologram {
                 Reflection.getMethod(ENTITY_CLASS, "setNoGravity", boolean.class) :
                 Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS, "setGravity", boolean.class));
 
-        Reflection.MethodInvoker SET_MARKER_METHOD = (version.isAboveOrEqual(MinecraftVersion.V1_8_R3) ?
-                Reflection.getMethod(BUKKIT_ENTITY_ARMOR_STAND_CLASS,
-                        "setMarker", boolean.class) : null);
-
         Reflection.MethodInvoker customNameMethod = Reflection.getMethod(ENTITY_CLASS, "setCustomName",
                 version.isAboveOrEqual(MinecraftVersion.V1_13_R1) ? CHAT_BASE_COMPONENT_CLASS : String.class);
 
         Reflection.MethodInvoker customNameVisibilityMethod = Reflection.getMethod(ENTITY_CLASS, "setCustomNameVisible", boolean.class);
 
-        Location location = start.clone().add(0, (DELTA * text.size()) + (SET_MARKER_METHOD != null ? 1f : 0f), 0); // markers drop the armor stand's nametag by around 1 block
+        // TODO: +1 on all y-coords of start location in nms code
+        Location location = start.clone().add(0, (DELTA * text.size()), 0);
         Class<?> worldClass = worldServer.getClass().getSuperclass();
 
         if (start.getWorld().getEnvironment() != World.Environment.NORMAL) {
             worldClass = worldClass.getSuperclass();
         }
 
-//        Reflection.ConstructorInvoker entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
-//                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
-//                Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
-        // Replacement for issue #59
+        // Try catch block for issue #59
         Reflection.ConstructorInvoker entityArmorStandConstructor = null;
         try {
             entityArmorStandConstructor = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
@@ -136,7 +126,6 @@ public class Hologram {
                     Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass, double.class, double.class, double.class) :
                     Reflection.getConstructor(ENTITY_ARMOR_STAND_CLASS, worldClass));
         }
-        // end #59
 
         for (String line : text) {
             Object entityArmorStand = (version.isAboveOrEqual(MinecraftVersion.V1_14_R1) ?
@@ -156,11 +145,9 @@ public class Hologram {
             SET_BASE_PLATE_METHOD.invoke(entityArmorStand, false);
             SET_ARMS_METHOD.invoke(entityArmorStand, false);
 
-            if (SET_MARKER_METHOD != null) { // setMarker isn't a method in 1.8_R2, so still check if it exists in the first place.
-                Object bukkitEntity = GET_BUKKIT_ENTITY.invoke(entityArmorStand); // if it does, grab the Bukkit Entity
-                ArmorStand as = (ArmorStand) bukkitEntity; // reflection wasn't working here for some reason- just using a regular ArmorStand object since it's not version-dependent.
-                as.setMarker(true); // set the marker state
-            }
+            Object bukkitEntity = GET_BUKKIT_ENTITY.invoke(entityArmorStand);
+            ArmorStand as = (ArmorStand) bukkitEntity;
+            as.setMarker(true); // set the marker state
 
             armorStands.add(entityArmorStand);
 
@@ -179,7 +166,28 @@ public class Hologram {
         }
     }
 
-    public List<Object> getUpdatePackets(List<String> text) {
+    public void show(Player player) {
+        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
+
+        for (int i = 0; i < text.size(); i++) {
+            if (text.get(i).isEmpty()) continue; // No need to spawn the line.
+            SEND_PACKET_METHOD.invoke(playerConnection, showPackets.get(i));
+            if (version.isAboveOrEqual(MinecraftVersion.V1_15_R1)) {
+                SEND_PACKET_METHOD.invoke(playerConnection, metaPackets.get(i));
+            }
+        }
+    }
+
+    public void hide(Player player) {
+        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
+
+        for (int i = 0; i < text.size(); i++) {
+            if (text.get(i).isEmpty()) continue; // No need to hide the line (as it was never spawned).
+            SEND_PACKET_METHOD.invoke(playerConnection, hidePackets.get(i));
+        }
+    }
+
+    public void update(Player player, List<String> text {
         List<Object> updatePackets = new ArrayList<>();
 
         if (this.text.size() != text.size()) {
@@ -214,10 +222,6 @@ public class Hologram {
 
         this.text = text;
 
-        return updatePackets;
-    }
-
-    public void update(Player player, List<Object> updatePackets) {
         Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
 
         for (Object packet : updatePackets) {
@@ -225,24 +229,7 @@ public class Hologram {
         }
     }
 
-    public void show(Player player) {
-        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
-
-        for (int i = 0; i < text.size(); i++) {
-            if (text.get(i).isEmpty()) continue; // No need to spawn the line.
-            SEND_PACKET_METHOD.invoke(playerConnection, showPackets.get(i));
-            if (version.isAboveOrEqual(MinecraftVersion.V1_15_R1)) {
-                SEND_PACKET_METHOD.invoke(playerConnection, metaPackets.get(i));
-            }
-        }
-    }
-
-    public void hide(Player player) {
-        Object playerConnection = PLAYER_CONNECTION_FIELD.get(PLAYER_GET_HANDLE_METHOD.invoke(player));
-
-        for (int i = 0; i < text.size(); i++) {
-            if (text.get(i).isEmpty()) continue; // No need to hide the line (as it was never spawned).
-            SEND_PACKET_METHOD.invoke(playerConnection, hidePackets.get(i));
-        }
+    public List<String> getText() {
+        return text;
     }
 }

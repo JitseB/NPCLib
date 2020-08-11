@@ -8,7 +8,7 @@ import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
-import net.jitse.npclib.hologram.Hologram;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -19,68 +19,27 @@ import java.util.UUID;
 
 public interface NPC {
 
-    /**
-     * @param player
-     * @return unique hologram for that user
-     */
-    Hologram getPlayerHologram(Player player);
+    default void updateText(List<String> text) {
+        for (Player player : Bukkit.getOnlinePlayers())
+            updateText(player, text);
+    }
 
-    /**
-     * @param targetPlayer The target player
-     * @return object instance
-     * @author Gatt
-     */
-    NPC removePlayerLines(Player targetPlayer);
+    default void removeText() {
+        for (Player player : Bukkit.getOnlinePlayers())
+            removeText(player);
+    }
 
-    /**
-     * @param targetPlayer The target player
-     * @param update       whether or not to update the hologram
-     * @return object instance
-     * @author Gatt
-     */
-    NPC removePlayerLines(Player targetPlayer, boolean update);
+    default void removeText(Player player) {
+        updateText(player, null);
+    }
 
-    /**
-     * @param uniqueLines  The text that the targetPlayer will see. Null to remove
-     * @param targetPlayer The target player
-     * @return object instance
-     * @author Gatt
-     */
-    NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer);
+    void updateText(Player player, List<String> text);
 
-    /**
-     * @param uniqueLines  The text that the targetPlayer will see
-     * @param targetPlayer The target player
-     * @param update       whether or not to send the update packets
-     * @return object instance
-     * @author Gatt
-     */
-    NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer, boolean update);
+    List<String> getText();
 
-    /**
-     * @param targetPlayer The target player
-     * @return the lines that the targetPlayer will see, if null; default lines.
-     * @author Gatt
-     */
-    List<String> getPlayerLines(Player targetPlayer);
+    List<String> getText(Player player);
 
-    /**
-     * Set the NPC's location.
-     * Use this method before using {@link NPC#create}.
-     *
-     * @param location The spawn location for the NPC.
-     * @return object instance.
-     */
-    NPC setLocation(Location location);
-
-    /**
-     * Set the NPC's skin.
-     * Use this method before using {@link NPC#create}.
-     *
-     * @param skin The skin(data) you'd like to apply.
-     * @return object instance.
-     */
-    NPC setSkin(Skin skin);
+    void teleport(Location location);
 
     /**
      * Get the location of the NPC.
@@ -144,47 +103,6 @@ public interface NPC {
     void hide(Player player);
 
     /**
-     * Toggle a state of the NPC.
-     *
-     * @param state The state to be toggled.
-     * @return Object instance.
-     */
-    NPC toggleState(NPCState state);
-
-    /**
-     * Plays an animation as the the NPC.
-     *
-     * @param animation The animation to play.
-     */
-    void playAnimation(NPCAnimation animation);
-
-    /**
-     * Get state of NPC.
-     *
-     * @param state The state requested.
-     * @return boolean on/off status.
-     */
-    boolean getState(NPCState state);
-
-    /**
-     * Change the item in the inventory of the NPC.
-     *
-     * @param slot The slot to set the item of.
-     * @param item The item to set.
-     * @return Object instance.
-     */
-    NPC setItem(NPCSlot slot, ItemStack item);
-
-    NPC setText(List<String> text);
-
-    /**
-     * Get the text of an NPC
-     *
-     * @return List<String> text
-     */
-    List<String> getText();
-
-    /**
      * Get a NPC's item.
      *
      * @param slot The slot the item is in.
@@ -207,4 +125,45 @@ public interface NPC {
     UUID getUniqueId();
 
     int getEntityId();
+
+    /**
+     * Set the NPC's skin.
+     * Use this method before using {@link NPC#create}.
+     *
+     * @param skin The skin(data) you'd like to apply.
+     * @return object instance.
+     */
+    NPC setSkin(Skin skin);
+
+    /**
+     * Toggle a state of the NPC.
+     *
+     * @param state The state to be toggled.
+     * @return Object instance.
+     */
+    NPC toggleState(NPCState state);
+
+    /**
+     * Get state of NPC.
+     *
+     * @param state The state requested.
+     * @return boolean on/off status.
+     */
+    boolean getState(NPCState state);
+
+    /**
+     * Plays an animation as the the NPC.
+     *
+     * @param animation The animation to play.
+     */
+    void playAnimation(NPCAnimation animation);
+
+    /**
+     * Change the item in the inventory of the NPC.
+     *
+     * @param slot The slot to set the item of.
+     * @param item The item to set.
+     * @return Object instance.
+     */
+    NPC setItem(NPCSlot slot, ItemStack item);
 }

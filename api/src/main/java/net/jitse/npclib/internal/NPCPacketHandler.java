@@ -27,6 +27,8 @@ interface NPCPacketHandler {
 
     void sendAnimationPacket(Player player, NPCAnimation animation);
 
+    void sendTeleportationPacket(Player player);
+
     default void sendEquipmentPackets(Player player) {
         for (NPCSlot slot : NPCSlot.values())
             sendEquipmentPacket(player, slot, true);
