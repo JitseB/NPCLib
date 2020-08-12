@@ -4,6 +4,9 @@
 
 package net.jitse.npclib.internal;
 
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +19,16 @@ public final class NPCManager {
 
     public static Set<NPCBase> getAllNPCs() {
         return npcs;
+    }
+
+    public static Set<NPCBase> getShownToPlayer(Player player) {
+        Set<NPCBase> set = Collections.emptySet();
+        for (NPCBase npc : getAllNPCs()) {
+            if (npc.getShown().contains(player.getUniqueId())) {
+                set.add(npc);
+            }
+        }
+        return set;
     }
 
     public static void add(NPCBase npc) {

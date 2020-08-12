@@ -41,6 +41,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected UUID uuid = new UUID(new Random().nextLong(), 0);
     protected String name = uuid.toString().replace("-", "").substring(0, 10);
     protected GameProfile gameProfile = new GameProfile(uuid, name);
+    protected boolean created = false;
 
     protected NPCLib instance;
     protected List<String> text;
@@ -73,10 +74,26 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return playerHologram;
     }
 
+
+    @Override
+    public NPC removePlayerLines(Player targetPlayer) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
+        setPlayerLines(null, targetPlayer);
+        return this;
+    }
+
+    @Override
+    public NPC removePlayerLines(Player targetPlayer, boolean update) {
+        Validate.notNull(targetPlayer, "Player cannot be null.");
+        setPlayerLines(null, targetPlayer, update);
+        return this;
+    }
+
     @Override
     public NPC setPlayerLines(List<String> uniqueLines, Player targetPlayer) {
         Validate.notNull(targetPlayer, "Player cannot be null.");
-        uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
+        if (uniqueLines == null) uniqueText.remove(targetPlayer.getUniqueId());
+        else uniqueText.put(targetPlayer.getUniqueId(), uniqueLines);
         return this;
     }
 
@@ -86,6 +103,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         List<String> originalLines = getPlayerLines(targetPlayer);
         setPlayerLines(uniqueLines, targetPlayer);
         if (update) {
+
+            uniqueLines = getPlayerLines(targetPlayer); // retrieve the player lines from this function, incase it's been removed.
+
             if (originalLines.size() != uniqueLines.size()) { // recreate the entire hologram
                 Hologram originalhologram = getPlayerHologram(targetPlayer);
                 originalhologram.hide(targetPlayer); // essentially destroy the hologram
@@ -177,7 +197,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public boolean isShown(Player player) {
-        if (player == null) return false;
+        Objects.requireNonNull(player, "Player object cannot be null");
         return shown.contains(player.getUniqueId()) && !autoHidden.contains(player.getUniqueId());
     }
 
@@ -190,7 +210,13 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     @Override
     public NPC create() {
         createPackets();
+        this.created = true;
         return this;
+    }
+
+    @Override
+    public boolean isCreated() {
+        return created;
     }
 
     public void onLogout(Player player) {

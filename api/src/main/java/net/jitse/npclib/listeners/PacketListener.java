@@ -49,7 +49,7 @@ public class PacketListener {
     }
 
     private boolean handleInteractPacket(Player player, Object packet) {
-        if (!packetPlayInUseEntityClazz.isInstance(packet))
+        if (!packetPlayInUseEntityClazz.isInstance(packet) || player == null)
             return true; // We aren't handling the packet.
 
         NPCBase npc = null;
@@ -62,7 +62,7 @@ public class PacketListener {
         // ~ Kneesnap, 9 / 20 / 2019.
 
         for (NPCBase testNPC : NPCManager.getAllNPCs()) {
-            if (testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
+            if (testNPC.isCreated() && testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
                 npc = testNPC;
                 break;
             }

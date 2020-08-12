@@ -36,16 +36,16 @@ public class NPC_v1_16_R1 extends NPCBase {
     public NPC_v1_16_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
+
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
-        if (holo == null){
+        if (holo == null) {
             holo = new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
         }
         super.textDisplayHolograms.put(player.getUniqueId(), holo);
         return holo;
     }
-
 
     @Override
     public void createPackets() {
