@@ -46,7 +46,7 @@ If you have NPCLib under your `plugins` folder, you may use the following:
     <dependency>
         <groupId>net.jitse</groupId>
         <artifactId>npclib-api</artifactId>
-        <version>2.9-SNAPSHOT</version>
+        <version>2.9.1-SNAPSHOT</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
