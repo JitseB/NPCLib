@@ -187,7 +187,7 @@ public class Hologram {
         }
     }
 
-    public void update(Player player, List<String> text {
+    public void update(Player player, List<String> text) {
         List<Object> updatePackets = new ArrayList<>();
 
         if (this.text.size() != text.size()) {

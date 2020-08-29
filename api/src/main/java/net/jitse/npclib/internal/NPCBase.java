@@ -139,6 +139,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         if (!player.isOnline()) throw new IllegalArgumentException("Player is not online");
 
         shown.add(player.getUniqueId());
+        holograms.put(player.getUniqueId(), createHologram(player));
 
         sendShowPackets(player);
         sendMetadataPacket(player);
@@ -157,9 +158,11 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
         shown.remove(player.getUniqueId());
         holograms.remove(player.getUniqueId());
-        team.remove(player.getUniqueId());
 
-        if (player.isOnline()) sendHidePackets(player);
+        if (player.isOnline()) {
+            sendHidePackets(player);
+            // TODO: Remove team
+        }
     }
 
     @Override

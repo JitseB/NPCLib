@@ -6,6 +6,7 @@ package net.jitse.npclib.internal;
 
 import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.hologram.Hologram;
 import org.bukkit.entity.Player;
 
 /**
@@ -14,8 +15,6 @@ import org.bukkit.entity.Player;
 interface NPCPacketHandler {
 
     void createPackets();
-
-    void createPackets(Player player);
 
     void sendShowPackets(Player player);
 
@@ -28,6 +27,8 @@ interface NPCPacketHandler {
     void sendAnimationPacket(Player player, NPCAnimation animation);
 
     void sendTeleportationPacket(Player player);
+
+    Hologram createHologram(Player player);
 
     default void sendEquipmentPackets(Player player) {
         for (NPCSlot slot : NPCSlot.values())

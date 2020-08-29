@@ -32,30 +32,13 @@ public class NPC_v1_16_R1 extends NPCBase {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
-    private PacketPlayOutAnimation packetPlayOutAnimation;
 
     public NPC_v1_16_R1(NPCLib instance, Location location, List<String> lines) {
         super(instance, location, lines);
     }
 
     @Override
-    public Hologram getPlayerHologram(Player player) {
-        Hologram holo = super.getPlayerHologram(player);
-        if (holo == null) {
-            holo = new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 1.5, 0), getPlayerLines(player));
-        }
-        super.textDisplayHolograms.put(player.getUniqueId(), holo);
-        return holo;
-    }
-
-    @Override
     public void createPackets() {
-        Bukkit.getOnlinePlayers().forEach(this::createPackets);
-    }
-
-    @Override
-    public void createPackets(Player player) {
-
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
         // Packets for spawning the NPC:
@@ -79,6 +62,11 @@ public class NPC_v1_16_R1 extends NPCBase {
     }
 
     @Override
+    public Hologram createHologram(Player player) {
+        return new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 1.5, 0), text);
+    }
+
+    @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
@@ -89,7 +77,7 @@ public class NPC_v1_16_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
         sendMetadataPacket(player);
 
-        getPlayerHologram(player).show(player);
+        holograms.get(player.getUniqueId()).show(player);
 
         // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
@@ -103,7 +91,7 @@ public class NPC_v1_16_R1 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
 
-        getPlayerHologram(player).hide(player);
+        holograms.get(player.getUniqueId()).hide(player);
     }
 
     @Override
@@ -141,6 +129,7 @@ public class NPC_v1_16_R1 extends NPCBase {
         newProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         this.packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, newProfile, name);
         for (Player player : Bukkit.getOnlinePlayers()) {
+            // TODO: Only send to visible players
             PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
             playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
             playerConnection.sendPacket(packetPlayOutEntityDestroy);
