@@ -324,6 +324,7 @@ public abstract class TinyProtocol {
             try {
                 msg = onPacketInAsync(player, msg);
             } catch (Exception e) {
+                e.printStackTrace();
                 instance.getLogger().severe("Error in onPacketInAsync().", e);
             }
 
