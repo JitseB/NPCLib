@@ -403,4 +403,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     public List<String> getText() {
         return text;
     }
+    
+    @Override
+    public void lookAt(Location location) {
+    	sendHeadRotationPackets(location);
+    }
 }
