@@ -7,6 +7,9 @@ NPCLib – Basic non-player character library.<br>
 [![Discord](https://img.shields.io/badge/Support-Discord-blue.svg)](https://discord.gg/pvJGhEq)
 =
 
+`This project is starting 5 Oct. 2020 no longer actively maintained. I Thank you all for riding along!`
+
+
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8.8 - latest**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
 
 ### Preview (click to play video)
