@@ -1,12 +1,12 @@
-package net.jitse.npclib.nms.v1_16_R1;
+package net.jitse.npclib.nms.v1_16_R2;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -22,28 +22,28 @@ import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutAnimationWrapper;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutEntityMetadataWrapper;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_16_R1.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.minecraft.server.v1_16_R1.EnumItemSlot;
-import net.minecraft.server.v1_16_R1.PacketPlayOutAnimation;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntity;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_16_R1.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_16_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_16_R1.PacketPlayOutScoreboardTeam;
-import net.minecraft.server.v1_16_R1.PlayerConnection;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutAnimationWrapper;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutEntityMetadataWrapper;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutNamedEntitySpawnWrapper;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutPlayerInfoWrapper;
+import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutScoreboardTeamWrapper;
+import net.minecraft.server.v1_16_R2.EnumItemSlot;
+import net.minecraft.server.v1_16_R2.PacketPlayOutAnimation;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntity;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_16_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_16_R2.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_16_R2.PacketPlayOutScoreboardTeam;
+import net.minecraft.server.v1_16_R2.PlayerConnection;
 
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_16_R1 extends NPCBase {
+public class NPC_v1_16_R2 extends NPCBase {
 
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
@@ -52,7 +52,7 @@ public class NPC_v1_16_R1 extends NPCBase {
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
     private PacketPlayOutAnimation packetPlayOutAnimation;
 
-    public NPC_v1_16_R1(NPCLib instance, List<String> lines) {
+    public NPC_v1_16_R2(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
 
@@ -139,7 +139,7 @@ public class NPC_v1_16_R1 extends NPCBase {
         EnumItemSlot nmsSlot = slot.getNmsEnum(EnumItemSlot.class);
         ItemStack item = getItem(slot);
 
-        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pair = new Pair<>(nmsSlot, CraftItemStack.asNMSCopy(item));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R2.ItemStack> pair = new Pair<>(nmsSlot, CraftItemStack.asNMSCopy(item));
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, Collections.singletonList(pair));
         playerConnection.sendPacket(packet);
     }

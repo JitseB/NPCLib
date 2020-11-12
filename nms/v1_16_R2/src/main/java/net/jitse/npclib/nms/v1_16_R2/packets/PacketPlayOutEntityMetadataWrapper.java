@@ -1,12 +1,12 @@
-package net.jitse.npclib.nms.v1_16_R1.packets;
+package net.jitse.npclib.nms.v1_16_R2.packets;
 
 import java.util.Collection;
 
 import net.jitse.npclib.api.state.NPCState;
-import net.minecraft.server.v1_16_R1.DataWatcher;
-import net.minecraft.server.v1_16_R1.DataWatcherObject;
-import net.minecraft.server.v1_16_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_16_R2.DataWatcher;
+import net.minecraft.server.v1_16_R2.DataWatcherObject;
+import net.minecraft.server.v1_16_R2.DataWatcherRegistry;
+import net.minecraft.server.v1_16_R2.PacketPlayOutEntityMetadata;
 
 public class PacketPlayOutEntityMetadataWrapper {
 
@@ -33,6 +33,10 @@ public class PacketPlayOutEntityMetadataWrapper {
 //                e.printStackTrace();
 //            }
 //        }
+        
+        // Pose pose = Pose.SNEAKING;
+        
+        // dataWatcher.set(DataWatcherRegistry.s.a(6), EntityPose.values()[pose.ordinal()]);
 
         return new PacketPlayOutEntityMetadata(entityId, dataWatcher, true);
     }
