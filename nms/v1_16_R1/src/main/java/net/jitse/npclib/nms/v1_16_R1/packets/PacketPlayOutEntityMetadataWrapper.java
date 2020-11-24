@@ -1,12 +1,12 @@
 package net.jitse.npclib.nms.v1_16_R1.packets;
 
+import java.util.Collection;
+
 import net.jitse.npclib.api.state.NPCState;
 import net.minecraft.server.v1_16_R1.DataWatcher;
 import net.minecraft.server.v1_16_R1.DataWatcherObject;
 import net.minecraft.server.v1_16_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_16_R1.PacketPlayOutEntityMetadata;
-
-import java.util.Collection;
 
 public class PacketPlayOutEntityMetadataWrapper {
 

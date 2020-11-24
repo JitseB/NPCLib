@@ -213,4 +213,6 @@ public interface NPC {
      * @return The UUID of the NPC.
      */
     UUID getUniqueId();
+
+	void lookAt(Location location);
 }

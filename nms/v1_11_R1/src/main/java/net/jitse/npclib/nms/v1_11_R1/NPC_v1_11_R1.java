@@ -16,10 +16,12 @@ import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.nms.v1_11_R1.packets.*;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -146,5 +148,23 @@ public class NPC_v1_11_R1 extends NPCBase {
             playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         }
+    }
+    
+    @Override
+    public void sendHeadRotationPackets(Location location) {
+    	for (Player player : Bukkit.getOnlinePlayers()) {    		
+    		PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+    		
+    		Location npcLocation = getLocation();
+    		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
+    		
+            npcLocation.setDirection(dirBetweenLocations);
+            
+            float yaw = npcLocation.getYaw();
+            float pitch = npcLocation.getPitch();
+            
+            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+    	}
     }
 }

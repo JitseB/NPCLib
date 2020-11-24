@@ -6,6 +6,8 @@ package net.jitse.npclib.internal;
 
 import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -27,6 +29,8 @@ interface NPCPacketHandler {
 
     void sendAnimationPacket(Player player, NPCAnimation animation);
 
+    void sendHeadRotationPackets(Location location);
+    
     default void sendEquipmentPackets(Player player) {
         for (NPCSlot slot : NPCSlot.values())
             sendEquipmentPacket(player, slot, true);
