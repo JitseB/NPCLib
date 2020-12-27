@@ -54,6 +54,36 @@ public class MineSkinFetcher {
             }
         });
     }
+    
+    public static void fetchSkinFromIdSync(int id, Callback callback) {
+        try {
+            StringBuilder builder = new StringBuilder();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + id).openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.connect();
+
+            Scanner scanner = new Scanner(httpURLConnection.getInputStream());
+            while (scanner.hasNextLine()) {
+                builder.append(scanner.nextLine());
+            }
+
+            scanner.close();
+            httpURLConnection.disconnect();
+
+            JsonObject jsonObject = (JsonObject) new JsonParser().parse(builder.toString());
+            JsonObject textures = jsonObject.get("data").getAsJsonObject().get("texture").getAsJsonObject();
+            String value = textures.get("value").getAsString();
+            String signature = textures.get("signature").getAsString();
+
+            callback.call(new Skin(value, signature));
+        } catch (IOException exception) {
+            Bukkit.getLogger().severe("Could not fetch skin! (Id: " + id + "). Message: " + exception.getMessage());
+            exception.printStackTrace();
+            callback.failed();
+        }
+    }
 
     public interface Callback {
 
