@@ -175,13 +175,13 @@ public class NPC_v1_9_R1 extends NPCBase {
     		Location npcLocation = getLocation();
     		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
     		
-            npcLocation.setDirection(dirBetweenLocations);
+    		npcLocation.setDirection(dirBetweenLocations);
             
-            float yaw = npcLocation.getYaw();
-            float pitch = npcLocation.getPitch();
+    		float yaw = npcLocation.getYaw();
+    		float pitch = npcLocation.getPitch();
             
-            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+    		connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+    		connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
     	}
     }
 }
