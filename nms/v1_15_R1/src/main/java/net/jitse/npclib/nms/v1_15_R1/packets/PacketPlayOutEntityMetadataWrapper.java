@@ -22,10 +22,6 @@ public class PacketPlayOutEntityMetadataWrapper {
     }
     
     private EntityPose getMaskedPose(Collection<NPCState> states) {
-    	if (states.contains(NPCState.CROUCHED))
-    		return EntityPose.CROUCHING;
-//    	if (states.contains(NPCState.SLEEPING))
-//    		return EntityPose.SLEEPING;
-    	return EntityPose.STANDING;
+    	return states.contains(NPCState.CROUCHED) ? EntityPose.CROUCHING : EntityPose.STANDING;
     }
 }
