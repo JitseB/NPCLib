@@ -214,5 +214,10 @@ public interface NPC {
      */
     UUID getUniqueId();
 
-	void lookAt(Location location);
+    /**
+     * Update the direction the NPC is facing.
+     *
+     * @param location for NPC to look at.
+     */
+    void lookAt(Location location);
 }

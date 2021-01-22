@@ -56,6 +56,7 @@ public class NPC_v1_13_R2 extends NPCBase {
     public NPC_v1_13_R2(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
+    
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);

@@ -52,6 +52,7 @@ public class NPC_v1_14_R1 extends NPCBase {
     public NPC_v1_14_R1(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
+    
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
@@ -170,13 +171,13 @@ public class NPC_v1_14_R1 extends NPCBase {
     		Location npcLocation = getLocation();
     		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
     		
-            npcLocation.setDirection(dirBetweenLocations);
+    		npcLocation.setDirection(dirBetweenLocations);
             
-            float yaw = npcLocation.getYaw();
-            float pitch = npcLocation.getPitch();
+    		float yaw = npcLocation.getYaw();
+    		float pitch = npcLocation.getPitch();
             
-            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+    		connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+    		connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
     	}
     }
 }
