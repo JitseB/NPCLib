@@ -1,8 +1,17 @@
 package net.jitse.npclib.nms.v1_16_R2;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.datafixers.util.Pair;
+import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
+import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.internal.MinecraftVersion;
+import net.jitse.npclib.internal.NPCBase;
+import net.jitse.npclib.nms.v1_16_R2.packets.*;
+import net.minecraft.server.v1_16_R2.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
@@ -11,34 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.datafixers.util.Pair;
-
-import net.jitse.npclib.NPCLib;
-import net.jitse.npclib.api.skin.Skin;
-import net.jitse.npclib.api.state.NPCAnimation;
-import net.jitse.npclib.api.state.NPCSlot;
-import net.jitse.npclib.hologram.Hologram;
-import net.jitse.npclib.internal.MinecraftVersion;
-import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutAnimationWrapper;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutEntityMetadataWrapper;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_16_R2.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.minecraft.server.v1_16_R2.EnumItemSlot;
-import net.minecraft.server.v1_16_R2.PacketPlayOutAnimation;
-import net.minecraft.server.v1_16_R2.PacketPlayOutEntity;
-import net.minecraft.server.v1_16_R2.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_16_R2.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_16_R2.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_16_R2.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_16_R2.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_16_R2.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_16_R2.PacketPlayOutScoreboardTeam;
-import net.minecraft.server.v1_16_R2.PlayerConnection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Jitse Boonstra
@@ -57,13 +40,12 @@ public class NPC_v1_16_R2 extends NPCBase {
     }
 
     @Override
-    public Hologram getPlayerHologram(Player player) {
-        Hologram holo = super.getPlayerHologram(player);
-        if (holo == null) {
-            holo = new Hologram(MinecraftVersion.V1_16_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
-        }
-        super.textDisplayHolograms.put(player.getUniqueId(), holo);
-        return holo;
+    public Hologram getHologram(Player player) {
+        Hologram hologram = super.getHologram(player);
+        if (hologram == null)
+            hologram = new Hologram(MinecraftVersion.V1_16_R2, location.clone().add(0, 0.5, 0), getText(player));
+        playerHologram.put(player.getUniqueId(), hologram);
+        return hologram;
     }
 
     @Override
@@ -107,7 +89,7 @@ public class NPC_v1_16_R2 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
         sendMetadataPacket(player);
 
-        getPlayerHologram(player).show(player);
+        getHologram(player).show(player);
 
         // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
@@ -121,7 +103,7 @@ public class NPC_v1_16_R2 extends NPCBase {
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
 
-        getPlayerHologram(player).hide(player);
+        getHologram(player).hide(player);
     }
 
     @Override
@@ -166,22 +148,22 @@ public class NPC_v1_16_R2 extends NPCBase {
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         }
     }
-    
+
     @Override
     public void sendHeadRotationPackets(Location location) {
-    	for (Player player : Bukkit.getOnlinePlayers()) {    		
-    		PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-    		
-    		Location npcLocation = getLocation();
-    		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
-    		
-    		npcLocation.setDirection(dirBetweenLocations);
-            
-    		float yaw = npcLocation.getYaw();
-    		float pitch = npcLocation.getPitch();
-            
-    		connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(entityId, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-    		connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
-    	}
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+            Location npcLocation = getLocation();
+            Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
+
+            npcLocation.setDirection(dirBetweenLocations);
+
+            float yaw = npcLocation.getYaw();
+            float pitch = npcLocation.getPitch();
+
+            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(entityId, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+        }
     }
 }

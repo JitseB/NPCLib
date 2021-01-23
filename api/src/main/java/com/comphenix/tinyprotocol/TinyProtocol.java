@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Minimized version of TinyProtocol by Kristian suited for NPCLib.
+ * Minimized version of TinyProtocol by Kristian suited for NPCLib, modifications and refactoring by Jitse.
  */
 public abstract class TinyProtocol {
     private static final AtomicInteger ID = new AtomicInteger(0);
@@ -50,7 +50,8 @@ public abstract class TinyProtocol {
     private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
     // Speedup channel lookup
-    private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
+    // Made channelLookup UUID-based (JMB - 23rd Jan. 2021)
+    private Map<UUID, Channel> channelLookup = new MapMaker().weakValues().makeMap();
     private Listener listener;
 
     // Channels that have already been removed
@@ -89,6 +90,7 @@ public abstract class TinyProtocol {
             registerChannelHandler();
             registerPlayers(plugin);
             injected = true;
+            instance.getLogger().info("Injection complete");
         } catch (IllegalArgumentException ex) {
             // Damn you, late bind
             instance.getLogger().warning("Attempting to delay injection");
@@ -271,14 +273,14 @@ public abstract class TinyProtocol {
     }
 
     private Channel getChannel(Player player) {
-        Channel channel = channelLookup.get(player.getName());
+        Channel channel = channelLookup.get(player.getUniqueId());
 
         // Lookup channel again
         if (channel == null) {
             Object connection = getConnection.get(getPlayerHandle.invoke(player));
             Object manager = getManager.get(connection);
 
-            channelLookup.put(player.getName(), channel = getChannel.get(manager));
+            channelLookup.put(player.getUniqueId(), channel = getChannel.get(manager));
         }
 
         return channel;
@@ -292,9 +294,7 @@ public abstract class TinyProtocol {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
                 // No need to guard against this if we're closing
                 Channel channel = getChannel(player);
-                if (!closed) {
-                    uninjectedChannels.add(channel);
-                }
+                if (!closed) uninjectedChannels.add(channel);
 
                 // See ChannelInjector in ProtocolLib, line 590
                 channel.eventLoop().execute(() -> channel.pipeline().remove(handlerName));
@@ -324,12 +324,10 @@ public abstract class TinyProtocol {
             try {
                 msg = onPacketInAsync(player, msg);
             } catch (Exception e) {
-                instance.getLogger().severe("Error in onPacketInAsync().", e);
+                instance.getLogger().severe("Error in onPacketInAsync()", e);
             }
 
-            if (msg != null) {
-                super.channelRead(ctx, msg);
-            }
+            if (msg != null) super.channelRead(ctx, msg);
         }
 
         // Keeping this here for testing purposes:
@@ -338,7 +336,7 @@ public abstract class TinyProtocol {
 //            try {
 //                msg = onPacketOutAsync(player, ctx.channel(), msg);
 //            } catch (Exception e) {
-//                instance.getLogger().severe("Error in onPacketOutAsync().", e);
+//                instance.getLogger().severe("Error in onPacketOutAsync()", e);
 //            }
 //
 //            if (msg != null) {
@@ -349,7 +347,7 @@ public abstract class TinyProtocol {
         private void handleLoginStart(Channel channel, Object packet) {
             if (PACKET_LOGIN_IN_START.isInstance(packet)) {
                 GameProfile profile = getGameProfile.get(packet);
-                channelLookup.put(profile.getName(), channel);
+                channelLookup.put(profile.getId(), channel);
             }
         }
     }

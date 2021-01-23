@@ -43,10 +43,10 @@ public class NPC_v1_11_R1 extends NPCBase {
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
-        if (holo == null){
+        if (holo == null) {
             holo = new Hologram(MinecraftVersion.V1_11_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
         }
-        super.textDisplayHolograms.put(player.getUniqueId(), holo);
+        super.playerHologram.put(player.getUniqueId(), holo);
         return holo;
     }
 
@@ -149,22 +149,22 @@ public class NPC_v1_11_R1 extends NPCBase {
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         }
     }
-    
+
     @Override
     public void sendHeadRotationPackets(Location location) {
-    	for (Player player : Bukkit.getOnlinePlayers()) {    		
-    		PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-    		
-    		Location npcLocation = getLocation();
-    		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
-    		
-    		npcLocation.setDirection(dirBetweenLocations);
-            
-    		float yaw = npcLocation.getYaw();
-    		float pitch = npcLocation.getPitch();
-            
-    		connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-    		connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
-    	}
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+            Location npcLocation = getLocation();
+            Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
+
+            npcLocation.setDirection(dirBetweenLocations);
+
+            float yaw = npcLocation.getYaw();
+            float pitch = npcLocation.getPitch();
+
+            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+        }
     }
 }

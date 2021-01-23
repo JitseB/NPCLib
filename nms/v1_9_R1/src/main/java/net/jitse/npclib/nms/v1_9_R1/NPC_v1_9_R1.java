@@ -4,8 +4,17 @@
 
 package net.jitse.npclib.nms.v1_9_R1;
 
-import java.util.List;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.jitse.npclib.NPCLib;
+import net.jitse.npclib.api.skin.Skin;
+import net.jitse.npclib.api.state.NPCAnimation;
+import net.jitse.npclib.api.state.NPCSlot;
+import net.jitse.npclib.hologram.Hologram;
+import net.jitse.npclib.internal.MinecraftVersion;
+import net.jitse.npclib.internal.NPCBase;
+import net.jitse.npclib.nms.v1_9_R1.packets.*;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
@@ -14,33 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import net.jitse.npclib.NPCLib;
-import net.jitse.npclib.api.skin.Skin;
-import net.jitse.npclib.api.state.NPCAnimation;
-import net.jitse.npclib.api.state.NPCSlot;
-import net.jitse.npclib.hologram.Hologram;
-import net.jitse.npclib.internal.MinecraftVersion;
-import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutAnimationWrapper;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutEntityHeadRotationWrapper;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutEntityMetadataWrapper;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutPlayerInfoWrapper;
-import net.jitse.npclib.nms.v1_9_R1.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.minecraft.server.v1_9_R1.EnumItemSlot;
-import net.minecraft.server.v1_9_R1.PacketPlayOutAnimation;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntity;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_9_R1.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_9_R1.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_9_R1.PacketPlayOutScoreboardTeam;
-import net.minecraft.server.v1_9_R1.PlayerConnection;
+import java.util.List;
 
 /**
  * @author Jitse Boonstra
@@ -60,10 +43,10 @@ public class NPC_v1_9_R1 extends NPCBase {
     @Override
     public Hologram getPlayerHologram(Player player) {
         Hologram holo = super.getPlayerHologram(player);
-        if (holo == null){
+        if (holo == null) {
             holo = new Hologram(MinecraftVersion.V1_9_R1, location.clone().add(0, 0.5, 0), getPlayerLines(player));
         }
-        super.textDisplayHolograms.put(player.getUniqueId(), holo);
+        super.playerHologram.put(player.getUniqueId(), holo);
         return holo;
     }
 
@@ -166,22 +149,22 @@ public class NPC_v1_9_R1 extends NPCBase {
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         }
     }
-    
+
     @Override
     public void sendHeadRotationPackets(Location location) {
-    	for (Player player : Bukkit.getOnlinePlayers()) {    		
-    		PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-    		
-    		Location npcLocation = getLocation();
-    		Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
-    		
-    		npcLocation.setDirection(dirBetweenLocations);
-            
-    		float yaw = npcLocation.getYaw();
-    		float pitch = npcLocation.getPitch();
-            
-    		connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-    		connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
-    	}
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+
+            Location npcLocation = getLocation();
+            Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
+
+            npcLocation.setDirection(dirBetweenLocations);
+
+            float yaw = npcLocation.getYaw();
+            float pitch = npcLocation.getPitch();
+
+            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+        }
     }
 }
