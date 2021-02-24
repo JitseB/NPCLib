@@ -51,7 +51,7 @@ public abstract class TinyProtocol {
 
     // Speedup channel lookup
     // Made channelLookup UUID-based (JMB - 23rd Jan. 2021)
-    private Map<UUID, Channel> channelLookup = new MapMaker().weakValues().makeMap();
+    private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
     private Listener listener;
 
     // Channels that have already been removed
@@ -162,29 +162,23 @@ public abstract class TinyProtocol {
 
             @EventHandler(priority = EventPriority.MONITOR)
             public final void onPlayerLogin(PlayerLoginEvent event) {
-                if (closed)
-                    return;
+                if (closed) return;
 
                 Channel channel = getChannel(event.getPlayer());
 
                 // Don't inject players that have been explicitly uninjected
-                if (!uninjectedChannels.contains(channel)) {
-                    injectPlayer(event.getPlayer());
-                }
+                if (!uninjectedChannels.contains(channel)) injectPlayer(event.getPlayer());
             }
 
             @EventHandler(priority = EventPriority.MONITOR)
             public final void onPlayerAsyncPreLogin(AsyncPlayerPreLoginEvent event) {
-                if (!injected) {
+                if (!injected)
                     event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "TinyProtocol not injected yet");
-                }
             }
 
             @EventHandler
             public final void onPluginDisable(PluginDisableEvent e) {
-                if (e.getPlugin().equals(plugin)) {
-                    close();
-                }
+                if (e.getPlugin().equals(plugin)) close();
             }
 
         };
@@ -273,14 +267,14 @@ public abstract class TinyProtocol {
     }
 
     private Channel getChannel(Player player) {
-        Channel channel = channelLookup.get(player.getUniqueId());
+        Channel channel = channelLookup.get(player.getName());
 
         // Lookup channel again
         if (channel == null) {
             Object connection = getConnection.get(getPlayerHandle.invoke(player));
             Object manager = getManager.get(connection);
 
-            channelLookup.put(player.getUniqueId(), channel = getChannel.get(manager));
+            channelLookup.put(player.getName(), channel = getChannel.get(manager));
         }
 
         return channel;
@@ -347,7 +341,7 @@ public abstract class TinyProtocol {
         private void handleLoginStart(Channel channel, Object packet) {
             if (PACKET_LOGIN_IN_START.isInstance(packet)) {
                 GameProfile profile = getGameProfile.get(packet);
-                channelLookup.put(profile.getId(), channel);
+                channelLookup.put(profile.getName(), channel);
             }
         }
     }
