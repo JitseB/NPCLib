@@ -4,7 +4,6 @@ NPCLib – Basic non-player character library.<br>
 [![Build Status](https://travis-ci.com/JitseB/NPCLib.svg?branch=master)](https://travis-ci.com/JitseB/NPCLib)
 [![Versions](https://img.shields.io/badge/MC-1.8.8%20--%20latest-blue.svg)](https://github.com/JitseB/NPCLib/releases)
 [![Resource](https://img.shields.io/badge/SpigotMC-Resource-orange.svg)](https://www.spigotmc.org/resources/npclib.55884/)
-[![Discord](https://img.shields.io/badge/Support-Discord-blue.svg)](https://discord.gg/pvJGhEq)
 =
 
 This is an API made specifically for spigot servers (Minecraft). Current supported versions: **1.8.8 - latest**. Lightweight replacement for Citizens. NPCLib only uses packets instead of registering the entity in the actual Minecraft server.
@@ -46,14 +45,14 @@ If you have NPCLib under your `plugins` folder, you may use the following:
     <dependency>
         <groupId>net.jitse</groupId>
         <artifactId>npclib-api</artifactId>
-        <version>2.9-SNAPSHOT</version>
+        <version>2.11.1-SNAPSHOT</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
 ```
 If you do not want to have NPCLib in your `plugins` folder, you need to use the `npclib-plugin` artifact and [shade it](https://maven.apache.org/plugins/maven-shade-plugin/) accordingly.
 
-[Click here](https://github.com/JitseB/NPCLib/releases/latest) to view the latest release.
+Always make sure to use the latest stable release. [Click here](https://github.com/JitseB/NPCLib/releases/latest) to view the latest release.
 
 #### Repacking the library
 To make sure the classes won't be twice at the same place. I recommend repacking the library into your package. (Otherwise [issue #79](https://github.com/MinecraftLibraries/NPCLib/issues/79) might occur.) You can do that as follow:
