@@ -108,6 +108,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public NPC setText(List<String> text) {
+        this.text = text;
         for (UUID uuid : shown) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
