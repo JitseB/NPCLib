@@ -50,6 +50,13 @@ If you have NPCLib under your `plugins` folder, you may use the following:
     </dependency>
 </dependencies>
 ```
+
+#### Gradle
+```gradle
+    compileOnly 'net.jitse:npclib-api:2.11.1-SNAPSHOT'
+ ```
+
+
 If you do not want to have NPCLib in your `plugins` folder, you need to use the `npclib-plugin` artifact and [shade it](https://maven.apache.org/plugins/maven-shade-plugin/) accordingly.
 
 Always make sure to use the latest stable release. [Click here](https://github.com/JitseB/NPCLib/releases/latest) to view the latest release.
