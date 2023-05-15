@@ -24,7 +24,7 @@ Alternatively, you can help the project by starring the repository or telling ot
 There are multiple ways you can make use of NPCLib.
 
 1. The first option is to shade `npclib-plugin.jar` in to your plugin.
-2. The second option is to put `npclib-plugin.jar` under your `plugins` folder. By doing this, you no longer need to shade the API JAR. Though, do not forget to add `NPCLib` as a dependency in your `plugin.yml`!
+2. The second option is to put `npclib-plugin.jar` under your `plugins` folder. By doing this, you no longer need to shade the API JAR. Though, do not forget to add `NPCLibPlugin` as a dependency in your `plugin.yml`!
 3. The third option (and the one I recommend most) is to shade the library using Maven. I recently added NPCLib to the OSSRH (OSS Repository Hosting) which allows you to easily import NPCLib into your project.
 
 #### Maven repository
