@@ -36,7 +36,7 @@ public class NPCLibTest extends JavaPlugin {
 
         int skinId = 188100; // Read DOCUMENTATION.md on how and where to get this number.
         MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
-            NPC npc = npclib.createNPC(Arrays.asList(ChatColor.WHITE + "Hi there (#3)");
+            NPC npc = npclib.createNPC(Arrays.asList(ChatColor.WHITE + "Hi there (#3)"));
             npc.setLocation(event.getPlayer().getLocation());
             npc.setSkin(skin);
             ids.add(npc.getId());
