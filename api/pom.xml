@@ -7,8 +7,8 @@
 
     <parent>
         <artifactId>npclib</artifactId>
-        <groupId>net.jitse</groupId>
-        <version>2.12.1-SNAPSHOT</version>
+        <groupId>com.bnstra</groupId>
+        <version>2.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>npclib-api</artifactId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.42.Final</version>
+            <version>4.1.94.Final</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

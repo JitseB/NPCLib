@@ -1,6 +1,5 @@
 name: NPCLibPlugin
 version: ${project.parent.version}
-api-version: 1.16
 author: JitseB
 description: Dummy plugin for easy class-loading.
-main: net.jitse.npclib.plugin.NPCLibPlugin
+main: com.bnstra.npclib.plugin.NPCLibPlugin

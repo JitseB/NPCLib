@@ -6,9 +6,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>net.jitse</groupId>
+        <groupId>com.bnstra</groupId>
         <artifactId>npclib-nms</artifactId>
-        <version>2.12.1-SNAPSHOT</version>
+        <version>2.13-SNAPSHOT</version>
     </parent>
 
     <artifactId>npclib-nms-v1_16_R3</artifactId>
