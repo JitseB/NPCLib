@@ -377,7 +377,7 @@ public class Hologram {
                     "a", PACKET_CLASS);
             this.getIdMethod = Reflection.getMethod(ENTITY_ARMOR_STAND_CLASS,
                     "ae");
-        } else if (version.isAboveOrEqual(MinecraftVersion.V1_16_R3)) { // TODO: Might need to be lower
+        } else if (version.isAboveOrEqual(MinecraftVersion.V1_16_R3)) {
             this.setLocationMethod = Reflection.getMethod(ENTITY_CLASS,
                     "setPosition", double.class, double.class, double.class);
 
@@ -494,11 +494,10 @@ public class Hologram {
                     entityArmorStandConstructor.invoke(worldServer, location.getX(), location.getY(), location.getZ()) :
                     entityArmorStandConstructor.invoke(worldServer));
 
-            if (!version.isAboveOrEqual(MinecraftVersion.V1_14_R1)) {
-                setLocationMethod.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
-            }
-            if (!version.isAboveOrEqual(MinecraftVersion.V1_17_R1)) {
+            if (version.isAboveOrEqual(MinecraftVersion.V1_16_R3)) {
                 setLocationMethod.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ());
+            } else {
+                setLocationMethod.invoke(entityArmorStand, location.getX(), location.getY(), location.getZ(), 0, 0);
             }
 
             if (version.isAboveOrEqual(MinecraftVersion.V1_19_R1)) {

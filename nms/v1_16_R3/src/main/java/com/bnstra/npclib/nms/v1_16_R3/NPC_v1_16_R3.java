@@ -21,7 +21,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Jitse Boonstra
@@ -33,7 +35,8 @@ public class NPC_v1_16_R3 extends NPCBase {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
-    private PacketPlayOutAnimation packetPlayOutAnimation;
+
+    private final HashMap<UUID, Integer> playerInfoRemoveTimers = new HashMap<>();
 
     public NPC_v1_16_R3(NPCLib instance, List<String> lines) {
         super(instance, lines, MinecraftVersion.V1_16_R3);
@@ -85,9 +88,17 @@ public class NPC_v1_16_R3 extends NPCBase {
 
         getHologram(player).show(player);
 
+        // If there is already a timer, remove the old one (it is redundant)
+        if (playerInfoRemoveTimers.containsKey(player.getUniqueId()))
+            Bukkit.getScheduler().cancelTask(playerInfoRemoveTimers.get(player.getUniqueId()));
+
         // Removing the player info after 10 seconds.
-        Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
-                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 200);
+        playerInfoRemoveTimers.put(player.getUniqueId(), Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () -> {
+            if (isShown(player)) {
+                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
+            }
+            playerInfoRemoveTimers.remove(player.getUniqueId());
+        }, 200).getTaskId());
     }
 
     @Override
@@ -134,31 +145,36 @@ public class NPC_v1_16_R3 extends NPCBase {
         newProfile.getProperties().get("textures").clear();
         newProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         this.packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, newProfile, name);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
-            playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-            playerConnection.sendPacket(packetPlayOutEntityDestroy);
-            playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
-            playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
-            // TODO Change to the same mechanics as I did for 1.17 R1 (meta data packet not send!)
+
+        for (UUID shownUuid : super.getShown()) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                sendHidePackets(player);
+                sendShowPackets(player);
+                sendMetadataPacket(player);
+                sendEquipmentPackets(player);
+            }
         }
     }
 
     @Override
     public void sendHeadRotationPackets(Location location) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+        for (UUID shownUuid : super.getShown()) {
+            Player player = Bukkit.getPlayer(shownUuid);
+            if (player != null && isShown(player)) {
+                PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
-            Location npcLocation = getLocation();
-            Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
+                Location npcLocation = getLocation();
+                Vector dirBetweenLocations = location.toVector().subtract(npcLocation.toVector());
 
-            npcLocation.setDirection(dirBetweenLocations);
+                npcLocation.setDirection(dirBetweenLocations);
 
-            float yaw = npcLocation.getYaw();
-            float pitch = npcLocation.getPitch();
+                float yaw = npcLocation.getYaw();
+                float pitch = npcLocation.getPitch();
 
-            connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(entityId, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-            connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+                connection.sendPacket(new PacketPlayOutEntity.PacketPlayOutEntityLook(entityId, (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
+                connection.sendPacket(new PacketPlayOutEntityHeadRotationWrapper().create(npcLocation, entityId));
+            }
         }
     }
 }

@@ -23,14 +23,14 @@ public class MineSkinFetcher {
     private static final String MINESKIN_API = "https://api.mineskin.org/v2/skins/";
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
-    public static void fetchSkinFromUUIDAsync(String uuid, Callback callback) {
+    public static void fetchSkinFromUUIDAsync(String uuid, String token, Callback callback) {
         EXECUTOR.execute(() -> {
             try {
                 StringBuilder builder = new StringBuilder();
                 HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + uuid).openConnection();
                 httpURLConnection.setRequestProperty("User-Agent", "NPCLib/v2.13");
                 httpURLConnection.setRequestProperty("Accept", "application/json");
-                httpURLConnection.setRequestProperty("Authorization", "Bearer 0c9a497bdb277481270ce81eaab21b1d6727743c53858cc78d50052befbc73c0");
+                httpURLConnection.setRequestProperty("Authorization", "Bearer " + token);
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
@@ -59,13 +59,13 @@ public class MineSkinFetcher {
         });
     }
 
-    public static void fetchSkinFromUUIDSync(String uuid, Callback callback) {
+    public static void fetchSkinFromUUIDSync(String uuid, String token, Callback callback) {
         try {
             StringBuilder builder = new StringBuilder();
             HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + uuid).openConnection();
             httpURLConnection.setRequestProperty("User-Agent", "NPCLib/v2.13");
             httpURLConnection.setRequestProperty("Accept", "application/json");
-            httpURLConnection.setRequestProperty("Authorization", "Bearer 0c9a497bdb277481270ce81eaab21b1d6727743c53858cc78d50052befbc73c0");
+            httpURLConnection.setRequestProperty("Authorization", "Bearer " + token);
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setDoInput(true);
