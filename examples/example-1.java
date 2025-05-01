@@ -1,7 +1,7 @@
-package net.jitse.npclib.example;
+package com.bnstra.npclib.example;
 
-import net.jitse.npclib.NPCLib;
-import net.jitse.npclib.api.NPC;
+import com.bnstra.npclib.NPCLib;
+import com.bnstra.npclib.api.NPC;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
