@@ -56,7 +56,7 @@ public class NPCLibOptions {
 		 * @return movement handling
 		 */
 		public static MovementHandling playerMoveEvent() {
-			return new MovementHandling(false, 0);
+			return new MovementHandling(true, 0);
 		}
 
 		/**
@@ -69,7 +69,7 @@ public class NPCLibOptions {
 			if (updateInterval <= 0) {
 				throw new IllegalArgumentException("Negative update interval");
 			}
-			return new MovementHandling(true, updateInterval);
+			return new MovementHandling(false, updateInterval);
 		}
 
 	}

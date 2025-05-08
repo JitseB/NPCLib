@@ -71,14 +71,15 @@ public class PlayerListener extends HandleMoveBase implements Listener {
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        World from = event.getFrom();
+//        World from = event.getFrom();
 
         // The PlayerTeleportEvent is called, and will handle visibility in the new world.
-        for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (npc.isShown(player) && npc.getWorld().equals(from)) {
-                npc.hide(player, true);
-            }
-        }
+//        for (NPCBase npc : NPCManager.getAllNPCs()) {
+//            if (npc.isShown(player) && npc.getWorld().equals(from)) {
+//                npc.hide(player, true);
+//            }
+//        }
+        handleMove(player);
     }
 
     @EventHandler
