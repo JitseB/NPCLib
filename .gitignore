@@ -17,3 +17,6 @@ log
 target
 dependency-reduced-pom.xml
 jars
+
+# Scripts
+*.sh
