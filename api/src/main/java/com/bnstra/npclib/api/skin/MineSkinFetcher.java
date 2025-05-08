@@ -28,7 +28,7 @@ public class MineSkinFetcher {
             try {
                 StringBuilder builder = new StringBuilder();
                 HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + uuid).openConnection();
-                httpURLConnection.setRequestProperty("User-Agent", "NPCLib/v2.13");
+                httpURLConnection.setRequestProperty("User-Agent", "NPCLib/v2.13.1");
                 httpURLConnection.setRequestProperty("Accept", "application/json");
                 httpURLConnection.setRequestProperty("Authorization", "Bearer " + token);
                 httpURLConnection.setRequestMethod("GET");
